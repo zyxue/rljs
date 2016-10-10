@@ -29,11 +29,17 @@ class App extends React.Component {
        this.setState({value: event.target.value});
        } */
 
-    handleClick(event) {
+    handleClick(action, event) {
+        console.log(event);
+        console.log(arguments);
         /* for (let i=0; i< 100; i++) {
          *     this.state.agent.learn();
          * };*/
-        this.state.agent.learn();
+
+        if (action == 'evalPolicy') {this.state.agent.evaluatePolicy();}
+        else if (action == 'updatePolicy') {this.state.agent.updatePolicy();}
+        else {this.state.agent.learn();}
+
         this.setState({agent: this.state.agent});
     }
 
@@ -73,7 +79,11 @@ class App extends React.Component {
 
                 <Grid agent={this.state.agent}/>
                 <br/>
-                <button onClick={this.handleClick}>Click to learn</button>
+                <button onClick={this.handleClick.bind(this, 'learn')}>Learn</button>
+                <button onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</button>
+                <button onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</button>
+
+                <p>Learn: just one evaluatePolicy + one updatePolicy</p>
             </div>
         );
     }
