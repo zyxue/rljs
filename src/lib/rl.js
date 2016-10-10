@@ -21,15 +21,18 @@ var RL = {};
         }
     };
 
-    var sampleWeighted = function(p) {
+    global.sampleWeighted = function(p) {
         var r = Math.random();
-        var c = 0.0;
+        var c = 0.0;            // cumulative prob
         for(var i=0, n=p.length; i<n; i++) {
             c += p[i];
-            if(c >= r) { return i; }
+            if (c >= r) { return i; }
         }
+        // assert(false) may happen if sum(p) < 1;
         assert(false, 'wtf');
     };
+
+    var sampleWeighted = global.sampleWeighted;
 
     // ------
     // AGENTS
@@ -56,27 +59,15 @@ var RL = {};
             this.V = zeros(this.ns);
             this.P = zeros(this.ns * this.na);
             // initialize uniform random policy
-            for(var s=0;s<this.ns;s++) {
+            for(var s=0; s<this.ns; s++) {
                 var poss = this.env.allowedActions(s);
-                for(var i=0,n=poss.length;i<n;i++) {
-                    this.P[poss[i]*this.ns+s] = 1.0 / poss.length;
+                for(var i=0, n=poss.length; i<n; i++) {
+                    // console.log(1.0 / poss.length);
+                    this.P[poss[i] * this.ns + s] = 1.0 / poss.length;
                 }
             }
+            // console.log('this.P: ', this.P);
         },
-
-        act: function(s) {
-            // behave according to the learned policy
-            var poss = this.env.allowedActions(s);
-            var ps = [];
-            for(var i=0, n=poss.length; i<n; i++) {
-                var a = poss[i];
-                var prob = this.P[a*this.ns+s];
-                ps.push(prob);
-            }
-            var maxi = sampleWeighted(ps);
-            return poss[maxi];
-        },
-
 
         evaluatePolicy: function() {
             // perform a synchronous update of the value function
@@ -86,25 +77,18 @@ var RL = {};
                 // note that we assume that policy probability mass over allowed actions sums to one
                 var v = 0.0;
                 var poss = this.env.allowedActions(s);
-                for(var i=0,n=poss.length;i<n;i++) {
+                for(var i=0, n=poss.length; i<n; i++) {
                     var a = poss[i];
-                    var prob = this.P[a*this.ns+s]; // probability of taking action under policy
+                    var prob = this.P[a * this.ns + s]; // probability of taking action under policy
                     if(prob === 0) { continue; } // no contribution, skip for speed
                     var ns = this.env.nextStateDistribution(s,a);
-                    var rs = this.env.reward(s,a,ns); // reward for s->a->ns transition
+                    var rs = this.env.reward(s, a, ns); // reward for s->a->ns transition
                     v += prob * (rs + this.gamma * this.V[ns]);
                 }
                 Vnew[s] = v;
             }
             this.V = Vnew; // swap
         },
-
-        learn: function() {
-            // perform a single round of value iteration
-            this.evaluatePolicy(); // writes this.V
-            this.updatePolicy(); // writes this.P
-        },
-
 
         updatePolicy: function() {
             // update policy to be greedy w.r.t. learned Value function
@@ -123,11 +107,31 @@ var RL = {};
                     else if(v === vmax) { nmax += 1; }
                 }
                 // update policy smoothly across all argmaxy actions
-                for(var i=0,n=poss.length;i<n;i++) {
+                for(var i=0, n=poss.length;i<n;i++) {
                     var a = poss[i];
                     this.P[a*this.ns+s] = (vs[i] === vmax) ? 1.0/nmax : 0.0;
                 }
             }
+        },
+
+        learn: function() {
+            // perform a single round of value iteration
+            this.evaluatePolicy(); // writes this.V
+            this.updatePolicy(); // writes this.P
+        },
+
+        act: function(s) {
+            // behave according to the learned policy
+            // possible actions
+            var poss = this.env.allowedActions(s);
+            var ps = [];
+            for(var i=0, n=poss.length; i<n; i++) {
+                var a = poss[i];
+                var prob = this.P[a * this.ns + s];
+                ps.push(prob);
+            }
+            var maxi = sampleWeighted(ps);
+            return poss[maxi];
         }
     };
 
