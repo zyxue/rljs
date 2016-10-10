@@ -58,32 +58,32 @@ var RL = {};
     DPAgent.prototype = {
         reset: function() {
             // reset the agent's policy and value function
-            this.ns = this.env.getNumStates();
-            this.na = this.env.getMaxNumActions();
-            this.V = zeros(this.ns);
-            this.P = zeros(this.ns * this.na);
+            this.numStates = this.env.getNumStates();
+            this.numActions = this.env.getMaxNumActions();
+            this.V = zeros(this.numStates);
+            this.P = zeros(this.numStates * this.numActions);
             // initialize uniform random policy
-            for (var s = 0; s < this.ns; s++) {
+            for (var s = 0; s < this.numStates; s++) {
                 var poss = this.env.allowedActions(s);
                 for (var i = 0, n = poss.length; i < n; i++) {
                     // console.log(1.0 / poss.length);
-                    this.P[poss[i] * this.ns + s] = 1.0 / poss.length;
+                    this.P[poss[i] * this.numStates + s] = 1.0 / poss.length;
                 }
             }
-            // console.log('this.P: ', this.P);
         },
 
         evaluatePolicy: function() {
             // perform a synchronous update of the value function
-            var Vnew = zeros(this.ns);
-            for (var s = 0; s < this.ns; s++) {
-                // integrate over actions in a stochastic policy
-                // note that we assume that policy probability mass over allowed actions sums to one
+            var Vnew = zeros(this.numStates);
+            for (var s = 0; s < this.numStates; s++) {
+                // integrate over actions in a stochastic policy note that we
+                // assume that policy probability mass over allowed actions sums
+                // to one
                 var v = 0.0;
                 var poss = this.env.allowedActions(s);
                 for (var i = 0, n = poss.length; i < n; i++) {
                     var a = poss[i];
-                    var prob = this.P[a * this.ns + s]; // probability of taking action under policy
+                    var prob = this.P[a * this.numStates + s]; // probability of taking action under policy
                     if (prob === 0) {
                         continue;
                     } // no contribution, skip for speed
@@ -98,7 +98,7 @@ var RL = {};
 
         updatePolicy: function() {
             // update policy to be greedy w.r.t. learned Value function
-            for (var s = 0; s < this.ns; s++) {
+            for (var s = 0; s < this.numStates; s++) {
                 var poss = this.env.allowedActions(s);
                 // compute value of taking each allowed action
                 var vmax, nmax;
@@ -119,7 +119,7 @@ var RL = {};
                 // update policy smoothly across all argmaxy actions
                 for (var i = 0, n = poss.length; i < n; i++) {
                     var a = poss[i];
-                    this.P[a * this.ns + s] = (vs[i] === vmax) ? 1.0 / nmax : 0.0;
+                    this.P[a * this.numStates + s] = (vs[i] === vmax) ? 1.0 / nmax : 0.0;
                 }
             }
         },
@@ -137,7 +137,7 @@ var RL = {};
             var ps = [];
             for (var i = 0, n = poss.length; i < n; i++) {
                 var a = poss[i];
-                var prob = this.P[a * this.ns + s];
+                var prob = this.P[a * this.numStates + s];
                 ps.push(prob);
             }
             var maxi = sampleWeighted(ps);
