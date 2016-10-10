@@ -38,6 +38,7 @@ class App extends React.Component {
 
         if (action == 'evalPolicy') {this.state.agent.evaluatePolicy();}
         else if (action == 'updatePolicy') {this.state.agent.updatePolicy();}
+        else if (action == 'reset') {this.state.agent.reset();}
         else {this.state.agent.learn();}
 
         this.setState({agent: this.state.agent});
@@ -82,6 +83,7 @@ class App extends React.Component {
                 <button onClick={this.handleClick.bind(this, 'learn')}>Learn</button>
                 <button onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</button>
                 <button onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</button>
+                <button onClick={this.handleClick.bind(this, 'reset')}>Reset</button>
 
                 <p>Learn: just one evaluatePolicy + one updatePolicy</p>
             </div>
