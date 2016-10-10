@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import {R, RL} from './lib/rl.js';
 
 import GridWorld from './GridWorld.js';
-import Grid from './grid.jsx';
+import Grid from './Grid.jsx';
 
 
 class App extends React.Component {
