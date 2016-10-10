@@ -81,12 +81,12 @@ class Grid extends React.Component {
                     b = 255 + vv * ms;
                 }
 
-                /* reward color, value color */
-                var rcol,
-                    vcol = 'rgb(' + Math.floor(r) + ',' + Math.floor(g) + ',' + Math.floor(b) + ')';
+                /* value color */
+                var vcol;
                 if (env.T[s] === 1) {
                     vcol = "#AAA";
-                    rcol = "#AAA";
+                } else {
+                    vcol = 'rgb(' + Math.floor(r) + ',' + Math.floor(g) + ',' + Math.floor(b) + ')';
                 }
 
                 // set up cell rectangles
@@ -107,12 +107,19 @@ class Grid extends React.Component {
                     continue;
                 }
 
+                // state text
+                grp.append('text')
+                   .attr('x', xcoord + cs - 15)
+                   .attr('y', ycoord + 10)
+                   .attr('font-size', 10)
+                   .text(s.toFixed(0));
+
                 // reward text
                 var tr = grp.append('text')
                             .attr('x', xcoord + 3)
                             .attr('y', ycoord + 10)
                             .attr('font-size', 10);
-                tr.text('r: ' + env.Rarr[s].toFixed(1.1));
+                tr.text(env.Rarr[s].toFixed(1.1));
                 trs[s] = tr;
 
                 // value text
@@ -120,7 +127,7 @@ class Grid extends React.Component {
                             .attr('x', xcoord + 3)
                             .attr('y', ycoord + cs - 5)
                             .attr('font-size', 10)
-                            .text('v: ' + agent.V[s].toFixed(2));
+                            .text(agent.V[s].toFixed(2));
                 tvs[s] = tv;
 
                 // this highlights where the (0, 0) point is: top left corner
@@ -148,6 +155,14 @@ class Grid extends React.Component {
                     if (a === 1) {nx = 0; ny = -ss;}
                     if (a === 2) {nx = 0; ny = ss;}
                     if (a === 3) {nx = ss; ny = 0;}
+
+                    /* mapping are as below */
+                    /* var actionMapping = {
+                     *     0: '←',
+                     *     1: '↑',
+                     *     2: '↓',
+                     *     3: '→'
+                     * };*/
 
                     pa.attr('x1', xcoord + cs / 2)
                       .attr('y1', ycoord + cs / 2)

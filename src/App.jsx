@@ -17,21 +17,22 @@ class App extends React.Component {
         let agent = new RL.DPAgent(env, {'gamma':0.9});
 
         this.state = {
-            agent: agent
+            agent: agent,
+            value: 0
         };
 
-        /* this.state = {value: 10}; */
-        /* this.handleChange = this.handleChange.bind(this); */
+        this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
-    /* 
-       handleChange(event) {
-       this.setState({value: event.target.value});
-       } */
+
+    handleChange(event) {
+        let newVal = parseInt(event.target.value);
+        if (newVal) this.setState({value: newVal});
+    }
 
     handleClick(action, event) {
-        console.log(event);
-        console.log(arguments);
+        /* console.log(event);
+         * console.log(arguments);*/
         /* for (let i=0; i< 100; i++) {
          *     this.state.agent.learn();
          * };*/
@@ -45,38 +46,33 @@ class App extends React.Component {
     }
 
     render() {
-        var arr = [];
-        for (var i=0; i<20; i++) {
-            arr.push(i);
+        var actionMapping = {
+            0: '←',
+            1: '↑',
+            2: '↓',
+            3: '→'
         };
 
-        /* var actionMapping = {
-         *     0: '↑',
-         *     1: '←',
-         *     2: '→',
-         *     3: '↓'
-         * };
-
-         * var agent = this.state.agent;
-         * var actions = arr.map(
-         *     function (i) {
-         *         if (agent.env.T[i] === 1) {
-         *             return (<div className="col-md-1" key={i}>{i}: Cliff</div>);
+        /* 
+         *         let action;
+         *         if (this.state.value && this.state.value < this.state.agent.env.getNumStates()) {
+         *             console.log('lele', typeof this.state.value);
+         *             action = actionMapping[this.state.agent.act(this.state.value)];
          *         } else {
-         *             return (<div  className="col-md-1" key={i}>{i}:  {actionMapping[agent.act(i)]}</div>);
-         *         }
-         *     }
-         * );*/
+         *             action = '-';
+         *         }*/
 
         return (
             <div className="">
                 <br/>
 
-                {/* <input
-                    type="number"
+                {/* type="number" doesn't guarrantee it's a number, e.g. could also be empty string */}
+                {/* <input type="number"
                     value={this.state.value}
                     onChange={this.handleChange}
-                    />  */}
+                    />
+                    action at {this.state.value}: {action} */}
+
 
                 <Grid agent={this.state.agent}/>
                 <br/>
@@ -86,6 +82,13 @@ class App extends React.Component {
                 <button onClick={this.handleClick.bind(this, 'reset')}>Reset</button>
 
                 <p>Learn: just one evaluatePolicy + one updatePolicy</p>
+                <div>Numbers in each box:
+                    <ul>
+                        <li>top left: reward</li>
+                        <li>top right: state</li>
+                        <li>bottom left: value</li>
+                    </ul>
+                </div>
             </div>
         );
     }
