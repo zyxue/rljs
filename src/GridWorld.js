@@ -20,20 +20,16 @@ GridWorld.prototype = {
         let Rarr = R.zeros(this.gs);
         /* cliffs */
         let T = R.zeros(this.gs);
-        Rarr[55] = 1;
 
-        Rarr[54] = -1;
-        //Rarr[63] = -1;
-        Rarr[64] = -1;
-        Rarr[65] = -1;
-        Rarr[85] = -1;
-        Rarr[86] = -1;
+        let plusOneIdx = [55];
+        for (let i=0; i < plusOneIdx.length; i++) {
+            Rarr[plusOneIdx[i]] = 1;
+        }
 
-        Rarr[37] = -1;
-        Rarr[33] = -1;
-        //Rarr[77] = -1;
-        Rarr[67] = -1;
-        Rarr[57] = -1;
+        let negOneIdx = [54, 64, 65, 85, 86, 37, 33, 67, 57];
+        for (let i=0; i < negOneIdx.length; i++) {
+            Rarr[negOneIdx[i]] = -1;
+        }
 
         // make some cliffs
         for(let q=0; q<8; q++) {
