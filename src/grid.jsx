@@ -114,9 +114,10 @@ const Grid = React.createClass({
      * },
      */
 
-    initGrid (faux, env) {
-        let d3elt = d3.select(faux);
+    initGrid (faux, agent) {
+        let env = agent.env;
 
+        let d3elt = d3.select(faux);
         /* d3elt.append('div').html('');*/
 
         /* rs: rewards of the state
@@ -158,50 +159,75 @@ const Grid = React.createClass({
             for (var x = 0; x < gw; x++) {
                 var xcoord = x * cs;
                 var ycoord = y * cs;
+                var r = 255,
+                    g = 255,
+                    b = 255;
                 var s = env.xytos(x, y);
 
-                var g = svg.append('g');
+                var grp = svg.append('g');
+
+
                 // click callbackfor group
-                g.on('click', function(ss) {
+                grp.on('click', function(ss) {
                     /* return function() { cellClicked(ss); } // close over s*/
                 }(s));
 
-                // set up cell rectangles
-                var r = g.append('rect')
-                         .attr('x', xcoord)
-                         .attr('y', ycoord)
-                         .attr('height', cs)
-                         .attr('width', cs)
-                         .attr('fill', '#FFF')
-                         .attr('stroke', 'black')
-                         .attr('stroke-width', 2);
-                rs[s] = r;
 
-                // reward text
-                var tr = g.append('text')
-                          .attr('x', xcoord + 3)
-                          .attr('y', ycoord + 10)
-                          .attr('font-size', 10)
-                          .text('r');
-                trs[s] = tr;
+                var vv = agent.V[s];
+                var ms = 100;
+                if (vv > 0) {
+                    g = 255;
+                    r = 255 - vv * ms;
+                    b = 255 - vv * ms;
+                }
+                if (vv < 0) {
+                    g = 255 + vv * ms;
+                    r = 255;
+                    b = 255 + vv * ms;
+                }
+
+                /* reward color, value color */
+                var rcol,
+                    vcol = 'rgb(' + Math.floor(r) + ',' + Math.floor(g) + ',' + Math.floor(b) + ')';
+                if (env.T[s] === 1) {
+                    vcol = "#AAA";
+                    rcol = "#AAA";
+                }
+
+                // set up cell rectangles
+                var rect = grp.append('rect')
+                              .attr('x', xcoord)
+                              .attr('y', ycoord)
+                              .attr('height', cs)
+                              .attr('width', cs)
+                              .attr('fill', vcol)
+                              .attr('stroke', 'black')
+                              .attr('stroke-width', 2);
+                rs[s] = rect;
 
                 // skip rest for cliffs
                 if (env.T[s] === 1) {
                     continue;
                 }
 
+                // reward text
+                var tr = grp.append('text')
+                            .attr('x', xcoord + 3)
+                            .attr('y', ycoord + 10)
+                            .attr('font-size', 10);
+                tr.text('r: ' + env.Rarr[s].toFixed(1.1));
+                trs[s] = tr;
+
                 // value text
-                var tv = g.append('text')
-                          .attr('x', xcoord + 3)
-                          .attr('y', ycoord + cs - 5)
-                          .attr('font-size', 10)
-                          .text('v');
+                var tv = grp.append('text')
+                            .attr('x', xcoord + 3)
+                            .attr('y', ycoord + cs - 5)
+                            .attr('font-size', 10)
+                            .text('v: ' + agent.V[s].toFixed(2));
                 tvs[s] = tv;
 
-                console.log(xcoord, ycoord);
-
                 // this highlights where the (0, 0) point is: top left corner
-                /* g.append('circle')
+                /* grp.append('circle')
                  *  .attr('cx', xcoord)
                  *  .attr('cy', ycoord)
                  *  .attr('fill', 'red')
@@ -210,19 +236,29 @@ const Grid = React.createClass({
                 // policy arrows
                 pas[s] = [];
                 for (var a = 0; a < 4; a++) {
-                    /* pa.attr('x1', xcoord + cs / 2)
-                     *   .attr('y1', ycoord + cs / 2)
-                     *   .attr('x2', xcoord + cs / 2 + nx)
-                     *   .attr('y2', ycoord + cs / 2 + ny);*/
+                    var pa = grp.append('line');
 
-                    var pa = g.append('line')
-                              .attr('x1', xcoord + cs / 2)
-                              .attr('y1', ycoord + cs / 2)
-                              .attr('x2', xcoord + cs / 2)
-                              .attr('y2', ycoord + cs / 2)
-                              .attr('stroke', 'black')
-                              .attr('stroke-width', '1')
-                              .attr("marker-end", "url(#arrowhead)");
+                    var prob = agent.P[a * gs + s];
+                    if (prob === 0) {
+                        pa.attr('visibility', 'hidden');
+                    } else {
+                        pa.attr('visibility', 'visible');
+                    }
+                    var nx, ny;
+                    /* var ss = cs / 2 * prob * 0.9;*/
+                    var ss = cs / 6;
+                    if (a === 0) {nx = -ss; ny = 0;}
+                    if (a === 1) {nx = 0; ny = -ss;}
+                    if (a === 2) {nx = 0; ny = ss;}
+                    if (a === 3) {nx = ss; ny = 0;}
+
+                    pa.attr('x1', xcoord + cs / 2)
+                      .attr('y1', ycoord + cs / 2)
+                      .attr('x2', xcoord + cs / 2 + nx)
+                      .attr('y2', ycoord + cs / 2 + ny)
+                      .attr('stroke', 'black')
+                      .attr('stroke-width', '1')
+                      .attr("marker-end", "url(#arrowhead)");
                     pas[s].push(pa);
                     /* console.log(pas);*/
                 }
@@ -232,10 +268,14 @@ const Grid = React.createClass({
 
     componentDidMount () {
         const faux = this.connectFauxDOM('div.renderedD3', 'chart');
-        let env = this.props.agent.env;
-        this.initGrid(faux, env);
+        this.initGrid(faux, this.props.agent);
 
         this.animateFauxDOM(800);
+    },
+
+    componentDidUpdate() {
+        const faux = this.connectFauxDOM('div.renderedD3', 'chart');
+        this.initGrid(faux, this.props.agent);
     },
 
     render () {
