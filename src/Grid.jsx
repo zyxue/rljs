@@ -15,14 +15,6 @@ class Grid extends React.Component {
         let d3elt = d3.select(fauxElement);
         /* d3elt.append('div').html('');*/
 
-        /* rs: rewards of the state
-           trs: text for the reward of the state
-           tvs: text for the value of the state
-           pas: policy arrows*/
-        let rs = {},
-            trs = {},
-            tvs = {},
-            pas = {};
         let cs = 60; /* cell size */
 
         var gh = env.gh; // height in cells
@@ -90,17 +82,14 @@ class Grid extends React.Component {
                 }
 
                 // set up cell rectangles
-                var rect = grp.append('rect')
-                              .attr('x', xcoord)
-                              .attr('y', ycoord)
-                              .attr('height', cs)
-                              .attr('width', cs)
-                              .attr('fill', vcol)
-                              .attr('stroke', 'black')
-                              .attr('stroke-width', 2);
-                /* console.log(x, y, rect);*/
-
-                rs[s] = rect;
+                grp.append('rect')
+                   .attr('x', xcoord)
+                   .attr('y', ycoord)
+                   .attr('height', cs)
+                   .attr('width', cs)
+                   .attr('fill', vcol)
+                   .attr('stroke', 'black')
+                   .attr('stroke-width', 2);
 
                 // state text
                 grp.append('text')
@@ -115,20 +104,18 @@ class Grid extends React.Component {
                 }
 
                 // reward text
-                var tr = grp.append('text')
-                            .attr('x', xcoord + 3)
-                            .attr('y', ycoord + 10)
-                            .attr('font-size', 10);
-                tr.text(env.Rarr[s].toFixed(1.1));
-                trs[s] = tr;
+                grp.append('text')
+                   .attr('x', xcoord + 3)
+                   .attr('y', ycoord + 10)
+                   .attr('font-size', 10)
+                   .text(env.Rarr[s].toFixed(1.1));
 
                 // value text
-                var tv = grp.append('text')
-                            .attr('x', xcoord + 3)
-                            .attr('y', ycoord + cs - 5)
-                            .attr('font-size', 10)
-                            .text(agent.V[s].toFixed(2));
-                tvs[s] = tv;
+                grp.append('text')
+                   .attr('x', xcoord + 3)
+                   .attr('y', ycoord + cs - 5)
+                   .attr('font-size', 10)
+                   .text(agent.V[s].toFixed(2));
 
                 // this highlights where the (0, 0) point is: top left corner
                 /* grp.append('circle')
@@ -138,7 +125,6 @@ class Grid extends React.Component {
                  *  .attr('r', 4);*/
 
                 // policy arrows
-                pas[s] = [];
                 for (var a = 0; a < 4; a++) {
                     var pa = grp.append('line');
 
@@ -171,8 +157,6 @@ class Grid extends React.Component {
                       .attr('stroke', 'black')
                       .attr('stroke-width', '1')
                       .attr("marker-end", "url(#arrowhead)");
-                    pas[s].push(pa);
-                    /* console.log(pas);*/
                 }
             }
         }
