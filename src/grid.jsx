@@ -98,7 +98,7 @@ class Grid extends React.Component {
                               .attr('fill', vcol)
                               .attr('stroke', 'black')
                               .attr('stroke-width', 2);
-                console.log(x, y, rect);
+                /* console.log(x, y, rect);*/
 
                 rs[s] = rect;
 
