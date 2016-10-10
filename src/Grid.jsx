@@ -102,17 +102,17 @@ class Grid extends React.Component {
 
                 rs[s] = rect;
 
-                // skip rest for cliffs
-                if (env.T[s] === 1) {
-                    continue;
-                }
-
                 // state text
                 grp.append('text')
                    .attr('x', xcoord + cs - 15)
                    .attr('y', ycoord + 10)
                    .attr('font-size', 10)
                    .text(s.toFixed(0));
+
+                // skip rest for cliffs
+                if (env.T[s] === 1) {
+                    continue;
+                }
 
                 // reward text
                 var tr = grp.append('text')
