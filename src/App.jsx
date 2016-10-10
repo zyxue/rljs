@@ -64,7 +64,6 @@ class App extends React.Component {
         return (
             <div className="">
                 <br/>
-                <button onClick={this.handleClick}>Click to learn</button>
 
                 {/* <input
                     type="number"
@@ -73,6 +72,8 @@ class App extends React.Component {
                     />  */}
 
                 <Grid agent={this.state.agent}/>
+                <br/>
+                <button onClick={this.handleClick}>Click to learn</button>
             </div>
         );
     }
