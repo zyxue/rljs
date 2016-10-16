@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {R, RL} from '../lib/rl.js';
+import R from '../lib/r';
+import RL from '../lib/rl';
 
 import GridWorld from './GridWorldDP/GridWorld.js';
 import Grid from './GridWorldDP/Grid.jsx';

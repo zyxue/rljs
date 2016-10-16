@@ -2,7 +2,6 @@ import R from './r.js';
 
 import DPAgent from './DPAgent';
 
-// END OF RECURRENTJS
 
 var RL = {};
 (function(global) {
@@ -920,7 +919,5 @@ var RL = {};
     //global.DeterministPG = DeterministPG;
 })(RL);
 
-export {
-    R,
-    RL
-};
+
+export default RL;
