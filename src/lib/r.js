@@ -179,7 +179,7 @@ var R = {}; // the Recurrent library
     // var fillRand = function(m, lo, hi) { for(var i=0,n=m.w.length;i<n;i++) { m.w[i] = randf(lo, hi); } };
     var gradFillConst = function(m, c) {
         for (var i = 0, n = m.dw.length; i < n; i++) {
-            m.dw[i] = c
+            m.dw[i] = c;
         }
     };
 
@@ -413,8 +413,8 @@ var R = {}; // the Recurrent library
                 this.backprop.push(backward);
             }
             return out;
-        },
-    }
+        }
+    };
 
     var softmax = function(m) {
         var out = new Mat(m.n, m.d); // probability volume
@@ -436,13 +436,14 @@ var R = {}; // the Recurrent library
         // since we will use the computed probabilities outside
         // to set gradients directly on m
         return out;
-    }
+    };
 
     var Solver = function() {
         this.decay_rate = 0.999;
         this.smooth_eps = 1e-8;
         this.step_cache = {};
-    }
+    };
+
     Solver.prototype = {
         step: function(model, step_size, regc, clipval) {
             // perform parameter update
@@ -482,7 +483,7 @@ var R = {}; // the Recurrent library
             solver_stats['ratio_clipped'] = num_clipped * 1.0 / num_tot;
             return solver_stats;
         }
-    }
+    };
 
     var initLSTM = function(input_size, hidden_sizes, output_size) {
         // hidden size should be a list
@@ -511,7 +512,7 @@ var R = {}; // the Recurrent library
         model['Whd'] = new RandMat(output_size, hidden_size, 0, 0.08);
         model['bd'] = new Mat(output_size, 1);
         return model;
-    }
+    };
 
     var forwardLSTM = function(G, model, hidden_sizes, x, prev) {
         // forward prop for a single tick of LSTM
@@ -582,12 +583,12 @@ var R = {}; // the Recurrent library
             'c': cell,
             'o': output
         };
-    }
+    };
 
     var sig = function(x) {
         // helper function for computing sigmoid
         return 1.0 / (1 + Math.exp(-x));
-    }
+    };
 
     var maxi = function(w) {
         // argmax of array w
@@ -601,7 +602,7 @@ var R = {}; // the Recurrent library
             }
         }
         return maxix;
-    }
+    };
 
     var samplei = function(w) {
         // sample argmax from w, assuming w are 
@@ -617,7 +618,7 @@ var R = {}; // the Recurrent library
             i++;
         }
         return w.length - 1; // pretty sure we should never get here?
-    }
+    };
 
     // various utils
     global.assert = assert;
