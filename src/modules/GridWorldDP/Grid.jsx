@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import ReactFauxDOM from 'react-faux-dom';
 import * as d3 from 'd3';
 
-import ReactFauxDOM from 'react-faux-dom';
 
-import GridWorld from './GridWorld.js';
-
+/* draws the grid based on agent.env, agent.V and agent.P */
 
 class Grid extends React.Component {
     initGrid (fauxElement, agent) {
         let env = agent.env;
+        let V = agent.V;
+        let P = agent.P
 
         let d3elt = d3.select(fauxElement);
         /* d3elt.append('div').html('');*/
@@ -60,7 +60,7 @@ class Grid extends React.Component {
                 }(s));
 
 
-                var vv = agent.V[s];
+                var vv = V[s];
                 var ms = 100;
                 if (vv > 0) {
                     g = 255;
@@ -115,7 +115,7 @@ class Grid extends React.Component {
                    .attr('x', xcoord + 3)
                    .attr('y', ycoord + cs - 5)
                    .attr('font-size', 10)
-                   .text(agent.V[s].toFixed(2));
+                   .text(V[s].toFixed(2));
 
                 // this highlights where the (0, 0) point is: top left corner
                 /* grp.append('circle')
@@ -128,7 +128,7 @@ class Grid extends React.Component {
                 for (var a = 0; a < 4; a++) {
                     var pa = grp.append('line');
 
-                    var prob = agent.P[a * gs + s];
+                    var prob = P[a * gs + s];
                     if (prob === 0) {
                         pa.attr('visibility', 'hidden');
                     } else {
