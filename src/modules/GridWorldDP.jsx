@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {R, RL} from './lib/rl.js';
+import {R, RL} from '../lib/rl.js';
 
-import GridWorld from './GridWorld.js';
-import Grid from './Grid.jsx';
+import GridWorld from './GridWorldDP/GridWorld.js';
+import Grid from './GridWorldDP/Grid.jsx';
 
 
-class App extends React.Component {
+class GridWorldDP extends React.Component {
     constructor() {
         super();
         // create environment
@@ -95,4 +95,4 @@ class App extends React.Component {
 }
 
 
-export default App;
+export default GridWorldDP;
