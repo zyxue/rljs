@@ -1,28 +1,25 @@
-import {
-    R,
-    RL
-} from '../..//lib/rl.js';
+import {R, RL} from '../../lib/rl.js';
 
 
-var GridWorld = function() {
+var GridWorldEnv = function() {
     this.Rarr = null; // reward array
     this.T = null; // cell types, 0 = normal, 1 = cliff
     this.reset();
 };
 
 
-GridWorld.prototype = {
+GridWorldEnv.prototype = {
     reset: function() {
 
         // hardcoding one gridworld for now
-        this.gh = 10;
-        this.gw = 10;
-        this.gs = this.gh * this.gw; // number of states
+        this.horizontalNumStates = 10;         // number of states on x axis
+        this.verticalNumStates = 10;         // number of states on y axis
+        this.totalNumStates = this.horizontalNumStates * this.verticalNumStates; // number of states
 
         // specify some rewards
-        let Rarr = R.zeros(this.gs);
+        let Rarr = R.zeros(this.totalNumStates);
         /* cliffs */
-        let T = R.zeros(this.gs);
+        let T = R.zeros(this.totalNumStates);
 
         let plusOneIdx = [55];
         for (let i = 0; i < plusOneIdx.length; i++) {
@@ -36,19 +33,19 @@ GridWorld.prototype = {
 
         // make some cliffs
         for (let q = 0; q < 8; q++) {
-            let off = (q + 1) * this.gh + 2;
+            let off = (q + 1) * this.horizontalNumStates + 2;
             T[off] = 1;
             Rarr[off] = 0;
         }
 
         for (let q = 0; q < 6; q++) {
-            let off = 4 * this.gh + q + 2;
+            let off = 4 * this.horizontalNumStates + q + 2;
             T[off] = 1;
             Rarr[off] = 0;
         }
 
-        T[5 * this.gh + 2] = 0;
-        Rarr[5 * this.gh + 2] = 0; // make a hole
+        T[5 * this.horizontalNumStates + 2] = 0;
+        Rarr[5 * this.horizontalNumStates + 2] = 0; // make a hole
 
         this.Rarr = Rarr;
         this.T = T;
@@ -81,7 +78,7 @@ GridWorld.prototype = {
             if (a === 1) {nx = x; ny = y - 1;}
             if (a === 2) {nx = x; ny = y + 1;}
             if (a === 3) {nx = x + 1; ny = y;}
-            ns = nx * this.gh + ny;
+            ns = nx * this.horizontalNumStates + ny;
             if (this.T[ns] === 1) {
                 // actually never mind, this is a wall. reset the agent
                 ns = s;
@@ -117,17 +114,17 @@ GridWorld.prototype = {
         if (y > 0) {
             as.push(1);
         }
-        if (y < this.gh - 1) {
+        if (y < this.horizontalNumStates - 1) {
             as.push(2);
         }
-        if (x < this.gw - 1) {
+        if (x < this.verticalNumStates - 1) {
             as.push(3);
         }
         return as;
     },
 
     randomState: function() {
-        return Math.floor(Math.random() * this.gs);
+        return Math.floor(Math.random() * this.totalNumStates);
     },
 
     startState: function() {
@@ -135,7 +132,7 @@ GridWorld.prototype = {
     },
 
     getNumStates: function() {
-        return this.gs;
+        return this.totalNumStates;
     },
 
     getMaxNumActions: function() {
@@ -144,17 +141,17 @@ GridWorld.prototype = {
 
     // private functions
     stox: function(s) {
-        return Math.floor(s / this.gh);
+        return Math.floor(s / this.horizontalNumStates);
     },
 
     stoy: function(s) {
-        return s % this.gh;
+        return s % this.horizontalNumStates;
     },
 
     xytos: function(x, y) {
-        return x * this.gh + y;
+        return x * this.horizontalNumStates + y;
     }
 };
 
 
-export default GridWorld;
+export default GridWorldEnv;
