@@ -64,8 +64,6 @@ class GridWorldDP extends React.Component {
 
         return (
             <div className="">
-                <br/>
-
                 {/* type="number" doesn't guarrantee it's a number, e.g. could also be empty string */}
                 {/* <input type="number"
                     value={this.state.value}
