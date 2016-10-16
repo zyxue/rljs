@@ -13,19 +13,20 @@ class Grid extends React.Component {
         let P = agent.P
 
         let d3elt = d3.select(fauxElement);
-        /* d3elt.append('div').html('');*/
 
-        let cs = 60; /* cell size */
+        console.log(fauxElement);
+        console.log(fauxElement.attr);
+        console.log(d3elt);
 
-        var gh = env.gh; // height in cells
-        var gw = env.gw; // width in cells
-        var gs = env.gs; // total number of cells
+        let cs = 60; /* cell size*/
 
-        let w = 600;
-        let h = 600;
+        let gh = env.horizontalNumStates;
+        let gw = env.verticalNumStates;
+        let gs = env.totalNumStates;
+
         let svg = d3elt.append('svg')
-                       .attr('width', w)
-                       .attr('height', h)
+                       .attr('width', '100%')
+                       .attr('height', '100%')
                        .append('g')
                        .attr('transform', 'scale(1)');
 
@@ -164,6 +165,8 @@ class Grid extends React.Component {
 
     render () {
         var el = ReactFauxDOM.createElement('div');
+        el.setAttribute("style", "width: 100%; height: 100%");
+
         this.initGrid(el, this.props.agent);
         return el.toReact();
     }
