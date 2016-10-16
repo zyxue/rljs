@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import RL from '../lib/rl.js';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
@@ -27,7 +26,7 @@ class GridWorldTD extends React.Component {
     }
 
     handleChange(event) {
-        let newVal = parseInt(event.target.value);
+        let newVal = parseInt(event.target.fvalue, 10);
         if (newVal) this.setState({value: newVal});
     }
 
@@ -38,9 +37,9 @@ class GridWorldTD extends React.Component {
          *     this.state.agent.learn();
          * };*/
 
-        if (action == 'evalPolicy') {this.state.agent.evaluatePolicy();}
-        else if (action == 'updatePolicy') {this.state.agent.updatePolicy();}
-        else if (action == 'reset') {this.state.agent.reset();}
+        if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
+        else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
+        else if (action === 'reset') {this.state.agent.reset();}
         else {this.state.agent.learn();}
 
         this.setState({agent: this.state.agent});

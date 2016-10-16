@@ -1,7 +1,4 @@
-import {
-    R,
-    RL
-} from '../..//lib/rl.js';
+import R from '../../lib/r.js';
 
 
 var GridWorld = function() {

@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
-import R from '../lib/r';
 import RL from '../lib/rl';
 
 import GridWorld from './GridWorldDP/GridWorld.js';
@@ -27,7 +24,7 @@ class GridWorldDP extends React.Component {
     }
 
     handleChange(event) {
-        let newVal = parseInt(event.target.value);
+        let newVal = parseInt(event.target.value, 10);
         if (newVal) this.setState({value: newVal});
     }
 
@@ -38,21 +35,21 @@ class GridWorldDP extends React.Component {
          *     this.state.agent.learn();
          * };*/
 
-        if (action == 'evalPolicy') {this.state.agent.evaluatePolicy();}
-        else if (action == 'updatePolicy') {this.state.agent.updatePolicy();}
-        else if (action == 'reset') {this.state.agent.reset();}
+        if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
+        else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
+        else if (action === 'reset') {this.state.agent.reset();}
         else {this.state.agent.learn();}
 
         this.setState({agent: this.state.agent});
     }
 
     render() {
-        var actionMapping = {
-            0: '←',
-            1: '↑',
-            2: '↓',
-            3: '→'
-        };
+        /* var actionMapping = {
+         *     0: '←',
+         *     1: '↑',
+         *     2: '↓',
+         *     3: '→'
+         * };*/
 
         /* 
          *         let action;

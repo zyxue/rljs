@@ -17,7 +17,7 @@ export default React.createClass({
             <div>
                 <h1>RLjs examples</h1>
                 <nav>
-                    <ul role="nav" className="nav nav-pills">
+                    <ul role="navigation" className="nav nav-pills">
                         <li><NavLink to="/gridworld-dp">GridWorld DP</NavLink></li>
                         <li><NavLink to="/gridworld-td">GridWorld TD</NavLink></li>
                     </ul>

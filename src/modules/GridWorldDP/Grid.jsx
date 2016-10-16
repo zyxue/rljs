@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ReactFauxDOM from 'react-faux-dom';
 import * as d3 from 'd3';
 
@@ -10,7 +9,7 @@ class Grid extends React.Component {
     initGrid (fauxElement, agent) {
         let env = agent.env;
         let V = agent.V;
-        let P = agent.P
+        let P = agent.P;
 
         let d3elt = d3.select(fauxElement);
         /* d3elt.append('div').html('');*/

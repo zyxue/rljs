@@ -1,5 +1,4 @@
 import R from '../../lib/r';
-import RL from '../../lib/rl';
 
 
 var GridWorldEnv = function() {

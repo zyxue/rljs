@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ReactFauxDOM from 'react-faux-dom';
 import * as d3 from 'd3';
 
