@@ -5,9 +5,9 @@ import { Router, Route, hashHistory } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.css';
 
 
-import App from './modules/App';
-import GridWorldDP from './modules/GridWorldDP.jsx';
-import GridWorldTD from './modules/GridWorldTD.jsx';
+import App from './App';
+import GridWorldDP from './examples/GridWorldDP.jsx';
+import GridWorldTD from './examples/GridWorldTD.jsx';
 
 
 ReactDOM.render((
