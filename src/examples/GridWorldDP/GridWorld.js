@@ -1,4 +1,4 @@
-import R from '../../lib/r.js';
+import R from '../../lib/Recurrent-js';
 
 
 var GridWorld = function() {

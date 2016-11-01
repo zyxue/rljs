@@ -1,4 +1,4 @@
-import R from '../r.js';
+import R from '../Recurrent-js';
 import getopt from '../utils';
 
 

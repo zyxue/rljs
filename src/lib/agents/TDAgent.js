@@ -1,4 +1,4 @@
-import R from '../r';
+import R from '../Recurrent-js';
 import {setConst, getopt, sampleWeighted} from '../utils';
 
 
