@@ -1,6 +1,6 @@
 import React from 'react';
 
-import RL from '../lib/rl.js';
+import {DPAgent} from '../lib/Reinforce-js';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 import GridWorldEnv from './GridWorldTD/GridWorldEnv';
@@ -14,7 +14,7 @@ class GridWorldTD extends React.Component {
         let env = new GridWorldEnv();
 
         // create the agent, yay! Discount factor 0.9
-        let agent = new RL.DPAgent(env, {'gamma':0.9});
+        let agent = new DPAgent(env, {'gamma':0.9});
 
         this.state = {
             agent: agent,
