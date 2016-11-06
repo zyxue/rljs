@@ -5,30 +5,45 @@ import {setConst, getopt, sampleWeighted} from '../utils';
 // - does not require environment model :)
 // - learns from experience :)
 var TDAgent = function(env, opt) {
-    this.update = getopt(opt, 'update', 'qlearn'); // qlearn | sarsa
-    this.gamma = getopt(opt, 'gamma', 0.75); // future reward discount factor
-    this.epsilon = getopt(opt, 'epsilon', 0.1); // for epsilon-greedy policy
-    this.alpha = getopt(opt, 'alpha', 0.01); // value function learning rate
+    // qlearn | sarsa
+    this.update = getopt(opt, 'update', 'qlearn');
+    // future reward discount factor
+    this.gamma = getopt(opt, 'gamma', 0.75);
+    // for epsilon-greedy policy
+    this.epsilon = getopt(opt, 'epsilon', 0.1);
+    // value function learning rate
+    this.alpha = getopt(opt, 'alpha', 0.01);
 
-    // class allows non-deterministic policy, and smoothly regressing towards the optimal policy based on Q
+    // class allows non-deterministic policy, and smoothly regressing towards
+    // the optimal policy based on Q
     this.smooth_policy_update = getopt(opt, 'smooth_policy_update', false);
-    this.beta = getopt(opt, 'beta', 0.01); // learning rate for policy, if smooth updates are on
+    // learning rate for policy, if smooth updates are on
+    this.beta = getopt(opt, 'beta', 0.01);
 
     // eligibility traces
-    this.lambda = getopt(opt, 'lambda', 0); // eligibility trace decay. 0 = no eligibility traces used
+    // eligibility trace decay. 0 = no eligibility traces used
+    this.lambda = getopt(opt, 'lambda', 0);
     this.replacing_traces = getopt(opt, 'replacing_traces', true);
 
     // optional optimistic initial values
     this.q_init_val = getopt(opt, 'q_init_val', 0);
 
-    this.planN = getopt(opt, 'planN', 0); // number of planning steps per learning iteration (0 = no planning)
+    // number of planning steps per learning iteration (0 = no planning)
+    this.planN = getopt(opt, 'planN', 0);
 
-    this.Q = null; // state action value function
-    this.P = null; // policy distribution \pi(s,a)
-    this.e = null; // eligibility trace
-    this.env_model_s = null;; // environment model (s,a) -> (s',r)
-    this.env_model_r = null;; // environment model (s,a) -> (s',r)
-    this.env = env; // store pointer to environment
+    // state action value function
+    this.Q = null;
+    // policy distribution \pi(s,a)
+    this.PI = null;
+    // eligibility trace
+    this.etrace = null;
+    // environment model (s,a) -> (s',r)
+    this.env_model_s = null;
+    // environment model (s,a) -> (s',r)
+    this.env_model_r = null;
+
+    // store pointer to environment
+    this.env = env;
     this.reset();
 };
 
@@ -39,8 +54,8 @@ TDAgent.prototype = {
         this.na = this.env.getMaxNumActions();
         this.Q = R.zeros(this.ns * this.na);
         if(this.q_init_val !== 0) { setConst(this.Q, this.q_init_val); }
-        this.P = R.zeros(this.ns * this.na);
-        this.e = R.zeros(this.ns * this.na);
+        this.PI = R.zeros(this.ns * this.na);
+        this.etrace = R.zeros(this.ns * this.na);
 
         // model/planning vars
         this.env_model_s = R.zeros(this.ns * this.na);
@@ -53,7 +68,7 @@ TDAgent.prototype = {
         for(var s=0;s<this.ns;s++) {
             var poss = this.env.allowedActions(s);
             for(var i=0,n=poss.length;i<n;i++) {
-                this.P[poss[i]*this.ns+s] = 1.0 / poss.length;
+                this.PI[poss[i]*this.ns+s] = 1.0 / poss.length;
             }
         }
         // agent memory, needed for streaming updates
@@ -74,7 +89,7 @@ TDAgent.prototype = {
         var poss = this.env.allowedActions(s);
         var probs = [];
         for(var i=0,n=poss.length;i<n;i++) {
-            probs.push(this.P[poss[i]*this.ns+s]);
+            probs.push(this.PI[poss[i]*this.ns+s]);
         }
         // epsilon greedy policy
         if(Math.random() < this.epsilon) {
@@ -173,9 +188,9 @@ TDAgent.prototype = {
         if(lambda > 0) {
             // perform an eligibility trace update
             if(this.replacing_traces) {
-                this.e[sa] = 1;
+                this.etrace[sa] = 1;
             } else {
-                this.e[sa] += 1;
+                this.etrace[sa] += 1;
             }
             var edecay = lambda * this.gamma;
             var state_update = R.zeros(this.ns);
@@ -184,11 +199,11 @@ TDAgent.prototype = {
                 for(var i=0;i<poss.length;i++) {
                     var a = poss[i];
                     var saloop = a * this.ns + s;
-                    var esa = this.e[saloop];
+                    var esa = this.etrace[saloop];
                     var update = this.alpha * esa * (target - this.Q[saloop]);
                     this.Q[saloop] += update;
                     this.updatePriority(s, a, update);
-                    this.e[saloop] *= edecay;
+                    this.etrace[saloop] *= edecay;
                     var u = Math.abs(update);
                     if(u > state_update[s]) { state_update[s] = u; }
                 }
@@ -200,7 +215,7 @@ TDAgent.prototype = {
             }
             if(this.explored && this.update === 'qlearn') {
                 // have to wipe the trace since q learning is off-policy :(
-                this.e = R.zeros(this.ns * this.na);
+                this.etrace = R.zeros(this.ns * this.na);
             }
         } else {
             // simpler and faster update without eligibility trace
@@ -256,18 +271,18 @@ TDAgent.prototype = {
             var ix = a*this.ns+s;
             if(this.smooth_policy_update) {
                 // slightly hacky :p
-                this.P[ix] += this.beta * (target - this.P[ix]);
-                psum += this.P[ix];
+                this.PI[ix] += this.beta * (target - this.PI[ix]);
+                psum += this.PI[ix];
             } else {
                 // set hard target
-                this.P[ix] = target;
+                this.PI[ix] = target;
             }
         }
         if(this.smooth_policy_update) {
             // renomalize P if we're using smooth policy updates
             for(var i=0,n=poss.length;i<n;i++) {
                 var a = poss[i];
-                this.P[a*this.ns+s] /= psum;
+                this.PI[a*this.ns+s] /= psum;
             }
         }
     }
