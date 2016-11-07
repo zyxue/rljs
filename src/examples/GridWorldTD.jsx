@@ -3,8 +3,8 @@ import React from 'react';
 import {DPAgent} from '../lib/Reinforce-js';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
-import GridWorldEnv from './GridWorldTD/GridWorldEnv';
-import Grid from './GridWorldTD/Grid';
+import GridWorldEnv from './GridWorldDP/GridWorldEnv';
+import Grid from './GridWorldDP/Grid';
 
 
 class GridWorldTD extends React.Component {

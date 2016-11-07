@@ -1,7 +1,7 @@
 import React from 'react';
 import {DPAgent} from '../lib/Reinforce-js';
 
-import GridWorld from './GridWorldDP/GridWorld.js';
+import GridWorld from './GridWorldDP/GridWorldEnv.js';
 import Grid from './GridWorldDP/Grid.jsx';
 
 
