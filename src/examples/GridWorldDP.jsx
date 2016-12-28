@@ -1,9 +1,10 @@
 import React from 'react';
+import {Col, Button, ButtonToolbar} from 'react-bootstrap';
+
 import {DPAgent} from '../lib/Reinforce-js';
 
 import GridWorld from './GridWorldDP/GridWorldEnv.js';
 import Grid from './GridWorldDP/Grid.jsx';
-
 
 class GridWorldDP extends React.Component {
     constructor() {
@@ -69,22 +70,31 @@ class GridWorldDP extends React.Component {
                     />
                     action at {this.state.value}: {action} */}
 
+                <Col className='grid' xs={12} md={7} style={{border: 'red 1px solid', height: '600px'}}>
+                    <Grid agent={this.state.agent}/>
+                </Col>
 
-                <Grid agent={this.state.agent}/>
-                <br/>
-                <button onClick={this.handleClick.bind(this, 'learn')}>Learn</button>
-                <button onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</button>
-                <button onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</button>
-                <button onClick={this.handleClick.bind(this, 'reset')}>Reset</button>
+                <Col xs={12} md={4}>
+                    <ButtonToolbar>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
 
-                <p>Learn: just one evaluatePolicy + one updatePolicy</p>
-                <div>Numbers in each box:
-                    <ul>
-                        <li>top left: reward</li>
-                        <li>top right: state</li>
-                        <li>bottom left: value</li>
-                    </ul>
-                </div>
+                        {/* <button onClick={this.handleClick.bind(this, 'learn')}>Learn</button>
+                            <button onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</button>
+                            <button onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</button>
+                            <button onClick={this.handleClick.bind(this, 'reset')}>Reset</button> */}
+                    </ButtonToolbar>
+                    <p>Learn: just one evaluatePolicy + one updatePolicy</p>
+                    <div>Numbers in each box:
+                        <ul>
+                            <li>top left: reward</li>
+                            <li>top right: state</li>
+                            <li>bottom left: value</li>
+                        </ul>
+                    </div>
+                </Col>
             </div>
         );
     }
