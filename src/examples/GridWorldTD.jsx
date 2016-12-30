@@ -1,10 +1,10 @@
 import React from 'react';
-
-import {DPAgent} from '../lib/Reinforce-js';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
-import GridWorldEnv from './GridWorldDP/GridWorldEnv';
-import Grid from './GridWorldDP/Grid';
+import {TDAgent} from '../lib/Reinforce-js';
+
+import GridWorldEnv from './GridWorldTD/GridWorldEnv';
+import Grid from './GridWorldTD/Grid';
 
 
 class GridWorldTD extends React.Component {
@@ -14,7 +14,7 @@ class GridWorldTD extends React.Component {
         let env = new GridWorldEnv();
 
         // create the agent, yay! Discount factor 0.9
-        let agent = new DPAgent(env, {'gamma':0.9});
+        let agent = new TDAgent(env, {'gamma':0.9});
 
         this.state = {
             agent: agent,
@@ -37,7 +37,7 @@ class GridWorldTD extends React.Component {
          *     this.state.agent.learn();
          * };*/
 
-        if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
+        if (action === 'act') {this.state.agent.act();}
         else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
         else if (action === 'reset') {this.state.agent.reset();}
         else {this.state.agent.learn();}
@@ -55,7 +55,7 @@ class GridWorldTD extends React.Component {
                 <Col xs={12} md={4}>
                     <ButtonToolbar>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</Button>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
                     </ButtonToolbar>
