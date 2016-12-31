@@ -19,7 +19,7 @@ GridWorld.prototype = {
 
         // hardcoding one gridworld for now
         this.numRows = 10;
-        this.numCols = 10;
+        this.numCols = 12;
         // equivalent to number of states
         this.numCells = this.numRows * this.numCols;
 
@@ -81,6 +81,7 @@ GridWorld.prototype = {
             if (action === 1) {nx = x; ny = y - 1;}
             if (action === 2) {nx = x + 1; ny = y;}
             if (action === 3) {nx = x; ny = y + 1;}
+            // console.debug(x, y, nx, ny);
             s1 = this.xytos(nx, ny);
             if (this.cliffArr[s1] === 1) {
                 s1 = s0;

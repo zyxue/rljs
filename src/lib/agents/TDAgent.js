@@ -40,6 +40,9 @@ TDAgent.prototype = {
         this.Z = R.zeros(arraySize);
         this.Pi = R.zeros(arraySize);
         this.V = R.zeros(arraySize);
+
+        this.s0 = this.env.initState();
+        this.a0 = this.chooseAction(this.s0);
     },
 
     resetEpisode: function() {
@@ -90,6 +93,7 @@ TDAgent.prototype = {
         let reward = res.reward;
         let s1 = res.nextState;
         let a1 = this.chooseAction(s1);
+        // console.debug(s0, a0, reward, s1, a1);
 
         let delta = reward + this.gamma * this.getQ(s1, a1) - this.getQ(s0, a0);
         let idx0 = this._getIdx(s0, a0);
@@ -107,19 +111,37 @@ TDAgent.prototype = {
         this.a0 = a1;
     },
 
-    learn: function(r1) {
-        var actionMapping = {
-            0: '←',
-            1: '↑',
-            2: '↓',
-            3: '→'
-        };
-
-        this.s0 = this.env.initState();
-        this.a0 = this.chooseAction(this.s0);
+    learnFromOneEpisode: function(r1) {
         let counter = 0;
         while (! this.env.isTerminal(this.s0)) {
-            console.log(counter, this.s0, this.a0, actionMapping[this.a0]);
+            // console.log(counter, this.s0, this.a0, actionMapping[this.a0]);
+
+            this.act();
+
+            counter += 1;
+            if (counter > 5000) {
+                console.log('taking too long to end one episode: > ' + counter + ' steps.');
+                break;
+            }
+        }
+
+        // equivalent to exit at terminal state
+        this.act();
+
+        console.log('learned from one episode (' + counter + ' steps).');
+    },
+
+    learn: function(r1) {
+        // var actionMapping = {
+        //     0: '←',
+        //     1: '↑',
+        //     2: '↓',
+        //     3: '→'
+        // };
+
+        let counter = 0;
+        while (! this.env.isTerminal(this.s0)) {
+            // console.log(counter, this.s0, this.a0, actionMapping[this.a0]);
 
             this.act();
 
@@ -127,7 +149,11 @@ TDAgent.prototype = {
             if (counter > 1000) break;
         }
 
-        console.log('learning');
+        // reset s0, a0 after one episode
+        this.s0 = this.env.initState();
+        this.a0 = this.chooseAction(this.s0);
+
+        console.log('learned from One episode');
     },
 
     updateModel: function(s0, a0, r0, s1, a1) {
