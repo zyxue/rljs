@@ -5,8 +5,11 @@ import R from '../../lib/Recurrent-js';
 
 
 var GridWorld = function() {
-    this.Rarr = null; // reward array
-    this.T = null; // cell types, 0 = normal, 1 = cliff
+    // reward array
+    this.Rarr = null;
+    // an array to store information about whether a state is a cliff,
+    // 0 = normal, 1 = cliff
+    this.cliffArr = null;
     this.reset();
 };
 
@@ -23,7 +26,7 @@ GridWorld.prototype = {
         // specify some rewards
         let Rarr = R.zeros(this.numCells);
         /* cliffs */
-        let T = R.zeros(this.numCells);
+        let cliffArr = R.zeros(this.numCells);
 
         let plusOneIdx = [55];
         for (let i = 0; i < plusOneIdx.length; i++) {
@@ -38,69 +41,58 @@ GridWorld.prototype = {
         // make some cliffs
         for (let q = 0; q < 8; q++) {
             let off = (q + 1) * this.numRows + 2;
-            T[off] = 1;
+            cliffArr[off] = 1;
             Rarr[off] = 0;
         }
 
         for (let q = 0; q < 6; q++) {
             let off = 4 * this.numRows + q + 2;
-            T[off] = 1;
+            cliffArr[off] = 1;
             Rarr[off] = 0;
         }
 
-        T[5 * this.numRows + 2] = 0;
+        cliffArr[5 * this.numRows + 2] = 0;
         Rarr[5 * this.numRows + 2] = 0; // make a hole
 
         this.Rarr = Rarr;
-        this.T = T;
+        this.cliffArr = cliffArr;
 
     },
 
-    reward: function(s, a, ns) {
+    calcReward: function(s0, action, s1) {
         // reward of being in s, taking action a, and ending up in ns
-        return this.Rarr[s];
+        let reward = this.Rarr[s0];
+        // every non-exit step takes a bit of negative reward
+        if (!this.isTerminal(s0)) reward -= 0.01;
+        return reward;
     },
 
-    nextStateDistribution: function(s, a) {
-        let ns;
-        // given (s,a) return distribution over s' (in sparse form)
-        if (this.T[s] === 1) {
-            // cliff! oh no!
-            // var ns = 0; // reset to state zero (start)
-        } else if (s === 55) {
-            // agent wins! teleport to start
-            ns = this.initState();
-            while (this.T[ns] === 1) {
-                ns = this.randomState();
-            }
+    calcNextState: function(s0, action) {
+        // gridworld is deterministic, so this is easy
+        let s1;
+
+        if (this.isTerminal(s0)) {
+            s1 = this.initState();
         } else {
-            // ordinary space
+            let x = this.stox(s0);
+            let y = this.stoy(s0);
             let nx, ny;
-            let x = this.stox(s);
-            let y = this.stoy(s);
-            if (a === 0) {nx = x - 1; ny = y;}
-            if (a === 1) {nx = x; ny = y - 1;}
-            if (a === 2) {nx = x; ny = y + 1;}
-            if (a === 3) {nx = x + 1; ny = y;}
-            ns = nx * this.numRows + ny;
-            if (this.T[ns] === 1) {
-                // actually never mind, this is a wall. reset the agent
-                ns = s;
+            if (action === 0) {nx = x - 1; ny = y;}
+            if (action === 1) {nx = x; ny = y - 1;}
+            if (action === 2) {nx = x + 1; ny = y;}
+            if (action === 3) {nx = x; ny = y + 1;}
+            s1 = this.xytos(nx, ny);
+            if (this.cliffArr[s1] === 1) {
+                s1 = s0;
             }
         }
-        // gridworld is deterministic, so return only a single next state
-        return ns;
+        return s1;
     },
 
-    gotoNextState: function(s, a) {
-        // gridworld is deterministic, so this is easy
-        let ns = this.nextStateDistribution(s, a);
-        // observe the raw reward of being in s, taking a, and ending up in ns
-        let r = this.Rarr[s];
-        // every step takes a bit of negative reward
-        r -= 0.01;
-
-        return {reward: r, nextState: ns};
+    gotoNextState: function(s0, action) {
+        let s1 = this.calcNextState(s0, action);
+        let reward = this.calcReward(s0, action, s1);
+        return {reward: reward, nextState: s1};
     },
 
     isTerminal: function(state) {
@@ -111,6 +103,13 @@ GridWorld.prototype = {
     },
 
     getAllowedActions: function(s) {
+        // var actionMapping = {
+        //     0: '←',
+        //     1: '↑',
+        //     2: '↓',
+        //     3: '→'
+        // };
+
         let x = this.stox(s);
         let y = this.stoy(s);
         let as = [];
@@ -120,10 +119,10 @@ GridWorld.prototype = {
         if (y > 0) {
             as.push(1);
         }
-        if (y < this.numRows - 1) {
+        if (x < this.numCols - 1) {
             as.push(2);
         }
-        if (x < this.numCols - 1) {
+        if (y < this.numRows - 1) {
             as.push(3);
         }
         return as;
@@ -148,15 +147,15 @@ GridWorld.prototype = {
 
     // private functions
     stox: function(s) {
-        return Math.floor(s / this.numRows);
+        return s % this.numCols;
     },
 
     stoy: function(s) {
-        return s % this.numRows;
+        return Math.floor(s / this.numCols);
     },
 
     xytos: function(x, y) {
-        return x * this.numRows + y;
+        return x + y * this.numCols;
     }
 };
 
