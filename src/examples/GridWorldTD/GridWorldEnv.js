@@ -69,7 +69,7 @@ GridWorld.prototype = {
             // var ns = 0; // reset to state zero (start)
         } else if (s === 55) {
             // agent wins! teleport to start
-            ns = this.startState();
+            ns = this.initState();
             while (this.T[ns] === 1) {
                 ns = this.randomState();
             }
