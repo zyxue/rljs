@@ -17,13 +17,12 @@ class GridWorldTD extends React.Component {
 
         this.state = {
             agent: agent,
-            value: 0,
 
             showQTriangles: true,
             showQVals: false,
             showStateVals: false,
             showStateCoords: false,
-            showRewardVals: false,
+            showRewardVals: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -34,11 +33,6 @@ class GridWorldTD extends React.Component {
         this.toggleStateVals = this.toggleStateVals.bind(this);
         this.toggleStateCoords = this.toggleStateCoords.bind(this);
         this.toggleRewardVals = this.toggleRewardVals.bind(this);
-    }
-
-    handleChange(event) {
-        let newVal = parseInt(event.target.fvalue, 10);
-        if (newVal) this.setState({value: newVal});
     }
 
     toggleQTriangles() {
@@ -61,6 +55,19 @@ class GridWorldTD extends React.Component {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
 
+    handleChange(event) {
+        let newVal = parseInt(event.target.fvalue, 10);
+        if (newVal) this.setState({value: newVal});
+    }
+
+    startActing() {
+        let intervalId = setInterval (() => {
+            this.state.agent.act();
+            this.setState({agent: this.state.agent});
+        }, 10);
+        this.setState({intervalId: intervalId});
+    }
+
     handleClick(action, event) {
         /* console.log(event);
          * console.log(arguments);*/
@@ -71,7 +78,13 @@ class GridWorldTD extends React.Component {
         if (action === 'act') {
             this.state.agent.act();
         } else if (action === 'toggle') {
-            this.state.agent.act();
+            console.log(this.state.intervalId);
+            if (this.state.intervalId) {
+                clearInterval(this.state.intervalId);
+                this.setState({intervalId: undefined});
+            } else {
+                this.startActing();
+            }
         }
         else if (action === 'reset') {this.state.agent.reset();}
         else {
