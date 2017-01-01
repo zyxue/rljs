@@ -4,26 +4,21 @@ import {getopt} from '../utils';
 
 
 
-let TDAgent = function(env, opt) {
+let TDAgent = function(env, gamma=0.75, epsilon=0.1, alpha=0.01, lambda=0, batchSize=100) {
     // store pointer to environment
     this.env = env;
 
     // future reward discount factor
-    this.gamma = getopt(opt, 'gamma', 0.75);
+    this.gamma = gamma;
     // for epsilon-greedy policy
-    this.epsilon = getopt(opt, 'epsilon', 0.1);
+    this.epsilon = epsilon;
     // value function learning rate
-    this.alpha = getopt(opt, 'alpha', 0.01);
+    this.alpha = alpha;
 
     // sarsa(lambda)
-    this.lambda = getopt(opt, 'lambda', 0);
-    this.Q = null;              // state-action value function
-    this.Z = null               // eligibility trace
+    this.lambda = lambda;
 
-    // needed for drawing grid
-    this.Pi = null;             // policy
-    this.V = null;              // state value function
-
+    this.batchSize = batchSize;
     this.reset();
 };
 
@@ -36,17 +31,19 @@ TDAgent.prototype = {
         this.maxNumActions = this.env.getMaxNumActions();
 
         let arraySize = this.numStates * this.maxNumActions;
-        this.Q = R.zeros(arraySize);
-        this.Z = R.zeros(arraySize);
-        this.Pi = R.zeros(arraySize);
-        this.V = R.zeros(arraySize);
+        this.Q = R.zeros(arraySize); // state-action value function
+        this.Z = R.zeros(arraySize); // eligibility trace
+
+        // needed for drawing grid
+        this.Pi = R.zeros(arraySize); // policy
+        this.V = R.zeros(arraySize);  // state value function
 
         this.s0 = this.env.initState();
         this.a0 = this.chooseAction(this.s0);
-    },
 
-    resetEpisode: function() {
-        // an episode finished
+        // for keeping learning progress
+        this.numEpisodesExperienced = 0;
+        this.numStepsPerEpisode = []; // record how number decreases;
     },
 
     _getIdx: function(s, a) {
@@ -111,49 +108,34 @@ TDAgent.prototype = {
         this.a0 = a1;
     },
 
-    learnFromOneEpisode: function(r1) {
-        let counter = 0;
+    learnFromOneEpisode: function() {
+        let numSteps = 0;
         while (! this.env.isTerminal(this.s0)) {
-            // console.log(counter, this.s0, this.a0, actionMapping[this.a0]);
-
             this.act();
 
-            counter += 1;
-            if (counter > 5000) {
-                console.log('taking too long to end one episode: > ' + counter + ' steps.');
+            numSteps += 1;
+            if (numSteps > 5000) {
+                console.error('taking too long to end one episode: > ' + numSteps + ' steps.');
                 break;
             }
         }
 
         // equivalent to exit at terminal state
         this.act();
+        console.log('learned from one episode (' + numSteps + ' steps).');
 
-        console.log('learned from one episode (' + counter + ' steps).');
+        this.numEpisodesExperienced += 1;
+        this.numStepsPerEpisode.push(numSteps);
+    },
+
+    learnFromBatchEpisodes: function() {
+        for (let i = 0; i < this.batchSize; i++) {
+            this.learnFromOneEpisode();
+        }
     },
 
     learn: function(r1) {
-        // var actionMapping = {
-        //     0: '←',
-        //     1: '↑',
-        //     2: '↓',
-        //     3: '→'
-        // };
-
-        let counter = 0;
-        while (! this.env.isTerminal(this.s0)) {
-            // console.log(counter, this.s0, this.a0, actionMapping[this.a0]);
-
-            this.act();
-
-            counter += 1;
-            if (counter > 1000) break;
-        }
-
-        // reset s0, a0 after one episode
-        this.s0 = this.env.initState();
-        this.a0 = this.chooseAction(this.s0);
-
-        console.log('learned from One episode');
+        // learn till it converges
     },
 
     updateModel: function(s0, a0, r0, s1, a1) {

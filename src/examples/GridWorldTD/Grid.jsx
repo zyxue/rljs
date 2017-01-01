@@ -8,7 +8,7 @@ https://github.com/alanbsmith/react-d3-example/blob/master/src/ProgressArc.js */
 function calcRGBColor(val) {
     /* based on the value, calculate the corresponding RGB color */
 
-    let scaler = 500;
+    let scaler = 1000;
     let r, g, b;
     if (val > 0) {
         r = 255 - val * scaler;
@@ -25,6 +25,7 @@ function calcRGBColor(val) {
         b = 255 + val * scaler;
     }
 
+    /* console.debug(r, g, b);*/
     return {red: r, green: g, blue: b};
 }
 
@@ -106,7 +107,7 @@ class Grid extends Component {
         let ymid = (y + 0.5) * height;
         return {xmin:xmin, ymin:ymin,
                 xmid:xmid, ymid:ymid,
-                xmax:xmax, ymax:ymax}
+                xmax:xmax, ymax:ymax};
     }
 
     drawCells(context) {
@@ -289,30 +290,25 @@ class Grid extends Component {
                  .attr('height', height)
                  .attr('width', width)
                  .attr('id', id)
-                 .append('g')
-        /* .attr('transform', `translate(${height / 2}, ${width / 2})`);*/
+                 .append('g');
     }
 
-    setBackground(context) {
-        return context.append('path')
-                      .datum({ endAngle: Math.PI * 2 })
-                      .style('fill', 'green')
-                      .attr('d', this.arc());
-    }
+    /* setBackground(context) {
+     *     return context.append('path')
+     *                   .datum({ endAngle: Math.PI * 2 })
+     *                   .style('fill', 'green')
+     *                   .attr('d', this.arc());
+     * }*/
 
     propTypes: {
         id: PropTypes.string,
         height: PropTypes.number,
-        width: PropTypes.number,
-        /* backgroundColor: PropTypes.string,
-         * foregroundColor: PropTypes.string,
-         * percentComplete: PropTypes.number*/
+        width: PropTypes.number
     }
 
     componentDidMount() {
         this.drawGrid();
     }
-
 
     componentDidUpdate() {
         this.redrawGrid();
@@ -321,7 +317,7 @@ class Grid extends Component {
     render () {
         return (
             <div ref="gridDiv"></div>
-        )        
+        );
     }
 }
 

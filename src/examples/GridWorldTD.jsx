@@ -5,34 +5,26 @@ import {TDAgent} from '../lib/Reinforce-js';
 
 import GridWorldEnv from './GridWorldTD/GridWorldEnv';
 import Grid from './GridWorldTD/Grid';
+import Line from './GridWorldTD/Line';
 
 
 class GridWorldTD extends React.Component {
     constructor() {
         super();
 
-        // create an env, and an agent with discount factor (gamma) as 0.9
+        // create an environment and an agent instance
         let env = new GridWorldEnv();
-        let agent = new TDAgent(env, {'gamma': 0.9});
+        let agent = new TDAgent(env);
 
         this.state = {
             agent: agent,
 
             showQTriangles: true,
-            showQVals: false,
+            showQVals: true,
             showStateVals: false,
             showStateCoords: false,
             showRewardVals: false
         };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-
-        this.toggleQTriangles = this.toggleQTriangles.bind(this);
-        this.toggleQVals = this.toggleQVals.bind(this);
-        this.toggleStateVals = this.toggleStateVals.bind(this);
-        this.toggleStateCoords = this.toggleStateCoords.bind(this);
-        this.toggleRewardVals = this.toggleRewardVals.bind(this);
     }
 
     toggleQTriangles() {
@@ -55,6 +47,11 @@ class GridWorldTD extends React.Component {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
 
+    updateAgentBatchSize(event) {
+        this.state.agent.batchSize = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
     handleChange(event) {
         let newVal = parseInt(event.target.fvalue, 10);
         if (newVal) this.setState({value: newVal});
@@ -69,12 +66,6 @@ class GridWorldTD extends React.Component {
     }
 
     handleClick(action, event) {
-        /* console.log(event);
-         * console.log(arguments);*/
-        /* for (let i=0; i< 100; i++) {
-         *     this.state.agent.learn();
-         * };*/
-
         if (action === 'act') {
             this.state.agent.act();
         } else if (action === 'toggle') {
@@ -85,14 +76,11 @@ class GridWorldTD extends React.Component {
             } else {
                 this.startActing();
             }
+        } else if (action === 'learn') {
+            this.state.agent.learnFromBatchEpisodes();
+        } else if (action === 'reset') {
+            this.state.agent.reset();
         }
-        else if (action === 'reset') {this.state.agent.reset();}
-        else {
-            /* temporary for testing purpose, learn multiple episodes in one click  */
-            for (let i=0; i < 2000; i ++)
-                this.state.agent.learnFromOneEpisode();
-        }
-
         this.setState({agent: this.state.agent});
     }
 
@@ -114,36 +102,54 @@ class GridWorldTD extends React.Component {
                     />
                 </Col>
 
+                <Col className='line' xs={12} md={9} style={{border: 'red 0.5px solid', height: '600px'}}>
+                    <Line
+                        height={300}
+                        width={400}
+                        id="TD-line"
+                        agent={this.state.agent}
+                    />
+                </Col>
+
+
                 <Col xs={12} md={3}>
+                    <ul>
+                        <li>γ = {this.state.agent.gamma}</li>
+                        <li>ε = {this.state.agent.epsilon}</li>
+                        <li>α = {this.state.agent.alpha}</li>
+                        <li>λ = {this.state.agent.lambda}</li>
+                        <li>batch size: <input type="number" value={this.state.agent.batchSize} size="5"
+                                               onChange={this.updateAgentBatchSize.bind(this)} /></li>
+                        <li>batch size: {this.state.agent.batchSize}</li>
+                        <li># Episodes experienced: {this.state.agent.numEpisodesExperienced}</li>
+                    </ul>
+
                     <ButtonToolbar>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggle')}>Toggle</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
                     </ButtonToolbar>
 
-                    <a onClick={this.toggleQTriangles}>Toggle Q Triangles (for clarity)</a>
-                    <br/>
-                    <a onClick={this.toggleQVals}>Toggle Q Values</a>
-                    <br/>
-                    <a onClick={this.toggleStateVals}>Toggle States</a>
-                    <br/>
-                    <a onClick={this.toggleStateCoords}>Toggle State Coordinates</a>
-                    <br/>
-                    <a onClick={this.toggleRewardVals}>Toggle Rewards</a>
+                    <h4>Instruction:</h4>
+                    <ul>
+                        <li>Act: take one action</li>
+                        <li>Toggle: Take actions continously indefinitely</li>
+                        <li>Learn: Learn from {this.state.batchSize} episodes</li>
+                    </ul>
 
-                    <p>Learn: just one evaluatePolicy + one updatePolicy</p>
-                    <div>Numbers in each box:
-                        <ul>
-                            <li>top left: reward</li>
-                            <li>top right: state</li>
-                            <li>bottom left: value</li>
-                        </ul>
-                    </div>
 
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    <h4>Toggle legends:</h4>
+                    <ul>
+                        <li><a className="toggle-button" onClick={this.toggleQTriangles.bind(this)}>Q triangles</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleQVals.bind(this)}>Q values</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleStateVals.bind(this)}>States</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleStateCoords.bind(this)}>State coordinates</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleRewardVals.bind(this)}>Rewards</a></li>
+                    </ul>
 
-                        </p>
+                    <p>Try hit learn button if you don't see much going on.</p>
+                    <p>Currently, only standard SARSA(λ) is implemented. Colors of each Q triangle reflect its learn values.</p>
                 </Col>
             </div>
         );
