@@ -27,18 +27,29 @@ class Line extends Component {
 
         // Define the axes
         var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(4);
-        var yAxis = d3.svg.axis().scale(y).orient("left").ticks(10);
+        var yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
 
         // Add the X Axis
         context.append('g')
                .attr('class', 'x axis')
+               .style("font-size", "12px")
                .attr('transform', 'translate(0,' + height + ')')
                .call(xAxis);
 
         // Add the Y Axis
         context.append('g')
                .attr('class', 'y axis')
+               .style("font-size", "10px")
                .call(yAxis);
+
+        // Add a title
+        context.append('text')
+               .attr("x", (width / 2))
+               .attr("y", 0 - (this.margin.top / 2))
+               .attr("text-anchor", "middle")
+               .style("font-size", "16px")
+               .style("text-decoration", "underline")
+               .text("# steps/episode");
     }
 
     redrawLine() {
@@ -57,7 +68,7 @@ class Line extends Component {
         const {height, width, id} = this.props;
         /* for simplicity to make margin on all sides the same, and 1/3 of the
         length on each dimension is used as margin to show axis ticks */
-        let margin = height * 1 / 3;
+        let margin = this.margin = height * 1 / 3;
         return d3.select(this.refs.lineDiv).append('svg')
                  .attr('height', height + margin)
                  .attr('width', width + margin)

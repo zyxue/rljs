@@ -87,10 +87,10 @@ class GridWorldTD extends React.Component {
     render() {
         return (
             <div className="GridWorldTD">
-                <Col className='grid' xs={12} md={9} style={{border: 'red 0.5px solid', height: '600px'}}>
+                <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
                     <Grid
                         height={600}
-                        width={800}
+                        width={700}
                         id="TD-grid"
                         agent={this.state.agent}
 
@@ -102,17 +102,14 @@ class GridWorldTD extends React.Component {
                     />
                 </Col>
 
-                <Col className='line' xs={12} md={9} style={{border: 'red 0.5px solid', height: '600px'}}>
+                <Col xs={12} md={4}>
                     <Line
-                        height={300}
-                        width={400}
+                        height={150}
+                        width={200}
                         id="TD-line"
                         agent={this.state.agent}
                     />
-                </Col>
 
-
-                <Col xs={12} md={3}>
                     <ul>
                         <li>γ = {this.state.agent.gamma}</li>
                         <li>ε = {this.state.agent.epsilon}</li>
@@ -120,7 +117,6 @@ class GridWorldTD extends React.Component {
                         <li>λ = {this.state.agent.lambda}</li>
                         <li>batch size: <input type="number" value={this.state.agent.batchSize} size="5"
                                                onChange={this.updateAgentBatchSize.bind(this)} /></li>
-                        <li>batch size: {this.state.agent.batchSize}</li>
                         <li># Episodes experienced: {this.state.agent.numEpisodesExperienced}</li>
                     </ul>
 
