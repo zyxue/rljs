@@ -18,6 +18,9 @@ class GridWorldTD extends React.Component {
 
         this.state = {
             agent: agent,
+            /* the interval between consecutive actions taken by action in
+            number of microseconds*/
+            actingRate: 1,
 
             showQTriangles: true,
             showQVals: true,
@@ -72,25 +75,50 @@ class GridWorldTD extends React.Component {
         this.setState({agent: this.state.agent});
     }
 
-    startActing() {
+    updateActingRate(event) {
+        let newActingRate = event.target.value;
+        this.setState({actingRate: newActingRate});
+
+        this.stopConsecutiveActions();
+        this.startConsecutiveActions(newActingRate);
+    }
+
+    startConsecutiveActions(actingRate) {
+        let ar = actingRate === undefined? this.state.actingRate: actingRate;
+        console.debug(ar);
         let intervalId = setInterval (() => {
             this.state.agent.act();
             this.setState({agent: this.state.agent});
-        }, 10);
+        }, ar);
         this.setState({intervalId: intervalId});
+    }
+
+    stopConsecutiveActions() {
+        if (this.inConsecutiveActions()) {
+            clearInterval(this.state.intervalId);
+            this.setState({intervalId: undefined});
+        }
+    }
+
+    inConsecutiveActions() {
+        /* check if consecutive action mode is on */
+        return this.state.intervalId === undefined? false : true;
+    }
+
+    toggleConsecutiveActions() {
+        /* console.debug(this.state.intervalId);*/
+        if (this.inConsecutiveActions()) {
+            this.stopConsecutiveActions();
+        } else {
+            this.startConsecutiveActions();
+        }
     }
 
     handleClick(action, event) {
         if (action === 'act') {
             this.state.agent.act();
         } else if (action === 'toggle') {
-            /* console.debug(this.state.intervalId);*/
-            if (this.state.intervalId) {
-                clearInterval(this.state.intervalId);
-                this.setState({intervalId: undefined});
-            } else {
-                this.startActing();
-            }
+            this.toggleConsecutiveActions();
         } else if (action === 'learn') {
             this.state.agent.learnFromBatchEpisodes();
         } else if (action === 'reset') {
@@ -107,7 +135,7 @@ class GridWorldTD extends React.Component {
                     <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
                     <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
                     <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; &nbsp;
-                    <span># Ep. = </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
+                    <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
                 </p>
 
                 <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
@@ -162,12 +190,16 @@ class GridWorldTD extends React.Component {
 
                         <Col md={5}>batch size = </Col>
                         <Col md={7}>
-                            <input type="number" value={this.state.agent.batchSize} size="5"
+                            <input type="text" value={this.state.agent.batchSize} size="10"
                             onChange={this.updateAgentBatchSize.bind(this)} />
                         </Col>
-                        <Col md={12}>
-                            # Episodes experienced: {this.state.agent.numEpisodesExperienced}
+
+                        <Col md={5}>acting rate: =</Col>
+                        <Col md={7}>
+                            <input type="text" value={this.state.actingRate} size="10"
+                                   onChange={this.updateActingRate.bind(this)} />
                         </Col>
+
                     </div>
 
 
