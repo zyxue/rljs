@@ -23,6 +23,9 @@ GridWorld.prototype = {
         // equivalent to number of states
         this.numCells = this.numRows * this.numCols;
 
+        this.startState = 0;
+        this.goalState = 55;
+
         // specify some rewards
         let Rarr = R.zeros(this.numCells);
         /* cliffs */
@@ -97,10 +100,7 @@ GridWorld.prototype = {
     },
 
     isTerminal: function(state) {
-        if (state === 55) {
-            // episode is over
-            return true;
-        }
+        return state === this.goalState ? true : false;
     },
 
     getAllowedActions: function(s) {
