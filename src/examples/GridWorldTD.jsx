@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Form, FormGroup, ControlLabel, FormControl, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 import {TDAgent} from '../lib/Reinforce-js';
 
@@ -47,6 +47,26 @@ class GridWorldTD extends React.Component {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
 
+    updateAgentGamma(event) {
+        this.state.agent.gamma = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
+    updateAgentEpsilon(event) {
+        this.state.agent.epsilon = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
+    updateAgentAlpha(event) {
+        this.state.agent.alpha = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
+    updateAgentLambda(event) {
+        this.state.agent.lambda = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
     updateAgentBatchSize(event) {
         this.state.agent.batchSize = event.target.value;
         this.setState({agent: this.state.agent});
@@ -82,6 +102,14 @@ class GridWorldTD extends React.Component {
     render() {
         return (
             <div className="GridWorldTD">
+                <p> <strong>Agent status: </strong>
+                    <span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; &nbsp;
+                    <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
+                    <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
+                    <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; &nbsp;
+                    <span># Ep. = </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
+                </p>
+
                 <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
                     <Grid
                         height={600}
@@ -98,22 +126,50 @@ class GridWorldTD extends React.Component {
                 </Col>
 
                 <Col xs={12} md={4}>
-                    <Line
-                        height={150}
-                        width={200}
-                        id="TD-line"
-                        agent={this.state.agent}
-                    />
+                    <div className="row">
+                        <Line
+                            height={150}
+                            width={200}
+                            id="TD-line"
+                            agent={this.state.agent}
+                        />
+                    </div>
 
-                    <ul>
-                        <li>γ = {this.state.agent.gamma}</li>
-                        <li>ε = {this.state.agent.epsilon}</li>
-                        <li>α = {this.state.agent.alpha}</li>
-                        <li>λ = {this.state.agent.lambda}</li>
-                        <li>batch size: <input type="number" value={this.state.agent.batchSize} size="5"
-                                               onChange={this.updateAgentBatchSize.bind(this)} /></li>
-                        <li># Episodes experienced: {this.state.agent.numEpisodesExperienced}</li>
-                    </ul>
+                    <div className="row">
+                        <Col md={2}>γ =</Col>
+                        <Col md={4}>
+                            <input type="text" value={this.state.agent.gamma} size="10"
+                                   onChange={this.updateAgentGamma.bind(this)} />
+                        </Col>
+
+                        <Col md={2}>ε =</Col>
+                        <Col md={4}>
+                            <input type="text" value={this.state.agent.epsilon} size="10"
+                                   onChange={this.updateAgentEpsilon.bind(this)} />
+                        </Col>
+
+                        <Col md={2}>α =</Col>
+                        <Col md={4}>
+                            <input type="text" value={this.state.agent.alpha} size="10"
+                                   onChange={this.updateAgentEpsilon.bind(this)} />
+                        </Col>
+
+                        <Col md={2}>λ =</Col>
+                        <Col md={4}>
+                            <input type="text" value={this.state.agent.lambda} size="10"
+                                   onChange={this.updateAgentLambda.bind(this)} />
+                        </Col>
+
+                        <Col md={5}>batch size = </Col>
+                        <Col md={7}>
+                            <input type="number" value={this.state.agent.batchSize} size="5"
+                            onChange={this.updateAgentBatchSize.bind(this)} />
+                        </Col>
+                        <Col md={12}>
+                            # Episodes experienced: {this.state.agent.numEpisodesExperienced}
+                        </Col>
+                    </div>
+
 
                     <ButtonToolbar>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
