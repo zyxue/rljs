@@ -4,7 +4,7 @@ import {getopt} from '../utils';
 
 
 
-let TDAgent = function(env, gamma=0.75, epsilon=0.1, alpha=0.01, lambda=0, batchSize=100) {
+let TDAgent = function(env, gamma=0.95, epsilon=0.1, alpha=0.01, lambda=0.3, batchSize=200) {
     // store pointer to environment
     this.env = env;
 
@@ -38,12 +38,11 @@ TDAgent.prototype = {
         this.Pi = R.zeros(arraySize); // policy
         this.V = R.zeros(arraySize);  // state value function
 
-        this.s0 = this.env.initState();
-        this.a0 = this.chooseAction(this.s0);
-
         // for keeping learning progress
         this.numEpisodesExperienced = 0;
         this.numStepsPerEpisode = []; // record how number decreases;
+
+        this.resetEpisode();
     },
 
     _getIdx: function(s, a) {
@@ -79,6 +78,13 @@ TDAgent.prototype = {
         return action;
     },
 
+    resetEpisode() {
+        // reset epsiode level variables
+        this.numStepsCurrentEpisode = 0;
+        this.s0 = this.env.initState();
+        this.a0 = this.chooseAction(this.s0);
+    },
+
     act: function() {
         // implement the "repeat (for each step of episode)" part of Figure
         // 7.11: Tabular Sarsa(λ)
@@ -90,6 +96,8 @@ TDAgent.prototype = {
         let reward = res.reward;
         let s1 = res.nextState;
         let a1 = this.chooseAction(s1);
+
+        this.numStepsCurrentEpisode += 1;
         // console.debug(s0, a0, reward, s1, a1);
 
         let delta = reward + this.gamma * this.getQ(s1, a1) - this.getQ(s0, a0);
@@ -104,28 +112,30 @@ TDAgent.prototype = {
             }
         }
 
-        this.s0 = s1;
-        this.a0 = a1;
+        if (this.env.isTerminal(this.s0)) {
+            this.numEpisodesExperienced += 1;
+            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+            this.resetEpisode();
+        } else {
+            this.s0 = s1;
+            this.a0 = a1;
+        }
     },
 
     learnFromOneEpisode: function() {
-        let numSteps = 0;
+        this.resetEpisode();
         while (! this.env.isTerminal(this.s0)) {
             this.act();
 
-            numSteps += 1;
-            if (numSteps > 5000) {
-                console.error('taking too long to end one episode: > ' + numSteps + ' steps.');
+            if (this.numStepsCurrentEpisode > 5000) {
+                console.error('taking too long to end one episode: > ' +
+                              this.numStepsCurrentEpisode + ' steps.');
                 break;
             }
         }
 
         // equivalent to exit at terminal state
         this.act();
-        // console.log('learned from one episode (' + numSteps + ' steps).');
-
-        this.numEpisodesExperienced += 1;
-        this.numStepsPerEpisode.push(numSteps);
     },
 
     learnFromBatchEpisodes: function() {
