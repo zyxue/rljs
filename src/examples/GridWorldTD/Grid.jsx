@@ -39,15 +39,17 @@ function genRGBColorString(val) {
 }
 
 
-function drawRect(grp, x, y, height, width, fillColor='white', strokeWidth=1) {
+function drawRect(grp, x, y, height, width,
+                  fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1) {
     grp.append('rect')
        .attr('x', x)
        .attr('y', y)
        .attr('height', height)
        .attr('width', width)
        .attr('fill', fillColor)
-       .attr('stroke', 'black')
-       .attr('stroke-width', strokeWidth);
+       .attr('stroke', strokeColor)
+       .attr('stroke-width', strokeWidth)
+       .attr('fill-opacity', fillOpacity);
 }
 
 
@@ -78,7 +80,6 @@ function genPointsStr(action, coords) {
     }
    return str;
 }
-
 
 
 /* draws the grid based on agent.env, agent.V and agent.P */
@@ -141,9 +142,20 @@ class Grid extends Component {
                     grp, env, Q, agent.maxNumActions, cellHeight, cellWidth,
                     ci, ri, coords,
                     showQTriangles, showQVals,
-                    showStateVals, showStateCoords, showRewardVals)
+                    showStateVals, showStateCoords, showRewardVals);
             }
         }
+
+        /* height goalstate */
+        this.highlightGoalState(context, env, cellHeight, cellWidth);
+    }
+
+    highlightGoalState(context, env, cellHeight, cellWidth) {
+        let x = env.stox(env.goalState);
+        let y = env.stoy(env.goalState);
+        let coords = this.calcCoords(x, y, cellHeight, cellWidth);
+        drawRect(context, coords.xmin, coords.ymin, cellHeight, cellWidth,
+                 undefined, 0, "green", 4);
     }
 
     drawOneCell(cellContext, env, Q, maxNumActions, cellHeight, cellWidth,
@@ -171,7 +183,6 @@ class Grid extends Component {
            per step penalty */
         if (showRewardVals) this.writeReward(cellContext, env.Rarr[currState], coords);
     }
-
 
     drawQTriangle(cellContext, action, qval, coords) {
         let color = genRGBColorString(qval);

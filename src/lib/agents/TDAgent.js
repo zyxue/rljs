@@ -122,7 +122,7 @@ TDAgent.prototype = {
 
         // equivalent to exit at terminal state
         this.act();
-        console.log('learned from one episode (' + numSteps + ' steps).');
+        // console.log('learned from one episode (' + numSteps + ' steps).');
 
         this.numEpisodesExperienced += 1;
         this.numStepsPerEpisode.push(numSteps);
