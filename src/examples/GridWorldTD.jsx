@@ -157,7 +157,7 @@ class GridWorldTD extends React.Component {
                     <div className="row">
                         <Line
                             height={150}
-                            width={200}
+                            width={300}
                             id="TD-line"
                             agent={this.state.agent}
                         />

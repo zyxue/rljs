@@ -68,7 +68,7 @@ class Line extends Component {
         const {height, width, id} = this.props;
         /* for simplicity to make margin on all sides the same, and 1/3 of the
         length on each dimension is used as margin to show axis ticks */
-        let margin = this.margin = height * 1 / 3;
+        let margin = this.margin = height * 1 / 2;
         return d3.select(this.refs.lineDiv).append('svg')
                  .attr('height', height + margin)
                  .attr('width', width + margin)
