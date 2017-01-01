@@ -52,11 +52,6 @@ class GridWorldTD extends React.Component {
         this.setState({agent: this.state.agent});
     }
 
-    handleChange(event) {
-        let newVal = parseInt(event.target.fvalue, 10);
-        if (newVal) this.setState({value: newVal});
-    }
-
     startActing() {
         let intervalId = setInterval (() => {
             this.state.agent.act();
@@ -69,7 +64,7 @@ class GridWorldTD extends React.Component {
         if (action === 'act') {
             this.state.agent.act();
         } else if (action === 'toggle') {
-            console.log(this.state.intervalId);
+            /* console.debug(this.state.intervalId);*/
             if (this.state.intervalId) {
                 clearInterval(this.state.intervalId);
                 this.setState({intervalId: undefined});
