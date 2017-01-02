@@ -9,9 +9,7 @@ class Line extends Component {
     drawLine() {
         const context = this.setContext();
 
-        const {height, width, agent} = this.props;
-
-        let data = agent.numStepsPerEpisode;
+        const {height, width, agent, data, title} = this.props;
 
         /* http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5 */
         var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
@@ -49,7 +47,7 @@ class Line extends Component {
                .attr("text-anchor", "middle")
                .style("font-size", "16px")
         /* .style("text-decoration", "underline")*/
-               .text("# steps/episode");
+               .text(title);
     }
 
     redrawLine() {

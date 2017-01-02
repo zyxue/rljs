@@ -166,10 +166,22 @@ class GridWorldTD extends React.Component {
                         <Line
                             height={150}
                             width={300}
-                            id="TD-line"
-                            agent={this.state.agent}
+                            id={'TD-num-steps-per-episode'}
+                            data={this.state.agent.numStepsPerEpisode}
+                            title={'# steps/episode'}
                         />
                     </div>
+
+                    <div className="row">
+                        <Line
+                            height={150}
+                            width={300}
+                            id={'TD-etrace'}
+                            data={this.state.agent.Z}
+                            title={'eligibility trace'}
+                        />
+                    </div>
+
 
                     <div className="row">
                         <Col md={2}>γ =</Col>
