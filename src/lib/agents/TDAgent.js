@@ -54,12 +54,14 @@ TDAgent.prototype = {
         return this.Q[idx];
     },
 
-    takeRandomAction: function(actions) {
+    takeRandomAction: function(state) {
+        let actions = this.env.getAllowedActions(state);
         let randomInt = R.randi(0, actions.length);
         return actions[randomInt];
     },
 
-    takeGreedyAction: function(state, actions) {
+    takeGreedyAction: function(state) {
+        let actions = this.env.getAllowedActions(state);
         let actn = actions[0];
         let qVal = this.Q[this._getIdx(state, actn)];
         for (let i=1; i < actions.length; i++) {
@@ -74,12 +76,10 @@ TDAgent.prototype = {
     },
 
     chooseAction: function(state) {
-        let allowedActions = this.env.getAllowedActions(state);
-
         if (Math.random() < this.epsilon) {
-            return this.takeRandomAction(allowedActions);
+            return this.takeRandomAction(state);
         } else {
-            return this.takeGreedyAction(state, allowedActions);
+            return this.takeGreedyAction(state);
         }
     },
 
@@ -90,7 +90,7 @@ TDAgent.prototype = {
         this.a0 = this.chooseAction(this.s0);
     },
 
-    act: function() {
+    sarsaAct: function() {
         // implement the "repeat (for each step of episode)" part of Figure
         // 7.11: Tabular Sarsa(λ)
 
@@ -125,6 +125,55 @@ TDAgent.prototype = {
             this.s0 = s1;
             this.a0 = a1;
         }
+    },
+
+    qLearningAct: function() {
+        // implement the "repeat (for each step of episode)" part of Figure
+        // 7.11: Tabular Sarsa(λ)
+
+        let s0 = this.s0;
+        let a0 = this.a0;
+
+        let res = this.env.gotoNextState(s0, a0);
+        let reward = res.reward;
+        let s1 = res.nextState;
+        let a1 = this.chooseAction(s1);
+
+        this.numStepsCurrentEpisode += 1;
+        // console.debug(s0, a0, reward, s1, a1);
+
+        let a_star = this.takeGreedyAction(s1)
+        let delta = reward + this.gamma * this.getQ(s1, a_star) - this.getQ(s0, a0);
+
+        let idx0 = this._getIdx(s0, a0);
+        this.Z[idx0] = this.Z[idx0] + 1;
+
+        for (let si=0; si < this.numStates; si++) {
+            for (let aj=0; aj < this.maxNumActions; aj++) {
+                let idx = this._getIdx(si, aj);
+                this.Q[idx] = this.Q[idx] + this.alpha * delta * this.Z[idx];
+                if (a1 === a_star) {
+                    this.Z[idx] = this.gamma * this.lambda * this.Z[idx];
+                } else {
+                    this.Z[idx] = 0;
+                }
+            }
+        }
+
+        if (this.env.isTerminal(this.s0)) {
+            this.numEpisodesExperienced += 1;
+            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+            this.resetEpisode();
+        } else {
+            this.s0 = s1;
+            this.a0 = a1;
+        }
+    },
+
+    act: function() {
+        // this.sarsaAct();
+        this.qLearningAct();
+        // console.log(this.Z);
     },
 
     learnFromOneEpisode: function() {
