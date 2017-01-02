@@ -54,31 +54,36 @@ TDAgent.prototype = {
         return this.Q[idx];
     },
 
+    takeRandomAction: function(actions) {
+        let randomInt = R.randi(0, actions.length);
+        return actions[randomInt];
+    },
+
+    takeGreedyAction: function(state, actions) {
+        let actn = actions[0];
+        let qVal = this.Q[this._getIdx(state, actn)];
+        for (let i=1; i < actions.length; i++) {
+            let currAction = actions[i];
+            let _qVal = this.Q[this._getIdx(state, currAction)];
+            if (_qVal > qVal) {
+                qVal = _qVal;
+                actn = currAction;
+            }
+        }
+        return actn;
+    },
+
     chooseAction: function(state) {
         let allowedActions = this.env.getAllowedActions(state);
 
-        let action;
         if (Math.random() < this.epsilon) {
-            // take a random action
-            let randomInt = R.randi(0, allowedActions.length);
-            action = allowedActions[randomInt];
+            return this.takeRandomAction(allowedActions);
         } else {
-            let greedyAction = allowedActions[0];
-            let qVal = this.Q[this._getIdx(state, greedyAction)];
-            for (let i=1; i < allowedActions.length; i++) {
-                let currAction = allowedActions[i];
-                let _qVal = this.Q[this._getIdx(state, currAction)];
-                if (_qVal > qVal) {
-                    qVal = _qVal;
-                    greedyAction = currAction;
-                }
-            }
-            action = greedyAction;
+            return this.takeGreedyAction(state, allowedActions);
         }
-        return action;
     },
 
-    resetEpisode() {
+    resetEpisode: function() {
         // reset epsiode level variables
         this.numStepsCurrentEpisode = 0;
         this.s0 = this.env.initState();
