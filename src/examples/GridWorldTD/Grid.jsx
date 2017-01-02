@@ -166,12 +166,48 @@ class Grid extends Component {
         
         if (showQTriangles) {
             let allowedActions = env.getAllowedActions(currState);
+
+            let greedyAction = null;
+            let greedyQVal = null;
             for(let i=0; i < allowedActions.length; i++) {
                 let currAction = allowedActions[i];
-                let qval = Q[currState * maxNumActions + currAction];
+                let qVal = Q[currState * maxNumActions + currAction];
 
-                this.drawQTriangle(cellContext, currAction, qval, coords);
-                if (showQVals) this.writeQ(cellContext, currAction, qval, coords);
+                let needUpdate = false;
+                if (greedyAction === null) {
+                    needUpdate = true;
+                } else {
+                    if (qVal  > greedyQVal) {
+                        needUpdate = true;
+                    }
+                }
+
+                if (needUpdate) {
+                    greedyAction = currAction;
+                    greedyQVal = qVal;
+                }
+
+                this.drawQTriangle(cellContext, currAction, qVal, coords);
+                if (showQVals) this.writeQ(cellContext, currAction, qVal, coords);
+            }
+
+            /* draw arrow for greedy action */
+            if (greedyQVal !== 0) {
+                let nx, ny;
+                let scaler = 4;
+                if (greedyAction === 0) {nx = - cellWidth / scaler; ny = 0;}
+                if (greedyAction === 1) {nx = 0; ny = - cellHeight / scaler;}
+                if (greedyAction === 2) {nx = cellWidth / scaler; ny = 0;}
+                if (greedyAction === 3) {nx = 0; ny = cellHeight / scaler;}
+
+                let pa = cellContext.append('line')
+                                    .attr('x1', coords.xmid)
+                                    .attr('y1', coords.ymid)
+                                    .attr('x2', coords.xmid + nx)
+                                    .attr('y2', coords.ymid + ny)
+                                    .attr('stroke', 'black')
+                                    .attr('stroke-width', 1.5)
+                                    .attr("marker-end", "url(#arrowhead)");
             }
         } else {
             drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
@@ -297,11 +333,23 @@ class Grid extends Component {
 
     setContext() {
         const {height, width, id} = this.props;
-        return d3.select(this.refs.gridDiv).append('svg')
-                 .attr('height', height)
-                 .attr('width', width)
-                 .attr('id', id)
-                 .append('g');
+        let context = d3.select(this.refs.gridDiv).append('svg')
+                        .attr('height', height)
+                        .attr('width', width)
+                        .attr('id', id)
+                        .append('g');
+
+        context.append("defs")
+               .append("marker")
+               .attr("id", "arrowhead")
+               .attr("refX", 3)
+               .attr("refY", 2)
+               .attr("markerWidth", 3)
+               .attr("markerHeight", 4)
+               .attr("orient", "auto")
+               .append("path")
+               .attr("d", "M 0,0 V 4 L3,2 Z");
+        return context;
     }
 
     /* setBackground(context) {

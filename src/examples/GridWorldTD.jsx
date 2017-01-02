@@ -151,7 +151,15 @@ class GridWorldTD extends React.Component {
                         showStateCoords={this.state.showStateCoords}
                         showRewardVals={this.state.showRewardVals}
                     />
+
+                <ul>
+                    <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
+                    <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
+                </ul>
+
                 </Col>
+
+
 
                 <Col xs={12} md={4}>
                     <div className="row">
@@ -216,7 +224,6 @@ class GridWorldTD extends React.Component {
                         <li>Toggle: Take actions continously indefinitely</li>
                         <li>Learn: Learn from {this.state.batchSize} episodes</li>
                     </ul>
-
 
                     <h4>Toggle legends:</h4>
                     <ul>
