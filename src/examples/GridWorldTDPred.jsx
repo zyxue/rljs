@@ -165,6 +165,7 @@ class GridWorldTD extends React.Component {
                         width={700}
                         id="TD-grid"
                         agent={this.state.agent}
+                        env={this.state.env}
 
                         showQTriangles={this.state.showQTriangles}
                         showQVals={this.state.showQVals}
