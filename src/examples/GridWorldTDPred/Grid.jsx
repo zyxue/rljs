@@ -179,7 +179,7 @@ class Grid extends Component {
         drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth,
                  {fillColor: genRGBColorString(st.V)});
 
-        if (showLegend.stateValue) console.log('NOT implemented yet');
+        if (showLegend.stateValue) this.writeStateValue(cellContext, st.V, coords);
         if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
         if (showLegend.stateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
         if (showLegend.reward) this.writeReward(cellContext, st.reward, coords);
@@ -233,6 +233,17 @@ class Grid extends Component {
                .attr("dominant-baseline", "text-after-edge")
                .text(qval.toFixed(1));
         }
+    }
+
+    writeStateValue(cellContext, val, coords) {
+        cellContext.append('text')
+                   .attr('x', coords.xmid)
+                   .attr('y', coords.ymid)
+                   .attr("text-anchor", "middle")
+                   .attr("dominant-baseline", "middle")
+                   .attr('font-size', 10)
+                   .attr('fill', 'blue')
+                   .text(val.toFixed(2));
     }
 
     writeStateId(cellContext, id, coords) {
