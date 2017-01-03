@@ -153,8 +153,8 @@ class Grid extends Component {
             let grp = context.append('g');
 
             if (st.isCliff) {
-                console.debug('Cliff!');
                 drawRect(grp, coords.xmin, coords.ymin, cellHeight, cellWidth, {fillColor: "#AAA"});
+                if (showLegend.stateId) that.writeStateId(grp, st.id, coords);
             } else {
                 that.drawOneCell(grp, st, coords, showLegend);
             }
