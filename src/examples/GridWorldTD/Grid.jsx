@@ -82,6 +82,38 @@ function genPointsStr(action, coords) {
 }
 
 
+function genPointsStrForAgentAction(action, coords) {
+    let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
+
+    // scaler
+    let S = 5 / 6
+    let str;
+    if (action === 0) {
+        str = (xmid - xmin) * (1 - S) + xmin + ',' + ymid + ' ' +
+              xmid + ',' + (ymax + ymid) / 2 + ' ' +
+              xmid + ',' + (ymin + ymid) / 2;
+
+    } else if (action === 1) {
+        str = xmid + ',' + ((ymid - ymin) * (1 - S) + ymin) + ' ' +
+              (xmin + xmid) / 2 + ',' + ymid + ' ' +
+              (xmax + xmid) / 2 + ',' + ymid;
+
+    } else if (action === 2) {
+        str = (xmax - xmid) * S + xmid  + ',' + ymid + ' ' +
+              xmid + ',' + (ymax + ymid) / 2 + ' ' +
+              xmid + ',' + (ymin + ymid) / 2;
+
+    } else if (action === 3) {
+        str = xmid + ',' + ((ymax - ymid) * S + ymid) + ' ' +
+              (xmin + xmid) / 2 + ',' + ymid + ' ' +
+              (xmax + xmid) / 2 + ',' + ymid;
+    }
+   return str;
+}
+
+
+
+
 /* draws the grid based on agent.env, agent.V and agent.P */
 
 class Grid extends Component {
@@ -320,14 +352,26 @@ class Grid extends Component {
         let x = agent.env.stox(agent.s0);
         let y = agent.env.stoy(agent.s0);
         let coords = this.calcCoords(x, y, cellHeight, cellWidth);
+        this.drawAgentAction(context, agent.a0, coords, {color: 'blue'});
         context.append('circle')
                .attr('cx', coords.xmid)
                .attr('cy', coords.ymid)
                .attr('r', 15)
                .attr('fill', '#FF0')
-               .attr('fill-opacity', 0.5)
+               .attr('fill-opacity', 1)
                .attr('stroke', '#000')
                .attr('id', 'cpos');
+    }
+
+    drawAgentAction(cellContext, action, coords) {
+        let pointsStr = genPointsStrForAgentAction(action, coords);
+        /* console.debug(pointsStr);*/
+        cellContext.append('polygon')
+                   .attr('points', pointsStr)
+                   .attr('fill', 'blue')
+                   .attr('fill-opacity', 1)
+                   .attr('stroke', 'black')
+                   .attr('stroke-width', 0.5);
     }
 
     setContext() {
