@@ -112,8 +112,6 @@ function genPointsStrForAgentAction(action, coords) {
 }
 
 
-
-
 /* draws the grid based on agent.env, agent.V and agent.P */
 
 class Grid extends Component {
@@ -164,7 +162,12 @@ class Grid extends Component {
             if (st.isCliff) drawRect(grp, coords.xmin, coords.ymin,
                                      cellHeight, cellWidth, "#AAA");
 
-            
+            that.drawOneCell(grp, st, coords);
+            /* grp, env, Q, agent.maxNumActions, cellHeight, cellWidth,
+             * ci, ri, coords,
+             * showQTriangles, showQVals,
+             * showStateVals, showStateCoords, showRewardVals);*/
+
         }) 
 
 
@@ -205,67 +208,92 @@ class Grid extends Component {
                  undefined, 0, "green", 4);
     }
 
-    drawOneCell(cellContext, env, Q, maxNumActions, cellHeight, cellWidth,
-                ci, ri, coords,
-                showQTriangles, showQVals,
-                showStateVals, showStateCoords, showRewardVals) {
-        let currState = env.xytos(ci, ri);
+
+
+    drawOneCell(cellContext, st, coords) {
         
-        if (showQTriangles) {
-            let allowedActions = env.getAllowedActions(currState);
+        /* 
+         * Q, maxNumActions, cellHeight, cellWidth,
+         *                 ci, ri, coords,
+         *                 showQTriangles, showQVals,
+         *                 showStateVals, showStateCoords, showRewardVals) {
+         *         let currState = env.xytos(ci, ri);*/
+        
+        let cellHeight = coords.ymax - coords.ymin;
+        let cellWidth = coords.xmax - coords.xmin;
+        drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
 
-            let greedyAction = null;
-            let greedyQVal = null;
-            for(let i=0; i < allowedActions.length; i++) {
-                let currAction = allowedActions[i];
-                let qVal = Q[currState * maxNumActions + currAction];
 
-                let needUpdate = false;
-                if (greedyAction === null) {
-                    needUpdate = true;
-                } else {
-                    if (qVal  > greedyQVal) {
-                        needUpdate = true;
-                    }
-                }
-
-                if (needUpdate) {
-                    greedyAction = currAction;
-                    greedyQVal = qVal;
-                }
-
-                this.drawQTriangle(cellContext, currAction, coords, {qVal: qVal});
-                if (showQVals) this.writeQ(cellContext, currAction, qVal, coords);
-            }
-
-            /* draw arrow for greedy action */
-            if (greedyQVal !== 0) {
-                let nx, ny;
-                let scaler = 4;
-                if (greedyAction === 0) {nx = - cellWidth / scaler; ny = 0;}
-                if (greedyAction === 1) {nx = 0; ny = - cellHeight / scaler;}
-                if (greedyAction === 2) {nx = cellWidth / scaler; ny = 0;}
-                if (greedyAction === 3) {nx = 0; ny = cellHeight / scaler;}
-
-                let pa = cellContext.append('line')
-                                    .attr('x1', coords.xmid)
-                                    .attr('y1', coords.ymid)
-                                    .attr('x2', coords.xmid + nx)
-                                    .attr('y2', coords.ymid + ny)
-                                    .attr('stroke', 'black')
-                                    .attr('stroke-width', 1.5)
-                                    .attr("marker-end", "url(#arrowhead)");
-            }
-        } else {
-            drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
-        }
-
-        if (showStateVals) this.writeState(cellContext, currState, coords);
-        if (showStateCoords) this.writeStateCoord(cellContext, ci, ri, coords);
-        /* this just show the reward of entering a given state without
-           per step penalty */
-        if (showRewardVals) this.writeReward(cellContext, env.Rarr[currState], coords);
+        /* if (showStateVals) this.writeState(cellContext, st.id, coords);
+         * if (showStateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
+         * // this just show the reward of entering a given state without
+         * // per step penalty
+         * if (showRewardVals) this.writeReward(cellContext, st.reward, coords);*/
     }
+
+
+
+    /* drawOneCell(cellContext, env, Q, maxNumActions, cellHeight, cellWidth,
+     *             ci, ri, coords,
+     *             showQTriangles, showQVals,
+     *             showStateVals, showStateCoords, showRewardVals) {
+     *     let currState = env.xytos(ci, ri);
+     *     
+     *     if (showQTriangles) {
+     *         let allowedActions = env.getAllowedActions(currState);
+
+     *         let greedyAction = null;
+     *         let greedyQVal = null;
+     *         for(let i=0; i < allowedActions.length; i++) {
+     *             let currAction = allowedActions[i];
+     *             let qVal = Q[currState * maxNumActions + currAction];
+
+     *             let needUpdate = false;
+     *             if (greedyAction === null) {
+     *                 needUpdate = true;
+     *             } else {
+     *                 if (qVal  > greedyQVal) {
+     *                     needUpdate = true;
+     *                 }
+     *             }
+
+     *             if (needUpdate) {
+     *                 greedyAction = currAction;
+     *                 greedyQVal = qVal;
+     *             }
+
+     *             this.drawQTriangle(cellContext, currAction, coords, {qVal: qVal});
+     *             if (showQVals) this.writeQ(cellContext, currAction, qVal, coords);
+     *         }
+
+     *         // draw arrow for greedy action
+     *         if (greedyQVal !== 0) {
+     *             let nx, ny;
+     *             let scaler = 4;
+     *             if (greedyAction === 0) {nx = - cellWidth / scaler; ny = 0;}
+     *             if (greedyAction === 1) {nx = 0; ny = - cellHeight / scaler;}
+     *             if (greedyAction === 2) {nx = cellWidth / scaler; ny = 0;}
+     *             if (greedyAction === 3) {nx = 0; ny = cellHeight / scaler;}
+
+     *             let pa = cellContext.append('line')
+     *                                 .attr('x1', coords.xmid)
+     *                                 .attr('y1', coords.ymid)
+     *                                 .attr('x2', coords.xmid + nx)
+     *                                 .attr('y2', coords.ymid + ny)
+     *                                 .attr('stroke', 'black')
+     *                                 .attr('stroke-width', 1.5)
+     *                                 .attr("marker-end", "url(#arrowhead)");
+     *         }
+     *     } else {
+     *         drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
+     *     }
+
+     *     if (showStateVals) this.writeState(cellContext, currState, coords);
+     *     if (showStateCoords) this.writeStateCoord(cellContext, ci, ri, coords);
+     *     // this just show the reward of entering a given state without
+     *     // per step penalty
+     *     if (showRewardVals) this.writeReward(cellContext, env.Rarr[currState], coords);
+     * }*/
 
     drawQTriangle(cellContext, action, coords, {qVal=0, color=genRGBColorString(qVal)}={}) {
         let pointsStr = genPointsStr(action, coords);

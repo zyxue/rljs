@@ -11,10 +11,9 @@ import Line from './GridWorldTDPred/Line';
 class GridWorldTD extends React.Component {
     constructor() {
         super();
-
-        // create an environment and an agent instance
-        /* let env = new GridWorldEnv({numRows: 4, numCols: 3});*/
-        let env = new GridWorldEnv({numRows: 4, numCols: 3});
+        this.allowedDimensions = [3, 4, 5, 6, 7];
+        let env = new GridWorldEnv({numRows: this.allowedDimensions[0],
+                                    numCols: this.allowedDimensions[1]});
         let agent = new TDAgent(env);
 
         this.state = {
@@ -65,6 +64,8 @@ class GridWorldTD extends React.Component {
                 break
             default:
         }
+        // resetting is important, don't forget!
+        env.reset();
         this.setState({env: env});
     }
 
@@ -213,7 +214,7 @@ class GridWorldTD extends React.Component {
                         <Col md={3}>
                             <select value={this.state.env.numRows} onChange={this.updateEnv.bind(this, 'numRows')}>
                                 {
-                                    [4, 5, 6].map(function (e, i, a) {
+                                    this.allowedDimensions.map(function (e, i, a) {
                                         return <option key={e + 'rows'}value={e}>{e}</option>
                                     })
                                 }
@@ -222,9 +223,9 @@ class GridWorldTD extends React.Component {
 
                         <Col md={3}># cols =</Col>
                         <Col md={3}>
-                            <select value={this.state.env.numRows} onChange={this.updateEnv.bind(this, 'numCols')}>
+                            <select value={this.state.env.numCols} onChange={this.updateEnv.bind(this, 'numCols')}>
                                 {
-                                    [4, 5, 6].map(function (e, i, a) {
+                                    this.allowedDimensions.map(function (e, i, a) {
                                         return <option key={e + 'cols'} value={e}>{e}</option>
                                     })
                                 }
