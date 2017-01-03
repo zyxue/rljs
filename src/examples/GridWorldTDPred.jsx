@@ -52,46 +52,16 @@ class GridWorldTD extends React.Component {
     }
 
     updateEnv(key, event) {
-        console.log(key, event.target.value, event.target.value === '');
         // to avoid Do not mutate state directly. Use setState() warning
         let env = this.state.env;
-        switch(key) {
-            case 'numRows':
-                env.numRows = event.target.value;
-                break;
-            case 'numCols':
-                env.numCols = event.target.value;
-                break
-            default:
-        }
-        // resetting is important, don't forget!
-        env.reset();
+        env[key] = event.target.value;
+        env.reset();        // resetting is important, don't forget!
         this.setState({env: env});
     }
 
     updateAgent(key, event) {
         let agent = this.state.agent;
-        switch(key) {
-            case 'learningAlgo':
-                agent.learningAlgo = event.target.value;
-                break;
-            case 'gamma':
-                agent.gamma = event.target.value;
-                break;
-            case 'epsilon':
-                agent.epsilon = event.target.value;
-                break;
-            case 'alpha':
-                agent.alpha = event.target.value;
-                break;
-            case 'lambda':
-                agent.lambda = event.target.value;
-                break;
-            case 'batchSize':
-                agent.batchSize = event.target.value;
-                break;
-            default:
-        }
+        agent[key] = event.target.value;
         this.setState({agent: agent});
     }
 
