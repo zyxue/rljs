@@ -1,7 +1,7 @@
 import R from '../Recurrent-js';
 
 
-let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.3, batchSize=200}={}) {
+let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7, batchSize=200}={}) {
     // store pointer to environment
     this.env = env;
 

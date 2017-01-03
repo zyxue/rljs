@@ -1,9 +1,17 @@
 import R from '../../lib/Recurrent-js';
 
 
-var GridWorld = function({numRows=5, numCols=5}={}) {
+// these are reasonable default for learning purpose
+var GridWorld = function({numRows=7, numCols=7,
+                          cliffStateIds=[2, 9, 16, 23, 30, 37, 31, 32, 33],
+                          startingStateId=0,
+                          terminalStateId=3,
+                         }={}) {
     this.numRows = numRows;
     this.numCols = numCols;
+    this.cliffStateIds = cliffStateIds;
+    this.startingStateId = startingStateId;
+    this.terminalStateId = terminalStateId;
 
     this.reset();
 };
@@ -32,31 +40,14 @@ GridWorld.prototype = {
         }
 
         // default starting state
-        this.startingState = this.states[0];
+        this.startingState = this.states[this.startingStateId];
         // default terminal state
-        this.terminalState = this.states[Math.floor(this.numCells / 2)];
+        // this.terminalState = this.states[Math.floor(this.numCells / 2)];
+        this.terminalState = this.states[this.terminalStateId];
         this.terminalState.reward = 1;
 
-        // add some random cliff
-        for (let i=0; i<numCells * 0.3; i++) {
-            let ri = R.randi(0, numCells);
-            if (!this.isTerminal(this.states[ri]) && ri !== this.startingState.id) {
-                this.states[ri].isCliff = true;
-            }
-        }
-
-        // add some rewards
-        for (let i=0; i<numCells * 0.3; i++) {
-            let ri = R.randi(0, numCells);
-            if (!this.isTerminal(this.states[ri]) && ri !== this.startingState.id) {
-                this.states[ri].isCliff = false;
-                if (Math.random() < 0.2) {
-                    this.states[ri].reward = 1;
-                } else {
-                    this.states[ri].reward = -1;
-                }
-            }
-        }
+        let that = this;
+        this.cliffStateIds.forEach((id) => {that.states[id].isCliff = true});
     },
 
     calcReward: function(s0, action, s1) {

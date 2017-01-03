@@ -11,9 +11,8 @@ import Line from './GridWorldTDPred/Line';
 class GridWorldTD extends React.Component {
     constructor() {
         super();
-        this.allowedDimensions = [3, 4, 5, 6, 7];
-        let env = new GridWorldEnv({numRows: this.allowedDimensions[0],
-                                    numCols: this.allowedDimensions[1]});
+        this.allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10];
+        let env = new GridWorldEnv();
         let agent = new TDPredAgent(env);
 
         this.state = {
@@ -21,7 +20,7 @@ class GridWorldTD extends React.Component {
             agent: agent,
             /* the interval between consecutive actions taken by action in
             number of microseconds*/
-            actingRate: 1,
+            actingRate: 100,
 
             showLegend: {
                 stateValue: false,
@@ -109,8 +108,6 @@ class GridWorldTD extends React.Component {
         return (
             <div className="GridWorldTD">
                 <p> <strong>Agent status: </strong>
-                    {this.state.agent.env.numRows}; &nbsp;
-                    {this.state.agent.env.numCols}; &nbsp;
                     <span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; &nbsp;
                     <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
                     <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
@@ -135,6 +132,8 @@ class GridWorldTD extends React.Component {
                     <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
                     <li>Gridworld is deterministic! </li>
                     <li>Trace-decay parameter (λ)</li>
+                    <li>When epsilon = 0, it's greedy policy, NO exploration</li>
+                    <li>When epsilon = 1, it's random policy.</li>
                 </ul>
 
                 </Col>
