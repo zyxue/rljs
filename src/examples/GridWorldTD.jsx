@@ -50,6 +50,12 @@ class GridWorldTD extends React.Component {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
 
+
+    updateLearningAlgo(event) {
+        this.state.agent.learningAlgo = event.target.value;
+        this.setState({agent: this.state.agent});
+    }
+
     updateAgentGamma(event) {
         this.state.agent.gamma = event.target.value;
         this.setState({agent: this.state.agent});
@@ -135,7 +141,7 @@ class GridWorldTD extends React.Component {
                     <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
                     <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
                     <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; &nbsp;
-                    <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
+                    <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>;
                 </p>
 
                 <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
@@ -185,6 +191,14 @@ class GridWorldTD extends React.Component {
 
 
                     <div className="row">
+                        <Col md={5}>Learning algorithm:</Col>
+                        <Col md={7}>
+                            <select value={this.state.learningAlgo} onChange={this.updateLearningAlgo.bind(this)}>
+                                <option value="sarsa">SARSA(λ)</option>
+                                <option value="qlearning">Q(λ) (Watkins's)</option>
+                            </select>
+                        </Col>
+
                         <Col md={2}>γ =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.gamma} size="10"

@@ -15,6 +15,8 @@ let TDAgent = function(env, gamma=0.95, epsilon=0.1, alpha=0.01, lambda=0.3, bat
     // value function learning rate
     this.alpha = alpha;
 
+    this.learningAlgo = 'sarsa';
+
     // sarsa(lambda)
     this.lambda = lambda;
 
@@ -172,8 +174,11 @@ TDAgent.prototype = {
 
     act: function() {
         // this.sarsaAct();
-        this.qLearningAct();
-        // console.log(this.Z);
+        if (this.learningAlgo === 'sarsa') {
+            this.sarsaAct()
+        } else if (this.learningAlgo === 'qlearning') {
+            this.qLearningAct();
+        }
     },
 
     learnFromOneEpisode: function() {
