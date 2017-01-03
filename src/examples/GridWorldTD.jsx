@@ -163,6 +163,7 @@ class GridWorldTD extends React.Component {
                     <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
                     <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
                     <li>Gridworld is deterministic! </li>
+                    <li>Trace-decay parameter (λ)</li>
                 </ul>
 
                 </Col>
