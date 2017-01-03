@@ -25,9 +25,9 @@ class GridWorldTD extends React.Component {
 
             showLegend: {
                 stateValue: false,
-                stateId: false,
+                stateId: true,
                 stateCoord: false,
-                reward: false
+                reward: true
             }
         };
     }
@@ -245,7 +245,7 @@ class GridWorldTD extends React.Component {
                         <li>Learn: Learn from {this.state.batchSize} episodes</li>
                     </ul>
 
-                    <h4>Toggle showLegend:</h4>
+                    <h4>Toggle legends:</h4>
                     <ul>
                         <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateValue')}>State values</a></li>
                         <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a></li>
