@@ -164,14 +164,6 @@ class Grid extends Component {
         this.highlightTerminalState(context, env, cellHeight, cellWidth);
     }
 
-    highlightTerminalState(context, env, cellHeight, cellWidth) {
-        let x = env.stox(env.terminalState.id);
-        let y = env.stoy(env.terminalState.id);
-        let coords = this.calcCoords(x, y, cellHeight, cellWidth);
-        drawRect(context, coords.xmin, coords.ymin, cellHeight, cellWidth,
-                 {fillOpacity: 0, strokeColor: 'green', strokeWidth: 4});
-    }
-
     drawOneCell(cellContext, st, coords, showLegend) {
         let cellHeight = coords.ymax - coords.ymin;
         let cellWidth = coords.xmax - coords.xmin;
@@ -179,60 +171,12 @@ class Grid extends Component {
         drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth,
                  {fillColor: genRGBColorString(st.V)});
 
+        this.drawTrace(cellContext, st.Z, coords);
+
         if (showLegend.stateValue) this.writeStateValue(cellContext, st.V, coords);
         if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
         if (showLegend.stateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
         if (showLegend.reward) this.writeReward(cellContext, st.reward, coords);
-    }
-
-    drawQTriangle(cellContext, action, coords, {qVal=0, color=genRGBColorString(qVal)}={}) {
-        let pointsStr = genPointsStr(action, coords);
-        /* console.debug(pointsStr);*/
-        cellContext.append('polygon')
-                   .attr('points', pointsStr)
-                   .attr('fill', color)
-                   .attr('fill-opacity', 1)
-                   .attr('stroke', 'black')
-                   .attr('stroke-width', 0.5);
-    }
-
-    writeQ(cellContext, action, qval, coords) {
-        let {xmin, ymin,  xmid, ymid, xmax, ymax} = coords;
-        if (action === 0) {
-            cellContext.append('text')
-               .attr('x', xmin)
-               .attr('y', ymid)
-               .attr('font-size', 10)
-               .attr("text-anchor", "start")
-               .attr("dominant-baseline", "central")
-               .text(qval.toFixed(1));
-
-        } else if (action === 1) {
-            cellContext.append('text')
-               .attr('x', xmid)
-               .attr('y', ymin)
-               .attr('font-size', 10)
-               .attr("text-anchor", "middle")
-               .attr("dominant-baseline", "text-before-edge")
-               .text(qval.toFixed(1));
-        } else if (action === 2) {
-            cellContext.append('text')
-               .attr('x', xmax)
-               .attr('y', ymid)
-               .attr('font-size', 10)
-               .attr("text-anchor", "end")
-               .attr("dominant-baseline", "central")
-               .text(qval.toFixed(1));
-
-        } else if (action === 3) {
-            cellContext.append('text')
-               .attr('x', xmid)
-               .attr('y', ymax)
-               .attr('font-size', 10)
-               .attr("text-anchor", "middle")
-               .attr("dominant-baseline", "text-after-edge")
-               .text(qval.toFixed(1));
-        }
     }
 
     writeStateValue(cellContext, val, coords) {
@@ -315,6 +259,29 @@ class Grid extends Component {
                    .attr('fill-opacity', 1)
                    .attr('stroke', 'black')
                    .attr('stroke-width', 0.5);
+    }
+
+
+    drawTrace(cellContext, Z, coords) {
+        /* let pointsStr = genPointsStrForAgentAction(action, coords);*/
+        /* console.debug(pointsStr);*/
+        cellContext.append('circle')
+               .attr('cx', coords.xmid)
+               .attr('cy', coords.ymid)
+               // log so that size of circle doesn't change too dramatically among neighbouring cells
+               .attr('r', Math.log(Z * 1000))
+               .attr('fill', '#FF0')
+               .attr('fill-opacity', 1)
+               .attr('stroke', '#000')
+               .attr('id', 'cpos');
+    }
+
+    highlightTerminalState(context, env, cellHeight, cellWidth) {
+        let x = env.stox(env.terminalState.id);
+        let y = env.stoy(env.terminalState.id);
+        let coords = this.calcCoords(x, y, cellHeight, cellWidth);
+        drawRect(context, coords.xmin, coords.ymin, cellHeight, cellWidth,
+                 {fillOpacity: 0, strokeColor: 'green', strokeWidth: 4});
     }
 
     setContext() {
