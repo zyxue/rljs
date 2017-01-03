@@ -152,10 +152,12 @@ class Grid extends Component {
             let coords = that.calcCoords(st.x, st.y, cellHeight, cellWidth);
             let grp = context.append('g');
 
-            if (st.isCliff) drawRect(grp, coords.xmin, coords.ymin,
-                                     cellHeight, cellWidth, "#AAA");
-
-            that.drawOneCell(grp, st, coords, showLegend);
+            if (st.isCliff) {
+                console.debug('Cliff!');
+                drawRect(grp, coords.xmin, coords.ymin, cellHeight, cellWidth, {fillColor: "#AAA"});
+            } else {
+                that.drawOneCell(grp, st, coords, showLegend);
+            }
         }) 
 
         // height terminal state
