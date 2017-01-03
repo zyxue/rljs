@@ -27,7 +27,8 @@ class GridWorldTD extends React.Component {
                 stateValue: false,
                 stateId: true,
                 stateCoord: false,
-                reward: true
+                reward: true,
+                etrace: true
             }
         };
     }
@@ -251,6 +252,7 @@ class GridWorldTD extends React.Component {
                         <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a></li>
                         <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateCoord')}>State coordinates</a></li>
                         <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'reward')}>Rewards</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'etrace')}>Eligibility trace</a></li>
                     </ul>
 
                     <p>Try hit learn button if you don't see much going on.</p>

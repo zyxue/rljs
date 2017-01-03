@@ -171,7 +171,7 @@ class Grid extends Component {
         drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth,
                  {fillColor: genRGBColorString(st.V)});
 
-        this.drawTrace(cellContext, st.Z, coords);
+        if (showLegend.etrace) this.drawTrace(cellContext, st.Z, coords);
 
         if (showLegend.stateValue) this.writeStateValue(cellContext, st.V, coords);
         if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
