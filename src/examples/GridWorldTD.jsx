@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, FormGroup, ControlLabel, FormControl, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 import {TDAgent} from '../lib/Reinforce-js';
 
@@ -49,7 +49,6 @@ class GridWorldTD extends React.Component {
     toggleRewardVals() {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
-
 
     updateLearningAlgo(event) {
         this.state.agent.learningAlgo = event.target.value;
