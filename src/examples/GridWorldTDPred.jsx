@@ -1,7 +1,7 @@
 import React from 'react';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
-import {TDAgent} from '../lib/Reinforce-js';
+import {TDPredAgent} from '../lib/Reinforce-js';
 
 import GridWorldEnv from './GridWorldTDPred/GridWorldEnv';
 import Grid from './GridWorldTDPred/Grid';
@@ -14,7 +14,7 @@ class GridWorldTD extends React.Component {
         this.allowedDimensions = [3, 4, 5, 6, 7];
         let env = new GridWorldEnv({numRows: this.allowedDimensions[0],
                                     numCols: this.allowedDimensions[1]});
-        let agent = new TDAgent(env);
+        let agent = new TDPredAgent(env);
 
         this.state = {
             env: env,
@@ -23,32 +23,19 @@ class GridWorldTD extends React.Component {
             number of microseconds*/
             actingRate: 1,
 
-            showQTriangles: true,
-            showQVals: true,
-            showStateVals: false,
-            showStateCoords: false,
-            showRewardVals: false
+            showLegend: {
+                stateValue: false,
+                stateId: false,
+                stateCoord: false,
+                reward: false
+            }
         };
     }
 
-    toggleQTriangles() {
-        this.setState({showQTriangles: !this.state.showQTriangles});
-    }
-
-    toggleQVals() {
-        this.setState({showQVals: !this.state.showQVals});
-    }
-
-    toggleStateVals() {
-        this.setState({showStateVals: !this.state.showStateVals});
-    }
-
-    toggleStateCoords() {
-        this.setState({showStateCoords: !this.state.showStateCoords});
-    }
-
-    toggleRewardVals() {
-        this.setState({showRewardVals: !this.state.showRewardVals});
+    toggleLegend(key, event) {
+        let showLegend = this.state.showLegend;
+        showLegend[key] = !showLegend[key];
+        this.setState(showLegend: showLegend);
     }
 
     updateEnv(key, event) {
@@ -138,11 +125,7 @@ class GridWorldTD extends React.Component {
                         agent={this.state.agent}
                         env={this.state.env}
 
-                        showQTriangles={this.state.showQTriangles}
-                        showQVals={this.state.showQVals}
-                        showStateVals={this.state.showStateVals}
-                        showStateCoords={this.state.showStateCoords}
-                        showRewardVals={this.state.showRewardVals}
+                        showLegend={this.state.showLegend}
                     />
 
                 <ul>
@@ -158,25 +141,25 @@ class GridWorldTD extends React.Component {
 
 
                 <Col xs={12} md={4}>
-                    <div className="row">
+                    {/* <div className="row">
                         <Line
-                            height={150}
-                            width={300}
-                            id={'TD-num-steps-per-episode'}
-                            data={this.state.agent.numStepsPerEpisode}
-                            title={'# steps/episode'}
+                        height={150}
+                        width={300}
+                        id={'TD-num-steps-per-episode'}
+                        data={this.state.agent.numStepsPerEpisode}
+                        title={'# steps/episode'}
                         />
-                    </div>
+                        </div>
 
-                    <div className="row">
+                        <div className="row">
                         <Line
-                            height={150}
-                            width={300}
-                            id={'TD-etrace'}
-                            data={this.state.agent.Z}
-                            title={'eligibility trace'}
+                        height={150}
+                        width={300}
+                        id={'TD-etrace'}
+                        data={this.state.agent.Z}
+                        title={'eligibility trace'}
                         />
-                    </div>
+                        </div> */}
 
 
                     <div className="row">
@@ -262,13 +245,12 @@ class GridWorldTD extends React.Component {
                         <li>Learn: Learn from {this.state.batchSize} episodes</li>
                     </ul>
 
-                    <h4>Toggle legends:</h4>
+                    <h4>Toggle showLegend:</h4>
                     <ul>
-                        <li><a className="toggle-button" onClick={this.toggleQTriangles.bind(this)}>Q triangles</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleQVals.bind(this)}>Q values</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleStateVals.bind(this)}>States</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleStateCoords.bind(this)}>State coordinates</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleRewardVals.bind(this)}>Rewards</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateValue')}>State values</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateCoord')}>State coordinates</a></li>
+                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'reward')}>Rewards</a></li>
                     </ul>
 
                     <p>Try hit learn button if you don't see much going on.</p>

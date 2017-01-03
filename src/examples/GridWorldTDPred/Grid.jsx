@@ -40,7 +40,7 @@ function genRGBColorString(val) {
 
 
 function drawRect(grp, x, y, height, width,
-                  fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1) {
+                  {fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1}) {
     grp.append('rect')
        .attr('x', x)
        .attr('y', y)
@@ -142,18 +142,11 @@ class Grid extends Component {
     }
 
     drawCells(context) {
-        const {height, width, agent, env,
-               showQTriangles, showQVals,
-               showStateVals, showStateCoords, showRewardVals} = this.props;
-
-        /* const {env, Q, Pi} = agent;*/
-
+        const {height, width, agent, env, showLegend} = this.props;
         const {numRows, numCols} = env;
         const cellHeight = height / numRows;
         const cellWidth = width  / numCols;
-        /* console.log(numRows, numCols, env, cellHeight, cellWidth);*/
 
-        console.log(env.states);
         let that = this;
         env.states.forEach(function (st, idx, arr) {
             let coords = that.calcCoords(st.x, st.y, cellHeight, cellWidth);
@@ -162,39 +155,8 @@ class Grid extends Component {
             if (st.isCliff) drawRect(grp, coords.xmin, coords.ymin,
                                      cellHeight, cellWidth, "#AAA");
 
-            that.drawOneCell(grp, st, coords);
-            /* grp, env, Q, agent.maxNumActions, cellHeight, cellWidth,
-             * ci, ri, coords,
-             * showQTriangles, showQVals,
-             * showStateVals, showStateCoords, showRewardVals);*/
-
+            that.drawOneCell(grp, st, coords, showLegend);
         }) 
-
-
-        /* for (let ri = 0; ri < numRows; ri++) {
-         *     for (let ci = 0; ci < numCols; ci++) {
-         *         let currState = env.xytos(ci, ri);
-
-         *         let coords = this.calcCoords(ci, ri, cellHeight, cellWidth);
-         *         let {xmin, ymin,  xmid, ymid, xmax, ymax} = coords;
-
-         *         let grp = context.append('g');
-
-         *         // draw cliff
-         *         if (env.cliffArr[currState] === 1) {
-         *             drawRect(grp, xmin, ymin, cellHeight, cellWidth, "#AAA");
-         *             continue;
-         *         } 
-
-         *         // this function could be further refactored to reduce the
-         *         // number of parameters passed
-         *         this.drawOneCell(
-         *             grp, env, Q, agent.maxNumActions, cellHeight, cellWidth,
-         *             ci, ri, coords,
-         *             showQTriangles, showQVals,
-         *             showStateVals, showStateCoords, showRewardVals);
-         *     }
-         * }*/
 
         // height goalstate
         /* this.highlightGoalState(context, env, cellHeight, cellWidth);*/
@@ -208,92 +170,18 @@ class Grid extends Component {
                  undefined, 0, "green", 4);
     }
 
-
-
-    drawOneCell(cellContext, st, coords) {
-        
-        /* 
-         * Q, maxNumActions, cellHeight, cellWidth,
-         *                 ci, ri, coords,
-         *                 showQTriangles, showQVals,
-         *                 showStateVals, showStateCoords, showRewardVals) {
-         *         let currState = env.xytos(ci, ri);*/
-        
+    drawOneCell(cellContext, st, coords, showLegend) {
         let cellHeight = coords.ymax - coords.ymin;
         let cellWidth = coords.xmax - coords.xmin;
-        drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
+        /* console.debug(st.V);*/
+        drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth,
+                 {fillColor: genRGBColorString(st.V)});
 
-
-        /* if (showStateVals) this.writeState(cellContext, st.id, coords);
-         * if (showStateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
-         * // this just show the reward of entering a given state without
-         * // per step penalty
-         * if (showRewardVals) this.writeReward(cellContext, st.reward, coords);*/
+        if (showLegend.stateValue) console.log('NOT implemented yet');
+        if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
+        if (showLegend.stateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
+        if (showLegend.reward) this.writeReward(cellContext, st.reward, coords);
     }
-
-
-
-    /* drawOneCell(cellContext, env, Q, maxNumActions, cellHeight, cellWidth,
-     *             ci, ri, coords,
-     *             showQTriangles, showQVals,
-     *             showStateVals, showStateCoords, showRewardVals) {
-     *     let currState = env.xytos(ci, ri);
-     *     
-     *     if (showQTriangles) {
-     *         let allowedActions = env.getAllowedActions(currState);
-
-     *         let greedyAction = null;
-     *         let greedyQVal = null;
-     *         for(let i=0; i < allowedActions.length; i++) {
-     *             let currAction = allowedActions[i];
-     *             let qVal = Q[currState * maxNumActions + currAction];
-
-     *             let needUpdate = false;
-     *             if (greedyAction === null) {
-     *                 needUpdate = true;
-     *             } else {
-     *                 if (qVal  > greedyQVal) {
-     *                     needUpdate = true;
-     *                 }
-     *             }
-
-     *             if (needUpdate) {
-     *                 greedyAction = currAction;
-     *                 greedyQVal = qVal;
-     *             }
-
-     *             this.drawQTriangle(cellContext, currAction, coords, {qVal: qVal});
-     *             if (showQVals) this.writeQ(cellContext, currAction, qVal, coords);
-     *         }
-
-     *         // draw arrow for greedy action
-     *         if (greedyQVal !== 0) {
-     *             let nx, ny;
-     *             let scaler = 4;
-     *             if (greedyAction === 0) {nx = - cellWidth / scaler; ny = 0;}
-     *             if (greedyAction === 1) {nx = 0; ny = - cellHeight / scaler;}
-     *             if (greedyAction === 2) {nx = cellWidth / scaler; ny = 0;}
-     *             if (greedyAction === 3) {nx = 0; ny = cellHeight / scaler;}
-
-     *             let pa = cellContext.append('line')
-     *                                 .attr('x1', coords.xmid)
-     *                                 .attr('y1', coords.ymid)
-     *                                 .attr('x2', coords.xmid + nx)
-     *                                 .attr('y2', coords.ymid + ny)
-     *                                 .attr('stroke', 'black')
-     *                                 .attr('stroke-width', 1.5)
-     *                                 .attr("marker-end", "url(#arrowhead)");
-     *         }
-     *     } else {
-     *         drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth);
-     *     }
-
-     *     if (showStateVals) this.writeState(cellContext, currState, coords);
-     *     if (showStateCoords) this.writeStateCoord(cellContext, ci, ri, coords);
-     *     // this just show the reward of entering a given state without
-     *     // per step penalty
-     *     if (showRewardVals) this.writeReward(cellContext, env.Rarr[currState], coords);
-     * }*/
 
     drawQTriangle(cellContext, action, coords, {qVal=0, color=genRGBColorString(qVal)}={}) {
         let pointsStr = genPointsStr(action, coords);
@@ -345,7 +233,7 @@ class Grid extends Component {
         }
     }
 
-    writeState(cellContext, state, coords) {
+    writeStateId(cellContext, id, coords) {
         cellContext.append('text')
                    .attr('x', coords.xmax)
                    .attr('y', coords.ymin)
@@ -354,8 +242,7 @@ class Grid extends Component {
 
                    .attr('font-size', 10)
                    .attr('fill', 'blue')
-                   .text(state.toFixed(0));
-                /* .text(state.toFixed(0) + ',' + x + ',' + y);*/
+                   .text(id.toFixed(0));
     }
 
     writeStateCoord(cellContext, stateCoordx, stateCoordy, coords) {
@@ -392,8 +279,8 @@ class Grid extends Component {
         const cellHeight = height / numRows;
         const cellWidth = width  / numCols;
 
-        let x = agent.env.stox(agent.s0);
-        let y = agent.env.stoy(agent.s0);
+        let x = agent.env.stox(agent.s0.id);
+        let y = agent.env.stoy(agent.s0.id);
         let coords = this.calcCoords(x, y, cellHeight, cellWidth);
         this.drawAgentAction(context, agent.a0, coords, {color: 'blue'});
         context.append('circle')
