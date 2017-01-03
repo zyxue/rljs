@@ -50,34 +50,31 @@ class GridWorldTD extends React.Component {
         this.setState({showRewardVals: !this.state.showRewardVals});
     }
 
-    updateLearningAlgo(event) {
-        this.state.agent.learningAlgo = event.target.value;
-        this.setState({agent: this.state.agent});
-    }
-
-    updateAgentGamma(event) {
-        this.state.agent.gamma = event.target.value;
-        this.setState({agent: this.state.agent});
-    }
-
-    updateAgentEpsilon(event) {
-        this.state.agent.epsilon = event.target.value;
-        this.setState({agent: this.state.agent});
-    }
-
-    updateAgentAlpha(event) {
-        this.state.agent.alpha = event.target.value;
-        this.setState({agent: this.state.agent});
-    }
-
-    updateAgentLambda(event) {
-        this.state.agent.lambda = event.target.value;
-        this.setState({agent: this.state.agent});
-    }
-
-    updateAgentBatchSize(event) {
-        this.state.agent.batchSize = event.target.value;
-        this.setState({agent: this.state.agent});
+    updateAgent(key, event) {
+        let agent = this.state.agent;
+        switch(key) {
+            case 'learningAlgo':
+                agent.learningAlgo = event.target.value;
+                break;
+            case 'gamma':
+                agent.gamma = event.target.value;
+                break;
+            case 'epsilon':
+                agent.epsilon = event.target.value;
+                break;
+            case 'alpha':
+                agent.alpha = event.target.value;
+                break;
+            case 'lambda':
+                agent.lambda = event.target.value;
+                break;
+            case 'batchSize':
+                agent.batchSize = event.target.value;
+                break;
+            default:
+                // pass
+        }
+        this.setState({agent: agent});
     }
 
     updateActingRate(event) {
@@ -119,14 +116,14 @@ class GridWorldTD extends React.Component {
         }
     }
 
-    handleClick(action, event) {
-        if (action === 'act') {
+    handleClick(key, event) {
+        if (key === 'act') {
             this.state.agent.act();
-        } else if (action === 'toggle') {
+        } else if (key === 'toggle') {
             this.toggleConsecutiveActions();
-        } else if (action === 'learn') {
+        } else if (key === 'learn') {
             this.state.agent.learnFromBatchEpisodes();
-        } else if (action === 'reset') {
+        } else if (key === 'reset') {
             this.state.agent.reset();
         }
         this.setState({agent: this.state.agent});
@@ -190,11 +187,10 @@ class GridWorldTD extends React.Component {
                         />
                     </div>
 
-
                     <div className="row">
                         <Col md={5}>Learning algorithm:</Col>
                         <Col md={7}>
-                            <select value={this.state.learningAlgo} onChange={this.updateLearningAlgo.bind(this)}>
+                            <select value={this.state.learningAlgo} onChange={this.updateAgent.bind(this, 'learningAlgo')}>
                                 <option value="sarsa">SARSA(λ)</option>
                                 <option value="qlearning">Q(λ) (Watkins's)</option>
                             </select>
@@ -203,31 +199,31 @@ class GridWorldTD extends React.Component {
                         <Col md={2}>γ =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.gamma} size="10"
-                                   onChange={this.updateAgentGamma.bind(this)} />
+                                   onChange={this.updateAgent.bind(this, 'gamma')} />
                         </Col>
 
                         <Col md={2}>ε =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.epsilon} size="10"
-                                   onChange={this.updateAgentEpsilon.bind(this)} />
+                                   onChange={this.updateAgent.bind(this, 'epsilon')} />
                         </Col>
 
                         <Col md={2}>α =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.alpha} size="10"
-                                   onChange={this.updateAgentEpsilon.bind(this)} />
+                                   onChange={this.updateAgent.bind(this, 'alpha')} />
                         </Col>
 
                         <Col md={2}>λ =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.lambda} size="10"
-                                   onChange={this.updateAgentLambda.bind(this)} />
+                                   onChange={this.updateAgent.bind(this, 'lambda')} />
                         </Col>
 
                         <Col md={5}>batch size = </Col>
                         <Col md={7}>
                             <input type="text" value={this.state.agent.batchSize} size="10"
-                            onChange={this.updateAgentBatchSize.bind(this)} />
+                            onChange={this.updateAgent.bind(this, 'batchSize')} />
                         </Col>
 
                         <Col md={5}>acting rate: =</Col>
