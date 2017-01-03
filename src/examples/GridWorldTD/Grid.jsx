@@ -187,7 +187,7 @@ class Grid extends Component {
                     greedyQVal = qVal;
                 }
 
-                this.drawQTriangle(cellContext, currAction, qVal, coords);
+                this.drawQTriangle(cellContext, currAction, coords, {qVal: qVal});
                 if (showQVals) this.writeQ(cellContext, currAction, qVal, coords);
             }
 
@@ -220,8 +220,7 @@ class Grid extends Component {
         if (showRewardVals) this.writeReward(cellContext, env.Rarr[currState], coords);
     }
 
-    drawQTriangle(cellContext, action, qval, coords) {
-        let color = genRGBColorString(qval);
+    drawQTriangle(cellContext, action, coords, {qVal=0, color=genRGBColorString(qVal)}={}) {
         let pointsStr = genPointsStr(action, coords);
         /* console.debug(pointsStr);*/
         cellContext.append('polygon')
