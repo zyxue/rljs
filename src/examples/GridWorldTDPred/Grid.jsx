@@ -40,7 +40,7 @@ function genRGBColorString(val) {
 
 
 function drawRect(grp, x, y, height, width,
-                  {fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1}) {
+                  {fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1}={}) {
     grp.append('rect')
        .attr('x', x)
        .attr('y', y)
@@ -158,16 +158,16 @@ class Grid extends Component {
             that.drawOneCell(grp, st, coords, showLegend);
         }) 
 
-        // height goalstate
-        /* this.highlightGoalState(context, env, cellHeight, cellWidth);*/
+        // height terminal state
+        this.highlightTerminalState(context, env, cellHeight, cellWidth);
     }
 
-    highlightGoalState(context, env, cellHeight, cellWidth) {
-        let x = env.stox(env.goalState);
-        let y = env.stoy(env.goalState);
+    highlightTerminalState(context, env, cellHeight, cellWidth) {
+        let x = env.stox(env.terminalState.id);
+        let y = env.stoy(env.terminalState.id);
         let coords = this.calcCoords(x, y, cellHeight, cellWidth);
         drawRect(context, coords.xmin, coords.ymin, cellHeight, cellWidth,
-                 undefined, 0, "green", 4);
+                 {fillOpacity: 0, strokeColor: 'green', strokeWidth: 4});
     }
 
     drawOneCell(cellContext, st, coords, showLegend) {
