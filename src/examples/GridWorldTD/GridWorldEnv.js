@@ -54,6 +54,12 @@ GridWorld.prototype = {
             Rarr[off] = 0;
         }
 
+        let cliffIdx = [37, 38, 39, 40, 41];
+        for (let i = 0; i < cliffIdx.length; i++) {
+            cliffArr[cliffIdx[i]] = 1;
+            Rarr[cliffIdx[i]] = 0;
+        }
+
         cliffArr[5 * this.numRows + 2] = 0;
         Rarr[5 * this.numRows + 2] = 0; // make a hole
 
