@@ -162,7 +162,8 @@ class GridWorldTD extends React.Component {
     envStatus() {
         return (
             <p className="text-center">
-                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>    <input type="range" min="-1" max="1" value={this.state.env.stepReward} step="0.01" onChange={this.updateEnvStepReward.bind(this, 'stepReward')}/>
+                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>
+                <div className="slider step-reward"><input type="range" min="-0.1" max="0.1" value={this.state.env.stepReward} step="0.01" onChange={this.updateEnvStepReward.bind(this, 'stepReward')}/></div>
             </p>
         )
     }

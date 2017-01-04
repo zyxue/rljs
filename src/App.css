@@ -1,3 +1,9 @@
 .toggle-button {
     cursor: pointer;
 }
+
+.slider {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10%;
+}
