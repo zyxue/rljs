@@ -13,7 +13,7 @@ class GridWorldTD extends React.Component {
         super();
         this.allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10];
         let env = new GridWorldEnv();
-        let agent = new TDPredAgent(env);
+        let agent = new TDPredAgent(env, {etraceType: 'replacingTrace'});
 
         this.state = {
             env: env,
@@ -159,9 +159,16 @@ class GridWorldTD extends React.Component {
 
     agentStatus() {
         return (
-            <p>
-                <strong>Agent status: </strong><span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>; <span># steps at current episode: </span><span className="text-primary">{this.state.agent.numStepsCurrentEpisode}</span>
-            </p>
+            <div>
+                <strong>Agent status: </strong>
+                α = <span className="text-primary">{this.state.agent.alpha}</span>;&nbsp;
+                γ = <span className="text-primary">{this.state.agent.gamma}</span>;&nbsp;
+                ε = <span className="text-primary">{this.state.agent.epsilon}</span>;&nbsp;
+                λ = <span className="text-primary">{this.state.agent.lambda}</span>;&nbsp;
+                <span className="text-primary">{this.state.agent.etraceType}</span>;&nbsp;
+                # Episodes: <span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>;&nbsp;
+                # steps: <span className="text-primary">{this.state.agent.numStepsCurrentEpisode}</span>
+            </div>
         )
     }
 
@@ -324,6 +331,15 @@ class GridWorldTD extends React.Component {
                         {this.agentUpdateInput('γ', 'gamma')}
                         {this.agentUpdateInput('ε', 'epsilon')}
                         {this.agentUpdateInput('λ', 'lambda')}
+
+                        <Col md={5}>Eligibility trace: </Col>
+                        <Col md={7}>
+                            <select value={this.state.agent.etraceType} onChange={this.updateAgent.bind(this, 'etraceType')}>
+                                <option key='accumulatingTrace' value='accumulatingTrace'>Accumulating trace</option>
+                                <option key='replacingTrace'    value='replacingTrace'>Replacing trace</option>
+                            </select>
+                        </Col>
+
                         {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
 
                         <Col md={5}>acting rate: =</Col>
