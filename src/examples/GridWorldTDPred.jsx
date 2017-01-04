@@ -289,7 +289,7 @@ class GridWorldTD extends React.Component {
                     <ul>
                         <li>Act: take one action</li>
                         <li>Toggle: Take actions continously indefinitely</li>
-                        <li>Learn: Learn from {this.state.batchSize} episodes</li>
+                        <li>Learn: Learn from one batch ({this.state.agent.batchSize}) of episodes</li>
                     </ul>
 
                     <h4>Toggle legends:</h4>
