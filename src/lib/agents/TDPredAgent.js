@@ -26,7 +26,6 @@ TDPredAgent.prototype = {
     reset: function(){
         this.env.states.forEach((st) => {
             st.V = 0;
-            st.histZ = [];
             st.Z = 0;
         });
 
@@ -41,6 +40,10 @@ TDPredAgent.prototype = {
     resetEpisode: function() {
         // reset epsiode level variables
         this.numStepsCurrentEpisode = 0;
+        // reset etrace history
+        this.env.states.forEach((st) => {
+            st.epiHistZ = [];
+        });
         this.s0 = this.env.initState();
         this.a0 = this.chooseAction(this.s0);
     },
@@ -91,6 +94,7 @@ TDPredAgent.prototype = {
         this.env.states.forEach((st, idx, arr) => {
             st.V = st.V + that.alpha * delta * st.Z;
             st.Z = that.gamma * that.lambda * st.Z
+            st.epiHistZ.push(st.Z);
         })
 
         if (this.env.isTerminal(s0)) {

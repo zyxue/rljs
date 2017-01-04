@@ -163,6 +163,16 @@ class GridWorldTD extends React.Component {
 
 
                     <div className="row">
+                        <Line
+                            height={150}
+                            width={300}
+                            id={'etrace-history'}
+                            data={this.state.env.states[1].epiHistZ}
+                            title={'historical etrace for the current episode at State ' + 1}
+                        />
+                    </div>
+
+                    <div className="row">
                         <Col md={3}># rows =</Col>
                         <Col md={3}>
                             <select value={this.state.env.numRows} onChange={this.updateEnv.bind(this, 'numRows')}>

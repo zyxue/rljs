@@ -32,9 +32,11 @@ GridWorld.prototype = {
                     reward: 0,
                     isCliff: false,
                     allowedActions: this.getAllowedActions(id),
-                    V: 0,       // init value of the state
-                    histZ: [],  // store etrace history 
-                    Z: 0        // current eligibility trace
+                    V: 0,         // init value of the state
+                    // store etrace history for one episode, better for both
+                    // visualization and smaller memory
+                    epiHistZ: [],
+                    Z: 0          // current eligibility trace
                 });
             }
         }
