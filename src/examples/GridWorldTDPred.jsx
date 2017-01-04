@@ -104,38 +104,49 @@ class GridWorldTD extends React.Component {
         this.setState({agent: this.state.agent});
     }
 
+    agentStatus() {
+        return (
+            <p className="text-center">
+                <strong>Agent status: </strong><span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
+            </p>
+        )
+    }
+
+    grid() {
+        return (
+            <Grid
+                height={600}
+                width={700}
+                id="TD-grid"
+                agent={this.state.agent}
+                env={this.state.env}
+
+                showLegend={this.state.showLegend}
+            />
+        )
+    }
+
+    instruction() {
+        return (
+            <ul>
+                <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
+                <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
+                <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
+                <li>Gridworld is deterministic! </li>
+                <li>Trace-decay parameter (λ)</li>
+                <li>When epsilon = 0, it's greedy policy, NO exploration</li>
+                <li>When epsilon = 1, it's random policy.</li>
+            </ul>
+        )
+    }
+
     render() {
         return (
             <div className="GridWorldTD">
-                <p> <strong>Agent status: </strong>
-                    <span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; &nbsp;
-                    <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
-                    <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
-                    <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; &nbsp;
-                    <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>;
-                </p>
-
-                <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
-                    <Grid
-                        height={600}
-                        width={700}
-                        id="TD-grid"
-                        agent={this.state.agent}
-                        env={this.state.env}
-
-                        showLegend={this.state.showLegend}
-                    />
-
-                <ul>
-                    <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
-                    <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
-                    <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
-                    <li>Gridworld is deterministic! </li>
-                    <li>Trace-decay parameter (λ)</li>
-                    <li>When epsilon = 0, it's greedy policy, NO exploration</li>
-                    <li>When epsilon = 1, it's random policy.</li>
-                </ul>
-
+            <Col className='grid' xs={12} md={8}>
+                {this.agentStatus()}
+                {this.grid()}
+                {this.instruction()}
                 </Col>
 
 
