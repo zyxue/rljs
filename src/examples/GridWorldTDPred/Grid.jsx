@@ -215,7 +215,7 @@ class Grid extends Component {
 
         if (showLegend.stateValue) this.writeStateValue(cellContext, st.V, coords);
         if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
-        if (showLegend.stateCoords) this.writeStateCoord(cellContext, st.x, st.y, coords);
+        if (showLegend.stateCoord) this.writeStateCoord(cellContext, st.x, st.y, coords);
         if (showLegend.reward) this.writeReward(cellContext, st.reward, coords);
     }
 
