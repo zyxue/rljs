@@ -147,6 +147,22 @@ class GridWorldTD extends React.Component {
         )
     }
 
+    episodicEtrace() {
+        let state = this.state.selectedState !== null? this.state.selectedState : this.state.env.states[0];
+        return (
+            <Line
+                height={150}
+                width={300}
+                margin={{top:30, left: 40, bottom: 30}}
+                id={'episodic-etrace-history'}
+                data={state.epiHistZ}
+            title={'Episodic etrace history (Z) at State ' + state.id}
+            xlabel={'Time'}
+            ylabel={'Z'}
+            />
+        );
+    }
+
     render() {
         return (
             <div className="GridWorldTD">
@@ -170,16 +186,7 @@ class GridWorldTD extends React.Component {
                     </div>
 
                     <div className="row">
-                        <Line
-                            height={150}
-                            width={300}
-                            margin={{top:30, left: 40, bottom: 30}}
-                            id={'episodic-etrace-history'}
-                            data={this.state.env.states[44].epiHistZ}
-                            title={'Episodic etrace history (Z) at S(' + 1 + ')'}
-                            xlabel={'Time'}
-                            ylabel={'Z'}
-                        />
+                        {this.episodicEtrace()}
                     </div>
 
                    <div className="row">

@@ -53,7 +53,7 @@ function drawRect(grp, x, y, height, width,
 }
 
 
-function drawFrame(grp, coords, {strokeColor='yellow', strokeWidth=4}={}) {
+function drawFrame(grp, coords, {strokeColor='yellow', strokeWidth=3}={}) {
     let line = d3.svg.line()
                  .x(function(d) { return d[0]; })
                  .y(function(d) { return d[1]; });
@@ -317,7 +317,7 @@ class Grid extends Component {
                .attr('id', 'cpos');
     }
 
-    highlightState(context, state, cellHeight, cellWidth, {strokeColor='yellow', strokeWidth=4}) {
+    highlightState(context, state, cellHeight, cellWidth, {strokeColor='yellow', strokeWidth=3}) {
         let coords = this.calcCoords(state.x, state.y, cellHeight, cellWidth);
         drawFrame(context, coords, {strokeColor: strokeColor, strokeWidth: strokeWidth});
     }
