@@ -22,6 +22,8 @@ class GridWorldTD extends React.Component {
             number of microseconds*/
             actingRate: 100,
 
+            selectedState: null,
+
             showLegend: {
                 stateValue: false,
                 stateId: true,
@@ -91,6 +93,10 @@ class GridWorldTD extends React.Component {
         }
     }
 
+    updateSelectedState(state) {
+        this.setState({selectedState: state});
+    }
+
     handleClick(action, event) {
         if (action === 'act') {
             this.state.agent.act();
@@ -120,8 +126,9 @@ class GridWorldTD extends React.Component {
                 id="TD-grid"
                 agent={this.state.agent}
                 env={this.state.env}
-
                 showLegend={this.state.showLegend}
+                selectedState={this.state.selectedState}
+                updateSelectedState={this.updateSelectedState.bind(this)}
             />
         )
     }
@@ -148,8 +155,6 @@ class GridWorldTD extends React.Component {
                 {this.grid()}
                 {this.instruction()}
                 </Col>
-
-
 
                 <Col xs={12} md={4}>
                     <div className="row">

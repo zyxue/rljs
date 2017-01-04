@@ -136,9 +136,9 @@ function genPointsStrForAgentAction(action, coords) {
 
 class Grid extends Component {
     handleMouseClick(rect, state) {
-        console.debug('state: ', state);
+        /* console.debug('state: ', state);*/
         this.props.updateSelectedState(state);
-        console.debug('selectedState: ' + this.props.selectedState);
+        /* console.debug('selectedState: ' + this.props.selectedState);*/
     }
 
     drawGrid() {
@@ -196,9 +196,12 @@ class Grid extends Component {
                });
         }) 
 
-        // height terminal state
-        /* this.highlightTerminalState(context, env, cellHeight, cellWidth);*/
-        this.highlightState(context, env.terminalState, cellHeight, cellWidth, {'strokeColor': 'green'});
+        this.highlightState(context, env.terminalState,
+                            cellHeight, cellWidth, {'strokeColor': 'green'});
+
+        if (this.props.selectedState !== null)
+            this.highlightState(context, this.props.selectedState,
+                                cellHeight, cellWidth, {'strokeColor': 'orange'});
     }
 
     drawOneCell(cellContext, st, coords, showLegend) {
