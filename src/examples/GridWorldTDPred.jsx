@@ -132,6 +132,12 @@ class GridWorldTD extends React.Component {
         this.setState({env: env});
     }
 
+    adjustSelectedReward(event) {
+        let st = this.state.selectedState;
+        st.reward = parseFloat(event.target.value);
+        this.setState({selectedState: st});
+    }
+
     handleClick(action, event) {
         if (action === 'act') {
             this.state.agent.act();
@@ -260,6 +266,24 @@ class GridWorldTD extends React.Component {
         )
     }
 
+    envUpdateControl() {
+        let st = this.state.selectedState;
+        let disabled = st === null? true: false;
+        let sliderReward = st === null? 0: st.reward;
+        return (
+            <div>Set selected state as
+                <ButtonToolbar>
+                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
+                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
+                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
+                </ButtonToolbar>
+
+                <input type="range" min="-1" max="1" disabled={disabled} value={sliderReward} step="0.01" onChange={this.adjustSelectedReward.bind(this)}/>
+            </div>
+        )
+    }
+
+
 
     render() {
         return (
@@ -312,12 +336,6 @@ class GridWorldTD extends React.Component {
                         {this.agentUpdateInput('ε', 'epsilon')}
                         {this.agentUpdateInput('λ', 'lambda')}
                         {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
-
-                        <Col md={5}>Step reward: =</Col>
-                        <Col md={7}>
-                            <input type="text" value={this.state.env.stepReward} size="10"
-                                   onChange={this.updateEnv.bind(this, 'stepReward', false)} />
-                        </Col>
 
                         <Col md={5}>acting rate: =</Col>
                         <Col md={7}>
