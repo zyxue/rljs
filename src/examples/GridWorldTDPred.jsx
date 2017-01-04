@@ -125,6 +125,14 @@ class GridWorldTD extends React.Component {
         )
     }
 
+    toggleLegends() {
+        return (
+            <p className="text-center">
+                <strong>Toggle legends:</strong> <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateValue')}>State values</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateCoord')}>State coordinates</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'reward')}>Rewards</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'etrace')}>Eligibility trace</a>
+            </p>
+        )
+    }
+
     grid() {
         return (
             <Grid
@@ -142,15 +150,31 @@ class GridWorldTD extends React.Component {
 
     instruction() {
         return (
+            <div>
+                <h2>Introduction</h2>
+                <p>This is a gridworld to help understand how TD(λ) does state value evaluation. This page is all about prediction and NO control. For control, please go to TD-control.</p>
             <ul>
-                <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
-                <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
-                <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
-                <li>Gridworld is deterministic! </li>
-                <li>Trace-decay parameter (λ)</li>
-                <li>When epsilon = 0, it's greedy policy, NO exploration</li>
-                <li>When epsilon = 1, it's random policy.</li>
+                <li>The agent always starts at the initial state, which defaults to State 0. It then try to navigate to the terminal state (green bound).</li>
+                <li>At each state, the agent has 4 actions (0: ←, 1: ↑, 2: ↓, 3: →). If it hits the walls or cliffs (grey), it stays put.</li>
+                <li>Yellow circle represents the current location of the agent, and its blue arrow represents the action it chooses for the next step from epsilon-greey policy.</li>
+                <li>For the meaning of numbers inside each rectangle, refer to Toggle legends section on the right.</li>
+                <li>You can start by clicking Act button and see how the agent moves one step at a time.</li>
+                <li>Then you can toggle continous action by clicking the Toggle button.</li>
+                <li>If it converges too slow, then hit Learn button to experience multiple episodes in batch without seeing how the agent acts. See how the first plot changes.</li>
+                <li>The second plot shows the episodic eligibility trace (Z) of one state (defaults to State 0). You can see that of a particular state by clicking the corresponding rectangle. An orange bound appears when a state is being selected.</li>
+                <li>The third plot shows a serial view of Z of all states at the current time. The same information is also shown on the grid with yellow circles of different sizes to reflect the difference among Z of different states. See how it diminishes as the agent is leaving the state further and further. The radii of circles are rescaled logarithmically to fit the rectangular better..</li>
+                <li>Gridworld is deterministic! So once the agent selects an action, its next state is deterministic.</li>
+                <li>After the agent reachs the terminal state, it needs an additional step (basically action of any direction will do) to exit the terminal state and obtain the plus reward. Then the episode ends, and the agent is reinitialized to the starting state.</li>
+                <li>Starting and terminal state, cliffs, rewards should be adjustable (TODO).</li>
+                <li>The right side below the plots are dashboard, where you can adjust different kinds of paramters. The greek letters are:</li>
+                    <ul>
+                        <li>α: learning rate</li>
+                        <li>γ: return discount factor</li>
+                        <li>ε: the exploration rate as defined in ε-greedy policy. When ε = 0, it's greedy policy, NO exploration at all; when ε = 1, it's a random policy</li>
+                        <li>λ: trace-decay parameter</li>
+                    </ul>
             </ul>
+            </div>
         )
     }
 
@@ -175,6 +199,7 @@ class GridWorldTD extends React.Component {
             <div className="GridWorldTD">
             <Col className='grid' xs={12} md={8}>
                 {this.agentStatus()}
+                {this.toggleLegends()}
                 {this.grid()}
                 {this.instruction()}
                 </Col>
@@ -232,14 +257,6 @@ class GridWorldTD extends React.Component {
                             </select>
                         </Col>
 
-                        <Col md={5}>Learning algorithm:</Col>
-                        <Col md={7}>
-                            <select value={this.state.learningAlgo} onChange={this.updateAgent.bind(this, 'learningAlgo')}>
-                                <option value="sarsa">SARSA(λ)</option>
-                                <option value="qlearning">Q(λ) (Watkins's)</option>
-                            </select>
-                        </Col>
-
                         <Col md={2}>γ =</Col>
                         <Col md={4}>
                             <input type="text" value={this.state.agent.gamma} size="10"
@@ -291,18 +308,6 @@ class GridWorldTD extends React.Component {
                         <li>Toggle: Take actions continously indefinitely</li>
                         <li>Learn: Learn from one batch ({this.state.agent.batchSize}) of episodes</li>
                     </ul>
-
-                    <h4>Toggle legends:</h4>
-                    <ul>
-                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateValue')}>State values</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateCoord')}>State coordinates</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'reward')}>Rewards</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleLegend.bind(this, 'etrace')}>Eligibility trace</a></li>
-                    </ul>
-
-                    <p>Try hit learn button if you don't see much going on.</p>
-                    <p>Currently, only standard SARSA(λ) is implemented. Colors of each Q triangle reflect its learn values.</p>
                 </Col>
             </div>
         );
