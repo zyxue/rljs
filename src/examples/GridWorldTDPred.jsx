@@ -40,11 +40,12 @@ class GridWorldTD extends React.Component {
         this.setState(showLegend: showLegend);
     }
 
-    updateEnv(key, event) {
+    updateEnv(key, needsReset=true, event) {
+        console.log(needsReset);
         // to avoid Do not mutate state directly. Use setState() warning
         let env = this.state.env;
         env[key] = event.target.value;
-        env.reset();        // resetting is important, don't forget!
+        if (needsReset) env.reset();        // resetting is important, don't forget!
         this.setState({env: env});
     }
 
@@ -143,6 +144,15 @@ class GridWorldTD extends React.Component {
             </p>
         )
     }
+
+    envStatus() {
+        return (
+            <p className="text-center">
+                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>
+            </p>
+        )
+    }
+
 
     toggleLegends() {
         return (
@@ -249,15 +259,9 @@ class GridWorldTD extends React.Component {
             <div className="GridWorldTD">
             <Col className='grid' xs={12} md={8}>
                 {this.agentStatus()}
+                {this.envStatus()}
                 {this.toggleLegends()}
-
-                <ButtonToolbar>
-                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
-                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
-                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
-                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
-                </ButtonToolbar>
-
+                {this.envUpdateControl()}
                 {this.grid()}
                 {this.instruction()}
                 </Col>
@@ -301,6 +305,12 @@ class GridWorldTD extends React.Component {
                         {this.agentUpdateInput('ε', 'epsilon')}
                         {this.agentUpdateInput('λ', 'lambda')}
                         {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
+
+                        <Col md={5}>Step reward: =</Col>
+                        <Col md={7}>
+                            <input type="text" value={this.state.env.stepReward} size="10"
+                                   onChange={this.updateEnv.bind(this, 'stepReward', false)} />
+                        </Col>
 
                         <Col md={5}>acting rate: =</Col>
                         <Col md={7}>

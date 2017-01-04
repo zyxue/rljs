@@ -6,12 +6,18 @@ var GridWorld = function({numRows=7, numCols=7,
                           cliffStateIds=[2, 9, 16, 23, 30, 37, 31, 32, 33],
                           startingStateId=0,
                           terminalStateId=3,
+                          stepReward=-0.01,
                          }={}) {
     this.numRows = numRows;
     this.numCols = numCols;
     this.cliffStateIds = cliffStateIds;
     this.startingStateId = startingStateId;
     this.terminalStateId = terminalStateId;
+
+    // the reward incurred each time the agent takes an action regardless of
+    // othe reward, if negative (usually the case), it becomes a penalty for
+    // staying in the game for too long
+    this.stepReward = stepReward;
 
     this.reset();
 };
@@ -56,7 +62,7 @@ GridWorld.prototype = {
         // reward of being in s, taking action a, and ending up in ns
         let reward = s0.reward;
         // every non-exit step takes a bit of negative reward
-        if (!this.isTerminal(s0)) reward -= 0.01;
+        if (!this.isTerminal(s0)) reward += this.stepReward;
         return reward;
     },
 
