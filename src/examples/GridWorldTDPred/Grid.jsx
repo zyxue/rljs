@@ -53,6 +53,25 @@ function drawRect(grp, x, y, height, width,
 }
 
 
+function drawFrame(grp, coords, {strokeColor='yellow', strokeWidth=4}={}) {
+    let line = d3.svg.line()
+                 .x(function(d) { return d[0]; })
+                 .y(function(d) { return d[1]; });
+
+    grp.append('path')
+       .attr("d", line([
+           [coords.xmin, coords.ymin],
+           [coords.xmax, coords.ymin],
+           [coords.xmax, coords.ymax],
+           [coords.xmin, coords.ymax],
+           [coords.xmin, coords.ymin]
+       ]))
+       .style('class', 'highlightFrame')
+       .style('stroke', strokeColor)
+       .style('stroke-width', strokeWidth)
+}
+
+
 function genPointsStr(action, coords) {
     let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
@@ -117,9 +136,9 @@ function genPointsStrForAgentAction(action, coords) {
 
 class Grid extends Component {
     handleMouseClick(rect, state) {
-        console.debug(state);
-        /* this.props.updateSelectedState(state);
-         * console.debug(this.props.selectedState);*/
+        console.debug('state: ', state);
+        this.props.updateSelectedState(state);
+        console.debug('selectedState: ' + this.props.selectedState);
     }
 
     drawGrid() {
@@ -167,20 +186,19 @@ class Grid extends Component {
             }
 
             // add a click event
-
-            /* let that = this;*/
             grp.select('rect')
                .style('cursor', 'pointer')
                .on('click', function() {
-                // here, this is the rect object
-                console.debug(this);
-                console.debug(that.handleMouseClick);
-                that.handleMouseClick(this, st);
-            });
+                   // here, this is the rect object
+                   // console.debug(this);
+                   // console.debug(that.handleMouseClick);
+                   that.handleMouseClick(this, st);
+               });
         }) 
 
         // height terminal state
-        this.highlightTerminalState(context, env, cellHeight, cellWidth);
+        /* this.highlightTerminalState(context, env, cellHeight, cellWidth);*/
+        this.highlightState(context, env.terminalState, cellHeight, cellWidth, {'strokeColor': 'green'});
     }
 
     drawOneCell(cellContext, st, coords, showLegend) {
@@ -296,12 +314,9 @@ class Grid extends Component {
                .attr('id', 'cpos');
     }
 
-    highlightTerminalState(context, env, cellHeight, cellWidth) {
-        let x = env.stox(env.terminalState.id);
-        let y = env.stoy(env.terminalState.id);
-        let coords = this.calcCoords(x, y, cellHeight, cellWidth);
-        drawRect(context, coords.xmin, coords.ymin, cellHeight, cellWidth,
-                 {fillOpacity: 0, strokeColor: 'green', strokeWidth: 4});
+    highlightState(context, state, cellHeight, cellWidth, {strokeColor='yellow', strokeWidth=4}) {
+        let coords = this.calcCoords(state.x, state.y, cellHeight, cellWidth);
+        drawFrame(context, coords, {strokeColor: strokeColor, strokeWidth: strokeWidth});
     }
 
     setContext() {
