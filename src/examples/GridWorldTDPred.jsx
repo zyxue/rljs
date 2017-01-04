@@ -63,6 +63,12 @@ class GridWorldTD extends React.Component {
         this.setState({agent: agent});
     }
 
+    updateAgentAction() {
+        let agent = this.state.agent;
+        agent.a0 = (agent.a0 + 1) % 4;
+        this.setState({agent: agent});
+    }
+
     updateActingRate(event) {
         let newActingRate = event.target.value;
         this.setState({actingRate: newActingRate});
@@ -187,6 +193,7 @@ class GridWorldTD extends React.Component {
                 showLegend={this.state.showLegend}
                 selectedState={this.state.selectedState}
                 updateSelectedState={this.updateSelectedState.bind(this)}
+                updateAgentAction={this.updateAgentAction.bind(this)}
             />
         )
     }

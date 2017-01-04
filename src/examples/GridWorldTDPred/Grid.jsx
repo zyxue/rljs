@@ -234,7 +234,7 @@ class Grid extends Component {
     }
 
     drawAgent(context) {
-        const {height, width, agent} = this.props;
+        const {height, width, agent, updateAgentAction} = this.props;
         const {numRows, numCols} = agent.env;
         const cellHeight = height / numRows;
         const cellWidth = width  / numCols;
@@ -250,7 +250,11 @@ class Grid extends Component {
                .attr('fill', '#FF0')
                .attr('fill-opacity', 1)
                .attr('stroke', '#000')
-               .attr('id', 'cpos');
+               .attr('id', 'cpos')
+               .style('cursor', 'pointer')
+               .on('click', function () {
+                   updateAgentAction();
+               })
     }
 
     drawAgentAction(cellContext, action, coords) {
