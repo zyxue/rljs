@@ -94,6 +94,13 @@ class GridWorldTD extends React.Component {
     }
 
     updateSelectedState(state) {
+        if (this.state.selectedState !== null) {
+            if (state.id === this.state.selectedState.id) {
+                this.setState({selectedState: null});
+                return
+            }
+        }
+
         this.setState({selectedState: state});
     }
 
