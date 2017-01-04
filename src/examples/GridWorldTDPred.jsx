@@ -156,32 +156,39 @@ class GridWorldTD extends React.Component {
                         <Line
                             height={150}
                             width={300}
+                            margin={{top:30, left: 40, bottom:30}}
                             id={'TD-num-steps-per-episode'}
                             data={this.state.agent.numStepsPerEpisode}
-                            title={'# steps/episode'}
+                            xlabel={'Episode count'}
+                            ylabel={'# steps'}
                         />
                     </div>
-
-                    <div className="row">
-                        <Line
-                        height={150}
-                        width={300}
-                        id={'TD-etrace'}
-                        data={this.state.env.states.map((st) => (st.Z))}
-                        title={'eligibility trace'}
-                        />
-                    </div>
-
 
                     <div className="row">
                         <Line
                             height={150}
                             width={300}
-                            id={'etrace-history'}
-                            data={this.state.env.states[1].epiHistZ}
-                            title={'historical etrace for the current episode at State ' + 1}
+                            margin={{top:30, left: 40, bottom: 30}}
+                            id={'episodic-etrace-history'}
+                            data={this.state.env.states[44].epiHistZ}
+                            title={'Episodic etrace history (Z) at S(' + 1 + ')'}
+                            xlabel={'Time'}
+                            ylabel={'Z'}
                         />
                     </div>
+
+                   <div className="row">
+                        <Line
+                            height={150}
+                            width={300}
+                            margin={{top:30, left: 40, bottom: 30}}
+                            id={'TD-etrace'}
+                            data={this.state.env.states.map((st) => (st.Z))}
+                            title={'Serial view of eligibility trace (Z)'}
+                            xlabel={'State'}
+                            ylabel={'Z'}
+                        />
+                   </div>
 
                     <div className="row">
                         <Col md={3}># rows =</Col>
