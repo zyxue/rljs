@@ -3,13 +3,12 @@ import * as d3 from 'd3';
 
 import './Line.css';
 
-/* draws the grid based on agent.env, agent.V and agent.P */
 
 class Line extends Component {
     drawLine() {
         const context = this.setContext();
 
-        const {height, width, agent, data, title} = this.props;
+        const {height, width, margin, data, title, xlabel, ylabel} = this.props;
 
         /* http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5 */
         var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
@@ -30,7 +29,7 @@ class Line extends Component {
         // Add the X Axis
         context.append('g')
                .attr('class', 'x axis')
-               .style("font-size", "12px")
+               .style("font-size", "10px")
                .attr('transform', 'translate(0,' + height + ')')
                .call(xAxis);
 
@@ -40,14 +39,30 @@ class Line extends Component {
                .style("font-size", "10px")
                .call(yAxis);
 
-        // Add a title
-        context.append('text')
-               .attr("x", (width / 2))
-               .attr("y", 0)
-               .attr("text-anchor", "middle")
-               .style("font-size", "16px")
-        /* .style("text-decoration", "underline")*/
-               .text(title);
+        if (title !== undefined)
+            context.append('text')
+                   .attr("x", (width / 2))
+                   .attr("y", 0)
+                   .attr("text-anchor", "middle")
+                   .attr("dominant-baseline", "text-after-edge")
+                   .style("font-size", "13px")
+                   .text(title);
+
+        if (xlabel !== undefined)
+            context.append('text')
+                   .attr("text-anchor", "middle")
+                   .attr("transform", "translate("+ (width/2) +","+(height + (margin.bottom || 0))+")")
+                   .attr("dominant-baseline", "text-after-edge")
+                   .style("font-size", "11px")
+                   .text(xlabel);
+
+        if (ylabel !== undefined)
+            context.append("text")
+                   .attr("text-anchor", "middle")
+                   /* /1.27 is a very brittle setting after careful adjustment to make it look better */
+                   .attr("transform", "translate("+ -margin.left / 1.27 +","+(height/2)+")rotate(-90)")
+                   .style("font-size", "11px")
+                   .text(ylabel);
     }
 
     redrawLine() {
@@ -63,17 +78,15 @@ class Line extends Component {
     }
 
     setContext() {
-        const {height, width, id} = this.props;
-        /* for simplicity to make margin on all sides the same, and 1/3 of the
-        length on each dimension is used as margin to show axis ticks */
-        let margin = this.margin = height * 1 / 2;
+        const {height, width, margin, id} = this.props;
         return d3.select(this.refs.lineDiv).append('svg')
-                 .attr('height', height + margin)
-                 .attr('width', width + margin)
+                 // parentheses are important to ensure the correct order of evaluation
+                 .attr('height', height + (margin.top || 0) + (margin.bottom || 0))
+                 .attr('width', width + (margin.left || 0) + (margin.right || 0))
                  .attr('id', id)
                  .append('g')
                  .attr("transform",
-                       "translate(" + margin / 2 + "," + margin / 2 + ")");
+                       "translate(" + margin.left + "," + margin.top + ")");
     }
 
     componentDidMount() {
