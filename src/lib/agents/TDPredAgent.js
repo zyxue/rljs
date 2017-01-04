@@ -116,7 +116,7 @@ TDPredAgent.prototype = {
         while (! this.env.isTerminal(this.s0)) {
             this.act();
 
-            if (this.numStepsCurrentEpisode > 5000) {
+            if (this.numStepsCurrentEpisode > 2500) {
                 console.error('taking too long to end one episode: > ' +
                               this.numStepsCurrentEpisode + ' steps.');
                 break;
