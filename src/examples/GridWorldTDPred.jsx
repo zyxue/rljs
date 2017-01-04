@@ -166,12 +166,13 @@ class GridWorldTD extends React.Component {
                 <li>Gridworld is deterministic! So once the agent selects an action, its next state is deterministic.</li>
                 <li>After the agent reachs the terminal state, it needs an additional step (basically action of any direction will do) to exit the terminal state and obtain the plus reward. Then the episode ends, and the agent is reinitialized to the starting state.</li>
                 <li>Starting and terminal state, cliffs, rewards should be adjustable (TODO).</li>
-                <li>The right side below the plots are dashboard, where you can adjust different kinds of paramters. The greek letters are:</li>
+                <li>The right side below the plots are dashboard, where you can adjust different kinds of paramters. Some of them are:</li>
                     <ul>
                         <li>α: learning rate</li>
                         <li>γ: return discount factor</li>
                         <li>ε: the exploration rate as defined in ε-greedy policy. When ε = 0, it's greedy policy, NO exploration at all; when ε = 1, it's a random policy</li>
                         <li>λ: trace-decay parameter</li>
+                        <li>Acting rate controls how fast the agent moves when toggle.</li>
                     </ul>
             </ul>
             </div>
