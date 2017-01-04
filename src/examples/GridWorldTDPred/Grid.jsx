@@ -53,25 +53,6 @@ function drawRect(grp, x, y, height, width,
 }
 
 
-function drawFrame(grp, coords, {strokeColor='yellow', strokeWidth=3}={}) {
-    let line = d3.svg.line()
-                 .x(function(d) { return d[0]; })
-                 .y(function(d) { return d[1]; });
-
-    grp.append('path')
-       .attr("d", line([
-           [coords.xmin, coords.ymin],
-           [coords.xmax, coords.ymin],
-           [coords.xmax, coords.ymax],
-           [coords.xmin, coords.ymax],
-           [coords.xmin, coords.ymin]
-       ]))
-       .style('class', 'highlightFrame')
-       .style('stroke', strokeColor)
-       .style('stroke-width', strokeWidth)
-}
-
-
 function genPointsStr(action, coords) {
     let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
@@ -196,12 +177,14 @@ class Grid extends Component {
                });
         }) 
 
-        this.highlightState(context, env.terminalState,
-                            cellHeight, cellWidth, {'strokeColor': 'green'});
-
         if (this.props.selectedState !== null)
-            this.highlightState(context, this.props.selectedState,
-                                cellHeight, cellWidth, {'strokeColor': 'orange'});
+            this.highlightState(context, this.props.selectedState, cellHeight, cellWidth,
+                                {fillColor: 'orange', fillOpacity: 0.5});
+
+        this.highlightState(context, env.startingState, cellHeight, cellWidth,
+                            {fillColor: 'blue', fillOpacity: 0.3});
+        this.highlightState(context, env.terminalState, cellHeight, cellWidth,
+                            {fillColor: 'green', fillOpacity: 0.3});
     }
 
     drawOneCell(cellContext, st, coords, showLegend) {
@@ -317,9 +300,31 @@ class Grid extends Component {
                .attr('id', 'cpos');
     }
 
-    highlightState(context, state, cellHeight, cellWidth, {strokeColor='yellow', strokeWidth=3}) {
+    highlightState(context, state, cellHeight, cellWidth,
+                   {fillColor=null, fillOpacity=1, strokeColor='black', strokeWidth=0}) {
         let coords = this.calcCoords(state.x, state.y, cellHeight, cellWidth);
-        drawFrame(context, coords, {strokeColor: strokeColor, strokeWidth: strokeWidth});
+        let line = d3.svg.line()
+                     .x(function(d) { return d[0]; })
+                     .y(function(d) { return d[1]; });
+
+        let that = this;
+        context.append('path')
+               .attr("d", line([
+                   [coords.xmin, coords.ymin],
+                   [coords.xmax, coords.ymin],
+                   [coords.xmax, coords.ymax],
+                   [coords.xmin, coords.ymax],
+                   [coords.xmin, coords.ymin]
+               ]))
+               .style('class', 'highlightFrame')
+               .style('stroke', strokeColor)
+               .style('stroke-width', strokeWidth)
+               .style('fill', fillColor)
+               .style('fill-opacity', fillOpacity)
+               .style('cursor', 'pointer')
+               .on('click', function() {
+                   that.handleMouseClick(this, state);
+               });
     }
 
     setContext() {
