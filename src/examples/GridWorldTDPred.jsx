@@ -153,7 +153,7 @@ class GridWorldTD extends React.Component {
 
     agentStatus() {
         return (
-            <p className="text-center">
+            <p>
                 <strong>Agent status: </strong><span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>
             </p>
         )
@@ -161,16 +161,16 @@ class GridWorldTD extends React.Component {
 
     envStatus() {
         return (
-            <p className="text-center">
-                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>
+            <p>
+                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward.toFixed(2)}</span>
                 <div className="slider step-reward"><input type="range" min="-0.1" max="0.1" value={this.state.env.stepReward} step="0.01" onChange={this.updateEnvStepReward.bind(this, 'stepReward')}/></div>
             </p>
         )
     }
 
-    toggleLegends() {
+    legendsControl() {
         return (
-            <p className="text-center">
+            <p>
                 <strong>Toggle legends:</strong> <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateValue')}>State values</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateId')}>State ID</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'stateCoord')}>State coordinates</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'reward')}>Rewards</a>; <a className="toggle-button" onClick={this.toggleLegend.bind(this, 'etrace')}>Eligibility trace</a>
             </p>
         )
@@ -217,6 +217,15 @@ class GridWorldTD extends React.Component {
                         <li>λ: trace-decay parameter</li>
                         <li>Acting rate controls how fast the agent moves when toggle.</li>
                     </ul>
+
+                    <li><strong>Instruction for agent control:</strong></li>
+                    <ul>
+                        <li>Act: take one action</li>
+                        <li>Toggle: Take actions continously indefinitely</li>
+                        <li>Learn: Learn from one batch ({this.state.agent.batchSize}) of episodes</li>
+                    </ul>
+
+
             </ul>
             </div>
         )
@@ -267,19 +276,19 @@ class GridWorldTD extends React.Component {
         )
     }
 
-    envUpdateControl() {
+    cellControl() {
         let st = this.state.selectedState;
         let disabled = st === null? true: false;
         let sliderReward = st === null? 0: st.reward;
         return (
             <div>
-                <strong>Set selected state as</strong>
+                <strong>Cell Control:</strong> set selected state as &nbsp;
                 <ButtonToolbar style={{display: 'inline-block', 'vertical-align': 'middle'}}>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
                 </ButtonToolbar>
-
+                &nbsp;
                 <div className="slider selected-reward"><input type="range" min="-1" max="1" disabled={disabled} value={sliderReward} step="0.01" onChange={this.adjustSelectedReward.bind(this)}/></div>
             </div>
         )
@@ -293,13 +302,38 @@ class GridWorldTD extends React.Component {
             <Col className='grid' xs={12} md={8}>
                 {this.agentStatus()}
                 {this.envStatus()}
-                {this.toggleLegends()}
-                {this.envUpdateControl()}
+                {this.cellControl()}
+                {this.legendsControl()}
                 {this.grid()}
                 {this.instruction()}
                 </Col>
 
                 <Col xs={12} md={4}>
+                    <p><strong>Agent control:</strong></p>
+                    <div className="row">
+                        {this.dimensionUpdateSelect('# rows', 'numRows')}
+                        {this.dimensionUpdateSelect('# columns', 'numCols')}
+
+                        {this.agentUpdateInput('α', 'alpha')}
+                        {this.agentUpdateInput('γ', 'gamma')}
+                        {this.agentUpdateInput('ε', 'epsilon')}
+                        {this.agentUpdateInput('λ', 'lambda')}
+                        {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
+
+                        <Col md={5}>acting rate: =</Col>
+                        <Col md={7}>
+                            <input type="text" value={this.state.actingRate} size="10"
+                                   onChange={this.updateActingRate.bind(this)} />
+                        </Col>
+                    </div>
+
+                    <ButtonToolbar>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggle')}>Toggle</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
+                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
+                    </ButtonToolbar>
+
                     <div className="row">
                         <Line
                             height={150}
@@ -329,36 +363,6 @@ class GridWorldTD extends React.Component {
                         />
                    </div>
 
-                    <div className="row">
-                        {this.dimensionUpdateSelect('# rows', 'numRows')}
-                        {this.dimensionUpdateSelect('# columns', 'numCols')}
-
-                        {this.agentUpdateInput('α', 'alpha')}
-                        {this.agentUpdateInput('γ', 'gamma')}
-                        {this.agentUpdateInput('ε', 'epsilon')}
-                        {this.agentUpdateInput('λ', 'lambda')}
-                        {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
-
-                        <Col md={5}>acting rate: =</Col>
-                        <Col md={7}>
-                            <input type="text" value={this.state.actingRate} size="10"
-                                   onChange={this.updateActingRate.bind(this)} />
-                        </Col>
-                    </div>
-
-                    <ButtonToolbar>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggle')}>Toggle</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
-                    </ButtonToolbar>
-
-                    <h4>Instruction:</h4>
-                    <ul>
-                        <li>Act: take one action</li>
-                        <li>Toggle: Take actions continously indefinitely</li>
-                        <li>Learn: Learn from one batch ({this.state.agent.batchSize}) of episodes</li>
-                    </ul>
                 </Col>
             </div>
         );
