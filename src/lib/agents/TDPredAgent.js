@@ -1,7 +1,8 @@
 import R from '../Recurrent-js';
 
 
-let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7, batchSize=200}={}) {
+let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
+                                 etraceType='accumulatingTrace', batchSize=200, }={}) {
     // store pointer to environment
     this.env = env;
 
@@ -15,6 +16,8 @@ let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7
     this.lambda = lambda;
 
     this.learningAlgo = 'tdLambda';
+    // accumulatingTrace or replacingTrace
+    this.etraceType = etraceType;
 
     // for learning from multiple episodes in batch
     this.batchSize = batchSize;
@@ -76,6 +79,22 @@ TDPredAgent.prototype = {
         }
     },
 
+    updateTrace: function(z, etraceType) {
+        let res = null;
+        switch (etraceType) {
+
+        case 'accumulatingTrace':
+            res = z + 1;
+            break;
+        case 'replacingTrace':
+            res = 1;
+            break;
+        default:
+            // do nothing
+        }
+        return res;
+    },
+
     tdLambdaAct: function() {
         // implement 7.7: On-line Tabular TD(λ)
 
@@ -88,7 +107,7 @@ TDPredAgent.prototype = {
         this.numStepsCurrentEpisode += 1;
 
         let delta = reward + this.gamma * s1.V - s0.V;
-        s0.Z = s0.Z + 1;
+        s0.Z = this.updateTrace(s0.Z, this.etraceType);
 
         let that = this;
         this.env.states.forEach((st, idx, arr) => {
