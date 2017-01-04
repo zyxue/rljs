@@ -114,7 +114,14 @@ function genPointsStrForAgentAction(action, coords) {
 
 /* draws the grid based on agent.env, agent.V and agent.P */
 
+
 class Grid extends Component {
+    handleMouseClick(rect, state) {
+        console.debug(state);
+        /* this.props.updateSelectedState(state);
+         * console.debug(this.props.selectedState);*/
+    }
+
     drawGrid() {
         const context = this.setContext();
         this.drawCells(context);
@@ -158,6 +165,18 @@ class Grid extends Component {
             } else {
                 that.drawOneCell(grp, st, coords, showLegend);
             }
+
+            // add a click event
+
+            /* let that = this;*/
+            grp.select('rect')
+               .style('cursor', 'pointer')
+               .on('click', function() {
+                // here, this is the rect object
+                console.debug(this);
+                console.debug(that.handleMouseClick);
+                that.handleMouseClick(this, st);
+            });
         }) 
 
         // height terminal state
