@@ -29,7 +29,6 @@ TDPredAgent.prototype = {
     reset: function(){
         this.env.states.forEach((st) => {
             st.V = 0;
-            st.Z = 0;
         });
 
         // for keeping learning progress
@@ -45,6 +44,7 @@ TDPredAgent.prototype = {
         this.numStepsCurrentEpisode = 0;
         // reset etrace history
         this.env.states.forEach((st) => {
+            st.Z = 0;
             st.epiHistZ = [];
         });
         this.s0 = this.env.initState();
