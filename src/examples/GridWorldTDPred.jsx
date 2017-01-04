@@ -195,6 +195,36 @@ class GridWorldTD extends React.Component {
         );
     }
 
+    dimensionUpdateSelect(label, attr, keyPrefix=label) {
+        return (
+            <div>
+                <Col md={4}>{label} =</Col>
+                <Col md={2}>
+                    <select value={this.state.env[attr]} onChange={this.updateEnv.bind(this, attr)}>
+                        {
+                            this.allowedDimensions.map(function (e, i, a) {
+                                return <option key={keyPrefix + e} value={e}>{e}</option>
+                            })
+                        }
+                    </select>
+                </Col>
+            </div>
+        )
+    }
+
+    agentUpdateInput(label, attr, {labelNumCols=2, valueNumCols=4} = {}) {
+        return (
+            <div>
+                <Col md={labelNumCols}>{label} =</Col>
+                <Col md={valueNumCols}>
+                    <input type="text" value={this.state.agent[attr]} size="10"
+                           onChange={this.updateAgent.bind(this, attr)} />
+                </Col>
+            </div>
+        )
+    }
+
+
     render() {
         return (
             <div className="GridWorldTD">
@@ -236,57 +266,14 @@ class GridWorldTD extends React.Component {
                    </div>
 
                     <div className="row">
-                        <Col md={3}># rows =</Col>
-                        <Col md={3}>
-                            <select value={this.state.env.numRows} onChange={this.updateEnv.bind(this, 'numRows')}>
-                                {
-                                    this.allowedDimensions.map(function (e, i, a) {
-                                        return <option key={e + 'rows'}value={e}>{e}</option>
-                                    })
-                                }
-                            </select>
-                        </Col>
+                        {this.dimensionUpdateSelect('# rows', 'numRows')}
+                        {this.dimensionUpdateSelect('# columns', 'numCols')}
 
-                        <Col md={3}># cols =</Col>
-                        <Col md={3}>
-                            <select value={this.state.env.numCols} onChange={this.updateEnv.bind(this, 'numCols')}>
-                                {
-                                    this.allowedDimensions.map(function (e, i, a) {
-                                        return <option key={e + 'cols'} value={e}>{e}</option>
-                                    })
-                                }
-                            </select>
-                        </Col>
-
-                        <Col md={2}>γ =</Col>
-                        <Col md={4}>
-                            <input type="text" value={this.state.agent.gamma} size="10"
-                                   onChange={this.updateAgent.bind(this, 'gamma')} />
-                        </Col>
-
-                        <Col md={2}>ε =</Col>
-                        <Col md={4}>
-                            <input type="text" value={this.state.agent.epsilon} size="10"
-                                   onChange={this.updateAgent.bind(this, 'epsilon')} />
-                        </Col>
-
-                        <Col md={2}>α =</Col>
-                        <Col md={4}>
-                            <input type="text" value={this.state.agent.alpha} size="10"
-                                   onChange={this.updateAgent.bind(this, 'alpha')} />
-                        </Col>
-
-                        <Col md={2}>λ =</Col>
-                        <Col md={4}>
-                            <input type="text" value={this.state.agent.lambda} size="10"
-                                   onChange={this.updateAgent.bind(this, 'lambda')} />
-                        </Col>
-
-                        <Col md={5}>batch size = </Col>
-                        <Col md={7}>
-                            <input type="text" value={this.state.agent.batchSize} size="10"
-                            onChange={this.updateAgent.bind(this, 'batchSize')} />
-                        </Col>
+                        {this.agentUpdateInput('α', 'alpha')}
+                        {this.agentUpdateInput('γ', 'gamma')}
+                        {this.agentUpdateInput('ε', 'epsilon')}
+                        {this.agentUpdateInput('λ', 'lambda')}
+                        {this.agentUpdateInput('batch size', 'batchSize', {labelNumCols:5, valueNumCols: 7})}
 
                         <Col md={5}>acting rate: =</Col>
                         <Col md={7}>
@@ -294,7 +281,6 @@ class GridWorldTD extends React.Component {
                                    onChange={this.updateActingRate.bind(this)} />
                         </Col>
                     </div>
-
 
                     <ButtonToolbar>
                         <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
