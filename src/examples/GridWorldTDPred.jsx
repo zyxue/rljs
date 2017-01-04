@@ -100,8 +100,27 @@ class GridWorldTD extends React.Component {
                 return
             }
         }
-
         this.setState({selectedState: state});
+    }
+
+    setSelectedStateAs(key) {
+        let env = this.state.env;
+        let st = this.state.selectedState;
+        if (key === 'startingState') {
+            st.isCliff = false;
+            env.startingState = st;
+        } else if (key === 'terminalState') {
+            // set reward of old terminal to 0 so as to avoid stuck in old
+            // terminalState taking advantage of plus reward
+            env.terminalState.reward = 0;
+            st.isCliff = false // terminal state cannot be cliff
+            env.terminalState = st;
+            env.terminalState.reward = 1;
+        } else if (key === 'cliff') {
+            if (st.id !== env.startingState.id && st.id !== env.terminalState.id)
+                st.isCliff = !st.isCliff;
+        }
+        this.setState({env: env});
     }
 
     handleClick(action, event) {
@@ -231,6 +250,14 @@ class GridWorldTD extends React.Component {
             <Col className='grid' xs={12} md={8}>
                 {this.agentStatus()}
                 {this.toggleLegends()}
+
+                <ButtonToolbar>
+                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
+                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
+                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
+                    <Button bsStyle='primary' className={this.state.selectedState === null? 'disabled': ''} onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
+                </ButtonToolbar>
+
                 {this.grid()}
                 {this.instruction()}
                 </Col>
