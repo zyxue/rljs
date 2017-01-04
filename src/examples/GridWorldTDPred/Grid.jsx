@@ -39,20 +39,6 @@ function genRGBColorString(val) {
 }
 
 
-function drawRect(grp, x, y, height, width,
-                  {fillColor='white', fillOpacity=1, strokeColor='black', strokeWidth=1}={}) {
-    grp.append('rect')
-       .attr('x', x)
-       .attr('y', y)
-       .attr('height', height)
-       .attr('width', width)
-       .attr('fill', fillColor)
-       .attr('stroke', strokeColor)
-       .attr('stroke-width', strokeWidth)
-       .attr('fill-opacity', fillOpacity);
-}
-
-
 function genPointsStr(action, coords) {
     let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
@@ -159,15 +145,17 @@ class Grid extends Component {
             let coords = that.calcCoords(st.x, st.y, cellHeight, cellWidth);
             let grp = context.append('g');
 
-            if (st.isCliff) {
-                drawRect(grp, coords.xmin, coords.ymin, cellHeight, cellWidth, {fillColor: "#AAA"});
-                if (showLegend.stateId) that.writeStateId(grp, st.id, coords);
-            } else {
-                that.drawOneCell(grp, st, coords, showLegend);
-            }
+            let fillColor = st.isCliff ? '#AAA' : genRGBColorString(st.V);
 
-            // add a click event
-            grp.select('rect')
+            grp.append('rect')
+               .attr('x', coords.xmin)
+               .attr('y', coords.ymin)
+               .attr('height', cellHeight)
+               .attr('width', cellWidth)
+               .attr('stroke', 'black')
+               .attr('stroke-width', 1)
+               .attr('fill', fillColor)
+               // add a click event
                .style('cursor', 'pointer')
                .on('click', function() {
                    // here, this is the rect object
@@ -175,6 +163,13 @@ class Grid extends Component {
                    // console.debug(that.handleMouseClick);
                    that.handleMouseClick(this, st);
                });
+
+            if (showLegend.stateValue) that.writeStateValue(grp, st.V, coords);
+            if (showLegend.stateId) that.writeStateId(grp, st.id, coords);
+            if (showLegend.stateCoord) that.writeStateCoord(grp, st.x, st.y, coords);
+            if (showLegend.reward) that.writeReward(grp, st.reward, coords);
+
+            if (showLegend.etrace) that.drawTrace(grp, st.Z, coords);
         }) 
 
         if (this.props.selectedState !== null)
@@ -185,21 +180,6 @@ class Grid extends Component {
                             {fillColor: 'blue', fillOpacity: 0.3});
         this.highlightState(context, env.terminalState, cellHeight, cellWidth,
                             {fillColor: 'green', fillOpacity: 0.3});
-    }
-
-    drawOneCell(cellContext, st, coords, showLegend) {
-        let cellHeight = coords.ymax - coords.ymin;
-        let cellWidth = coords.xmax - coords.xmin;
-        /* console.debug(st.V);*/
-        drawRect(cellContext, coords.xmin, coords.ymin, cellHeight, cellWidth,
-                 {fillColor: genRGBColorString(st.V)});
-
-        if (showLegend.etrace) this.drawTrace(cellContext, st.Z, coords);
-
-        if (showLegend.stateValue) this.writeStateValue(cellContext, st.V, coords);
-        if (showLegend.stateId) this.writeStateId(cellContext, st.id, coords);
-        if (showLegend.stateCoord) this.writeStateCoord(cellContext, st.x, st.y, coords);
-        if (showLegend.reward) this.writeReward(cellContext, st.reward, coords);
     }
 
     writeStateValue(cellContext, val, coords) {
