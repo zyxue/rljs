@@ -272,14 +272,15 @@ class GridWorldTD extends React.Component {
         let disabled = st === null? true: false;
         let sliderReward = st === null? 0: st.reward;
         return (
-            <div>Set selected state as
-                <ButtonToolbar>
+            <div>
+                <strong>Set selected state as</strong>
+                <ButtonToolbar style={{display: 'inline-block', 'vertical-align': 'middle'}}>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
                 </ButtonToolbar>
 
-                <input type="range" min="-1" max="1" disabled={disabled} value={sliderReward} step="0.01" onChange={this.adjustSelectedReward.bind(this)}/>
+                <div className="slider selected-reward"><input type="range" min="-1" max="1" disabled={disabled} value={sliderReward} step="0.01" onChange={this.adjustSelectedReward.bind(this)}/></div>
             </div>
         )
     }
