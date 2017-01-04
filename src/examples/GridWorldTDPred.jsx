@@ -40,14 +40,22 @@ class GridWorldTD extends React.Component {
         this.setState(showLegend: showLegend);
     }
 
-    updateEnv(key, needsReset=true, event) {
-        console.log(needsReset);
+    updateEnvDimension(key, event) {
         // to avoid Do not mutate state directly. Use setState() warning
         let env = this.state.env;
         env[key] = event.target.value;
-        if (needsReset) env.reset();        // resetting is important, don't forget!
+        env.reset();        // resetting is important, don't forget!
         this.setState({env: env});
     }
+
+    updateEnvStepReward(key, event) {
+        // to avoid Do not mutate state directly. Use setState() warning
+        let env = this.state.env;
+        env[key] = parseFloat(event.target.value);
+        console.log(typeof env[key]);
+        this.setState({env: env});
+    }
+
 
     updateAgent(key, event) {
         let agent = this.state.agent;
@@ -148,11 +156,10 @@ class GridWorldTD extends React.Component {
     envStatus() {
         return (
             <p className="text-center">
-                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>
+                <strong>Environment status: </strong><span># States = </span><span className="text-primary">{this.state.env.numCells}</span>; <span>Step reward = </span><span className="text-primary">{this.state.env.stepReward}</span>    <input type="range" min="-1" max="1" value={this.state.env.stepReward} step="0.01" onChange={this.updateEnvStepReward.bind(this, 'stepReward')}/>
             </p>
         )
     }
-
 
     toggleLegends() {
         return (
@@ -229,7 +236,7 @@ class GridWorldTD extends React.Component {
             <div>
                 <Col md={4}>{label} =</Col>
                 <Col md={2}>
-                    <select value={this.state.env[attr]} onChange={this.updateEnv.bind(this, attr)}>
+                    <select value={this.state.env[attr]} onChange={this.updateEnvDimension.bind(this, attr)}>
                         {
                             this.allowedDimensions.map(function (e, i, a) {
                                 return <option key={keyPrefix + e} value={e}>{e}</option>
