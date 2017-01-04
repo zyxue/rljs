@@ -214,6 +214,7 @@ class GridWorldTD extends React.Component {
                 <li>The second plot shows the episodic eligibility trace (Z) of one state (defaults to State 0). You can see that of a particular state by clicking the corresponding rectangle. An orange bound appears when a state is being selected.</li>
                 <li>The third plot shows a serial view of Z of all states at the current time. The same information is also shown on the grid with yellow circles of different sizes to reflect the difference among Z of different states. See how it diminishes as the agent is leaving the state further and further. The radii of circles are rescaled logarithmically to fit the rectangular better..</li>
                 <li>Gridworld is deterministic! So once the agent selects an action, its next state is deterministic.</li>
+                <li>You can also click on the agent to force it to change its action!</li>
                 <li>After the agent reachs the terminal state, it needs an additional step (basically action of any direction will do) to exit the terminal state and obtain the plus reward. Then the episode ends, and the agent is reinitialized to the starting state.</li>
                 <li>starting state, terminal state, cliffs, and rewards are all adjustable in cell control.</li>
                 <li>The right side below the plots are dashboard, where you can adjust different kinds of paramters. Some of them are:</li>
@@ -290,7 +291,7 @@ class GridWorldTD extends React.Component {
         return (
             <div>
                 <strong>Cell Control:</strong> set selected state as &nbsp;
-                <ButtonToolbar style={{display: 'inline-block', 'vertical-align': 'middle'}}>
+                <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
                     <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
@@ -300,8 +301,6 @@ class GridWorldTD extends React.Component {
             </div>
         )
     }
-
-
 
     render() {
         return (
