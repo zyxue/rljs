@@ -268,8 +268,9 @@ class Grid extends Component {
         cellContext.append('circle')
                .attr('cx', coords.xmid)
                .attr('cy', coords.ymid)
-               // log so that size of circle doesn't change too dramatically among neighbouring cells
-               .attr('r', Math.log(Z * 1000))
+               // log so that size of circle doesn't change too dramatically
+               // among neighbouring cells, 1 to avoid log of 0, and negative radius
+               .attr('r', Math.log(Z * 1000 + 1))
                .attr('fill', '#FF0')
                .attr('fill-opacity', 1)
                .attr('stroke', '#000')
