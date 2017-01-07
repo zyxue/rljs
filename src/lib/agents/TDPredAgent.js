@@ -57,7 +57,8 @@ TDPredAgent.prototype = {
     },
 
     takeGreedyAction: function(s0) {
-        let a0 = s0.allowedActions[0];
+        // take a random first action instead of [0] to avoid bias
+        let a0 = s0.allowedActions[R.randi(0, s0.allowedActions.length)];
         let [rew, s1] = this.env.gotoNextState(s0, a0);
         let val = s1.V;
         for (let i=1; i < s0.allowedActions.length; i++) {
