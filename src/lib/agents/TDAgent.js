@@ -1,25 +1,24 @@
-import R from '../Recurrent-js';
-// import {setConst, getopt, sampleWeighted} from '../utils';
-import {getopt} from '../utils';
+import {zeros, randi} from '../utils';
 
 
-
-let TDAgent = function(env, gamma=0.95, epsilon=0.1, alpha=0.01, lambda=0.3, batchSize=200) {
+let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
+                             etraceType='accumulatingTrace',
+                             batchSize=200}={}) {
     // store pointer to environment
     this.env = env;
 
-    // future reward discount factor
+    // learning rate
+    this.alpha = alpha;
+    // return discount factor
     this.gamma = gamma;
     // for epsilon-greedy policy
     this.epsilon = epsilon;
-    // value function learning rate
-    this.alpha = alpha;
-
-    this.learningAlgo = 'sarsa';
-
-    // sarsa(lambda)
+    // Trace-decay parameter
     this.lambda = lambda;
 
+    this.learningAlgo = 'sarsaLambda';
+
+    // for learning from multiple episodes in batch
     this.batchSize = batchSize;
     this.reset();
 };
@@ -27,24 +26,65 @@ let TDAgent = function(env, gamma=0.95, epsilon=0.1, alpha=0.01, lambda=0.3, bat
 
 TDAgent.prototype = {
     reset: function(){
-        // this number of states the agent could be at
-        this.numStates = this.env.getNumStates();
-        // this maximum number of actions the agent could take
-        this.maxNumActions = this.env.getMaxNumActions();
-
-        let arraySize = this.numStates * this.maxNumActions;
-        this.Q = R.zeros(arraySize); // state-action value function
-        this.Z = R.zeros(arraySize); // eligibility trace
-
-        // needed for drawing grid
-        this.Pi = R.zeros(arraySize); // policy
-        this.V = R.zeros(arraySize);  // state value function
+        this.resetValueFunction();
 
         // for keeping learning progress
         this.numEpisodesExperienced = 0;
         this.numStepsPerEpisode = []; // record how number decreases;
 
         this.resetEpisode();
+    },
+
+    resetEpisode: function() {
+        // reset epsiode level variables
+        this.numStepsCurrentEpisode = 0;
+        this.s0 = this.env.initState();
+        this.a0 = this.chooseAction(this.s0);
+        this.resetTrace();
+    },
+
+    resetValueFunction: function() {
+        this.env.states.forEach(function(state) {
+            state.Q = {};        // state-action value
+            state.allowedActions.forEach(function(action) {
+                state.Q[action] = 0;
+            });
+        });
+    },
+
+    resetTrace: function() {
+        // reset eligibility trace
+        this.env.states.forEach(function(state) {
+            state.Z = {},        // current etrace
+            state.epiHistZ = {}; // episodic historical etrace
+            state.allowedActions.forEach(function(action) {
+                state.Z[action] = 0;
+                state.epiHistZ[action] = [];
+            });
+        });
+    },
+
+    takeRandomAction: function(s0) {
+        let randomInt = randi(0, s0.allowedActions.legnth);
+        return s0.allowedActions[randomInt];
+    },
+
+    takeGreedyAction: function(s0) {
+        let actions = s0.allowedActions;
+        let a0 = actions[randi(0, actions.length)];
+        let qVal = s0.Q[a0];
+        for (let i=0; i < actions.length; i++) {
+            let _qVal = s0.Q[actions[i]];
+            if (_qVal > qVal) {
+                qVal = _qVal;
+                a0 = actions[i];
+            }
+        }
+        return a0;
+    },
+
+    chooseAction: function(s0) {
+        return Math.random() < this.epsilon ? this.takeRandomAction(s0) : this.takeGreedyAction(s0);
     },
 
     _getIdx: function(s, a) {
@@ -54,42 +94,6 @@ TDAgent.prototype = {
     getQ: function(s, a) {
         let idx = this._getIdx(s, a);
         return this.Q[idx];
-    },
-
-    takeRandomAction: function(state) {
-        let actions = this.env.getAllowedActions(state);
-        let randomInt = R.randi(0, actions.length);
-        return actions[randomInt];
-    },
-
-    takeGreedyAction: function(state) {
-        let actions = this.env.getAllowedActions(state);
-        let actn = actions[0];
-        let qVal = this.Q[this._getIdx(state, actn)];
-        for (let i=1; i < actions.length; i++) {
-            let currAction = actions[i];
-            let _qVal = this.Q[this._getIdx(state, currAction)];
-            if (_qVal > qVal) {
-                qVal = _qVal;
-                actn = currAction;
-            }
-        }
-        return actn;
-    },
-
-    chooseAction: function(state) {
-        if (Math.random() < this.epsilon) {
-            return this.takeRandomAction(state);
-        } else {
-            return this.takeGreedyAction(state);
-        }
-    },
-
-    resetEpisode: function() {
-        // reset epsiode level variables
-        this.numStepsCurrentEpisode = 0;
-        this.s0 = this.env.initState();
-        this.a0 = this.chooseAction(this.s0);
     },
 
     sarsaAct: function() {
