@@ -20,7 +20,7 @@ export default React.createClass({
                     <ul role="navigation" className="nav nav-pills">
                         <li><NavLink to="/gridworld-dp">GridWorld DP</NavLink></li>
                         <li><NavLink to="/gridworld-td-pred">GridWorld TD Prediction</NavLink></li>
-                        <li><NavLink to="/gridworld-td">GridWorld TD</NavLink></li>
+                        <li><NavLink to="/gridworld-td">GridWorld TD Control</NavLink></li>
                     </ul>
                 </nav>
                 <br/>
