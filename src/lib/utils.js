@@ -56,3 +56,8 @@ export let zeros = function(n) {
         return new Float64Array(n);
     }
 };
+
+
+export let randi = function(a, b) {
+    return Math.floor(Math.random() * (b - a) + a);
+};
