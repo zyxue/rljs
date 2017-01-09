@@ -3,69 +3,69 @@ import R from '../../lib/Recurrent-js';
 // Different from the ../GridWorldDP/GridWorldEnv, there is no transition or
 // reward function for TD learning because it's a model-free method
 
+var GridWorld = function({numRows=7, numCols=7,
+                          cliffStateIds=[2, 9, 16, 23, 30, 37, 31, 32, 33],
+                          startingStateId=0,
+                          terminalStateId=3,
+                          stepReward=-0.01,
+                          terminalReward=1
+                         }={}) {
+    this.numRows = numRows;
+    this.numCols = numCols;
+    this.cliffStateIds = cliffStateIds;
+    this.startingStateId = startingStateId;
+    this.terminalStateId = terminalStateId;
 
-var GridWorld = function() {
-    // reward array
-    this.Rarr = null;
-    // an array to store information about whether a state is a cliff,
-    // 0 = normal, 1 = cliff
-    this.cliffArr = null;
+    // the reward (usually negative and hence a penalty) for taking an action
+    this.stepReward = stepReward;
+    // the reward for the terminal
+    this.terminalReward = terminalReward;
+
     this.reset();
 };
 
 
 GridWorld.prototype = {
     reset: function() {
+        let numCells = this.numCells = this.numRows * this.numCols;
 
-        // hardcoding one gridworld for now
-        this.numRows = 10;
-        this.numCols = 12;
-        // equivalent to number of states
-        this.numCells = this.numRows * this.numCols;
+        this.states = [];
+        for (let ri = 0; ri < this.numRows; ri++) {
+            for (let ci = 0; ci < this.numCols; ci++) {
+                let id = this.xytos(ci, ri);
+                this.states.push({
+                    id: id,
+                    x: ci,
+                    y: ri,
+                    reward: 0,
+                    isCliff: false,
+                    allowedActions: this.getAllowedActions(id),
 
-        this.startState = 0;
-        this.goalState = 55;
-
-        // specify some rewards
-        let Rarr = R.zeros(this.numCells);
-        /* cliffs */
-        let cliffArr = R.zeros(this.numCells);
-
-        let plusOneIdx = [55];
-        for (let i = 0; i < plusOneIdx.length; i++) {
-            Rarr[plusOneIdx[i]] = 1;
+                    // to be filled later
+                    Q: {},       // state-action value
+                    Z: {},       // current etrace
+                    epiHistZ: {} // episodic historical etrace
+                });
+            }
         }
 
-        let negOneIdx = [54, 64, 65, 85, 86, 37, 33, 67, 57];
-        for (let i = 0; i < negOneIdx.length; i++) {
-            Rarr[negOneIdx[i]] = -1;
-        }
+        this.states.forEach(function(state) {
+            state.allowedActions.forEach(function(action) {
+                state.Q[action] = 0;
+                state.Z[action] = 0;
+                state.epiHistZ[action] = 0;
+            });
+        });
 
-        // make some cliffs
-        for (let q = 0; q < 8; q++) {
-            let off = (q + 1) * this.numRows + 2;
-            cliffArr[off] = 1;
-            Rarr[off] = 0;
-        }
+        // default starting state
+        this.startingState = this.states[this.startingStateId];
+        // default terminal state
+        // this.terminalState = this.states[Math.floor(this.numCells / 2)];
+        this.terminalState = this.states[this.terminalStateId];
+        this.terminalState.reward = this.terminalReward;
 
-        for (let q = 0; q < 6; q++) {
-            let off = 4 * this.numRows + q + 2;
-            cliffArr[off] = 1;
-            Rarr[off] = 0;
-        }
-
-        let cliffIdx = [37, 38, 39, 40, 41];
-        for (let i = 0; i < cliffIdx.length; i++) {
-            cliffArr[cliffIdx[i]] = 1;
-            Rarr[cliffIdx[i]] = 0;
-        }
-
-        cliffArr[5 * this.numRows + 2] = 0;
-        Rarr[5 * this.numRows + 2] = 0; // make a hole
-
-        this.Rarr = Rarr;
-        this.cliffArr = cliffArr;
-
+        let that = this;
+        this.cliffStateIds.forEach((id) => {that.states[id].isCliff = true});
     },
 
     calcReward: function(s0, action, s1) {
