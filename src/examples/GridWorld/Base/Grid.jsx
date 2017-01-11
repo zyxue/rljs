@@ -5,102 +5,6 @@ import * as d3 from 'd3';
 https://github.com/alanbsmith/react-d3-example/blob/master/src/ProgressArc.js */
 
 
-function calcRGBColor(val) {
-    /* based on the value, calculate the corresponding RGB color */
-
-    let scaler = 1000;
-    let r, g, b;
-    if (val > 0) {
-        r = 255 - val * scaler;
-        g = 255;
-        b = 255 - val * scaler;
-    } else if (val === 0) {
-        r = 255;
-        g = 255;
-        b = 255;
-    }
-    if (val < 0) {
-        r = 255;
-        g = 255 + val * scaler;
-        b = 255 + val * scaler;
-    }
-
-    /* console.debug(r, g, b);*/
-    return {red: r, green: g, blue: b};
-}
-
-
-function genRGBColorString(val) {
-    let rgbColor = calcRGBColor(val);
-    return 'rgb(' +
-           Math.floor(rgbColor.red) + ',' +
-           Math.floor(rgbColor.green) + ',' +
-           Math.floor(rgbColor.blue) + ')';
-}
-
-
-function genPointsStr(action, coords) {
-    let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
-
-    /* given an action, it generate the 3 points needed to form a triagle*/
-    let str;
-    if (action === 0) {
-        str = xmin + ',' + ymin + ' ' +
-              xmin + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 1) {
-        str = xmin + ',' + ymin + ' ' +
-              xmax + ',' + ymin + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 2) {
-        str = xmax + ',' + ymin + ' ' +
-              xmax + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 3) {
-        str = xmin + ',' + ymax + ' ' +
-              xmax + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-    }
-   return str;
-}
-
-
-function genPointsStrForAgentAction(action, coords) {
-    let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
-
-    // scaler
-    let S = 5 / 6
-    let str;
-    if (action === 0) {
-        str = (xmid - xmin) * (1 - S) + xmin + ',' + ymid + ' ' +
-              xmid + ',' + (ymax + ymid) / 2 + ' ' +
-              xmid + ',' + (ymin + ymid) / 2;
-
-    } else if (action === 1) {
-        str = xmid + ',' + ((ymid - ymin) * (1 - S) + ymin) + ' ' +
-              (xmin + xmid) / 2 + ',' + ymid + ' ' +
-              (xmax + xmid) / 2 + ',' + ymid;
-
-    } else if (action === 2) {
-        str = (xmax - xmid) * S + xmid  + ',' + ymid + ' ' +
-              xmid + ',' + (ymax + ymid) / 2 + ' ' +
-              xmid + ',' + (ymin + ymid) / 2;
-
-    } else if (action === 3) {
-        str = xmid + ',' + ((ymax - ymid) * S + ymid) + ' ' +
-              (xmin + xmid) / 2 + ',' + ymid + ' ' +
-              (xmax + xmid) / 2 + ',' + ymid;
-    }
-   return str;
-}
-
-
-/* draws the grid based on agent.env, agent.V and agent.P */
-
-
 class Grid extends Component {
     handleMouseClick(rect, state) {
         /* console.debug('state: ', state);*/
@@ -111,7 +15,7 @@ class Grid extends Component {
     drawGrid() {
         const context = this.setContext();
         this.drawCells(context);
-        this.drawAgent(context);
+        /* this.drawAgent(context);*/
     }
 
     redrawGrid() {
@@ -120,9 +24,14 @@ class Grid extends Component {
         this.drawGrid();
     }
 
+    drawCells(context) {
+        /* to be overwritten */
+    }
+
     calcCoords(x, y, height, width) {
-        /* the 6 numbers decide coordinates of 5 points, which decide 4 triagles
-           corresponding for 4 Q values at each state */
+        /* the 6 numbers that define the coordinates of 5 points in side each
+           square, useful for e.g. drawing triagles corresponding to Q values at
+           each state */
         let xmin = x * width;
         let ymin = y * height;
         let xmax = (x + 1) * width;
@@ -132,54 +41,6 @@ class Grid extends Component {
         return {xmin:xmin, ymin:ymin,
                 xmid:xmid, ymid:ymid,
                 xmax:xmax, ymax:ymax};
-    }
-
-    drawCells(context) {
-        const {height, width, agent, env, showLegend} = this.props;
-        const {numRows, numCols} = env;
-        const cellHeight = height / numRows;
-        const cellWidth = width  / numCols;
-
-        let that = this;
-        env.states.forEach(function (st, idx, arr) {
-            let coords = that.calcCoords(st.x, st.y, cellHeight, cellWidth);
-            let grp = context.append('g');
-
-            let fillColor = st.isCliff ? '#AAA' : genRGBColorString(st.V);
-
-            grp.append('rect')
-               .attr('x', coords.xmin)
-               .attr('y', coords.ymin)
-               .attr('height', cellHeight)
-               .attr('width', cellWidth)
-               .attr('stroke', 'black')
-               .attr('stroke-width', 1)
-               .attr('fill', fillColor)
-               // add a click event
-               .style('cursor', 'pointer')
-               .on('click', function() {
-                   // here, this is the rect object
-                   // console.debug(this);
-                   // console.debug(that.handleMouseClick);
-                   that.handleMouseClick(this, st);
-               });
-
-            if (showLegend.stateValue) that.writeStateValue(grp, st.V, coords);
-            if (showLegend.stateId) that.writeStateId(grp, st.id, coords);
-            if (showLegend.stateCoord) that.writeStateCoord(grp, st.x, st.y, coords);
-            if (showLegend.reward) that.writeReward(grp, st.reward, coords);
-
-            if (showLegend.etrace) that.drawTrace(grp, st.Z, coords);
-        }) 
-
-        if (this.props.selectedState !== null)
-            this.highlightState(context, this.props.selectedState, cellHeight, cellWidth,
-                                {fillColor: 'orange', fillOpacity: 0.5});
-
-        this.highlightState(context, env.startingState, cellHeight, cellWidth,
-                            {fillColor: 'blue', fillOpacity: 0.3});
-        this.highlightState(context, env.terminalState, cellHeight, cellWidth,
-                            {fillColor: 'green', fillOpacity: 0.3});
     }
 
     writeStateValue(cellContext, val, coords) {
@@ -258,7 +119,7 @@ class Grid extends Component {
     }
 
     drawAgentAction(cellContext, action, coords) {
-        let pointsStr = genPointsStrForAgentAction(action, coords);
+        let pointsStr = this.genPointsStrForAgentAction(action, coords);
         /* console.debug(pointsStr);*/
         cellContext.append('polygon')
                    .attr('points', pointsStr)
@@ -309,6 +170,96 @@ class Grid extends Component {
                .on('click', function() {
                    that.handleMouseClick(this, state);
                });
+    }
+
+    genRGBColorString(val) {
+        let rgbColor = this.calcRGBColor(val);
+        return 'rgb(' +
+               Math.floor(rgbColor.red) + ',' +
+               Math.floor(rgbColor.green) + ',' +
+               Math.floor(rgbColor.blue) + ')';
+    }
+
+
+    calcRGBColor(val) {
+        /* based on the value, calculate the corresponding RGB color */
+
+        let scaler = 1000;
+        let r, g, b;
+        if (val > 0) {
+            r = 255 - val * scaler;
+            g = 255;
+            b = 255 - val * scaler;
+        } else if (val === 0) {
+            r = 255;
+            g = 255;
+            b = 255;
+        }
+        if (val < 0) {
+            r = 255;
+            g = 255 + val * scaler;
+            b = 255 + val * scaler;
+        }
+
+        /* console.debug(r, g, b);*/
+        return {red: r, green: g, blue: b};
+    }
+
+    genPointsStr(action, coords) {
+        let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
+
+        /* given an action, it generate the 3 points needed to form a triagle*/
+        let str;
+        if (action === 0) {
+            str = xmin + ',' + ymin + ' ' +
+                  xmin + ',' + ymax + ' ' +
+                  xmid + ',' + ymid;
+
+        } else if (action === 1) {
+            str = xmin + ',' + ymin + ' ' +
+                  xmax + ',' + ymin + ' ' +
+                  xmid + ',' + ymid;
+
+        } else if (action === 2) {
+            str = xmax + ',' + ymin + ' ' +
+                  xmax + ',' + ymax + ' ' +
+                  xmid + ',' + ymid;
+
+        } else if (action === 3) {
+            str = xmin + ',' + ymax + ' ' +
+                  xmax + ',' + ymax + ' ' +
+                  xmid + ',' + ymid;
+        }
+        return str;
+    }
+
+    genPointsStrForAgentAction(action, coords) {
+        let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
+
+        // scaler
+        let S = 5 / 6
+        let str;
+        if (action === 0) {
+            str = (xmid - xmin) * (1 - S) + xmin + ',' + ymid + ' ' +
+                  xmid + ',' + (ymax + ymid) / 2 + ' ' +
+                  xmid + ',' + (ymin + ymid) / 2;
+
+        } else if (action === 1) {
+            str = xmid + ',' + ((ymid - ymin) * (1 - S) + ymin) + ' ' +
+               (xmin + xmid) / 2 + ',' + ymid + ' ' +
+               (xmax + xmid) / 2 + ',' + ymid;
+
+        } else if (action === 2) {
+            str = (xmax - xmid) * S + xmid  + ',' + ymid + ' ' +
+                  xmid + ',' + (ymax + ymid) / 2 + ' ' +
+                  xmid + ',' + (ymin + ymid) / 2;
+
+        } else if (action === 3) {
+            str = xmid + ',' + ((ymax - ymid) * S + ymid) + ' ' +
+               (xmin + xmid) / 2 + ',' + ymid + ' ' +
+               (xmax + xmid) / 2 + ',' + ymid;
+        }
+        return str;
     }
 
     setContext() {
