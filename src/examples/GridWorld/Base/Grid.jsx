@@ -205,34 +205,6 @@ class Grid extends Component {
         return {red: r, green: g, blue: b};
     }
 
-    genPointsStr(action, coords) {
-        let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
-
-        /* given an action, it generate the 3 points needed to form a triagle*/
-        let str;
-        if (action === 0) {
-            str = xmin + ',' + ymin + ' ' +
-                  xmin + ',' + ymax + ' ' +
-                  xmid + ',' + ymid;
-
-        } else if (action === 1) {
-            str = xmin + ',' + ymin + ' ' +
-                  xmax + ',' + ymin + ' ' +
-                  xmid + ',' + ymid;
-
-        } else if (action === 2) {
-            str = xmax + ',' + ymin + ' ' +
-                  xmax + ',' + ymax + ' ' +
-                  xmid + ',' + ymid;
-
-        } else if (action === 3) {
-            str = xmin + ',' + ymax + ' ' +
-                  xmax + ',' + ymax + ' ' +
-                  xmid + ',' + ymid;
-        }
-        return str;
-    }
-
     genPointsStrForAgentAction(action, coords) {
         let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
