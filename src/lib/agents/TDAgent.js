@@ -102,9 +102,7 @@ TDAgent.prototype = {
         // implement the "repeat (for each step of episode)" part of Figure
         // 7.11: Tabular Sarsa(λ)
 
-        let s0 = this.s0;
-        let a0 = this.a0;
-
+        let {s0, a0} = this;
         let [reward, s1] = this.env.gotoNextState(s0, a0);
         let a1 = this.chooseAction(s1);
 
@@ -122,14 +120,6 @@ TDAgent.prototype = {
             });
         });
 
-        // for (let si=0; si < this.numStates; si++) {
-        //     for (let aj=0; aj < this.maxNumActions; aj++) {
-        //         let idx = this._getIdx(si, aj);
-        //         this.Q[idx] = this.Q[idx] + this.alpha * delta * this.Z[idx];
-        //         this.Z[idx] = this.gamma * this.lambda * this.Z[idx];
-        //     }
-        // }
-
         if (this.env.isTerminal(s0)) {
             this.numEpisodesExperienced += 1;
             this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
@@ -140,38 +130,30 @@ TDAgent.prototype = {
         }
     },
 
-    qLearningAct: function() {
-        // implement the "repeat (for each step of episode)" part of Figure
-        // 7.11: Tabular Sarsa(λ)
+    qLambdaAct: function() {
+        // implement the Watkins' Q(λ) in Figure 7.14
 
-        let s0 = this.s0;
-        let a0 = this.a0;
-
-        let res = this.env.gotoNextState(s0, a0);
-        let reward = res.reward;
-        let s1 = res.nextState;
+        let {s0, a0} = this;
+        let [reward, s1] = this.env.gotoNextState(s0, a0);
         let a1 = this.chooseAction(s1);
 
         this.numStepsCurrentEpisode += 1;
-        // console.debug(s0, a0, reward, s1, a1);
 
-        let a_star = this.takeGreedyAction(s1)
-        let delta = reward + this.gamma * this.getQ(s1, a_star) - this.getQ(s0, a0);
+        let aStar = this.takeGreedyAction(s1);
+        let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
+        s0.Z[a0] = s0.Z[a0] + 1;
 
-        let idx0 = this._getIdx(s0, a0);
-        this.Z[idx0] = this.Z[idx0] + 1;
-
-        for (let si=0; si < this.numStates; si++) {
-            for (let aj=0; aj < this.maxNumActions; aj++) {
-                let idx = this._getIdx(si, aj);
-                this.Q[idx] = this.Q[idx] + this.alpha * delta * this.Z[idx];
-                if (a1 === a_star) {
-                    this.Z[idx] = this.gamma * this.lambda * this.Z[idx];
+        let that = this;
+        this.env.states.forEach((state) => {
+            state.allowedActions.forEach((action) => {
+                state.Q[action] = state.Q[action] + that.alpha * delta * state.Z[action];
+                if (a1 == aStar) {
+                    state.Z[action] = that.gamma * that.lambda * state.Z[action];
                 } else {
-                    this.Z[idx] = 0;
+                    state.Z[action] = 0;
                 }
-            }
-        }
+            });
+        });
 
         if (this.env.isTerminal(this.s0)) {
             this.numEpisodesExperienced += 1;
@@ -185,9 +167,9 @@ TDAgent.prototype = {
 
     act: function() {
         if (this.learningAlgo === 'sarsaLambda') {
-            this.sarsaAct()
-        } else if (this.learningAlgo === 'qlearningLambda') {
-            this.qLearningAct();
+            this.sarsaAct();
+        } else if (this.learningAlgo === 'qLambda') {
+            this.qLambdaAct();
         } else {
             console.error('unimplemented learning algorithm: ' + this.learningAlgo);
         }
