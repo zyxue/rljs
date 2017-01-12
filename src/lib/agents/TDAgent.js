@@ -117,8 +117,8 @@ TDAgent.prototype = {
         let that = this;
         this.env.states.forEach((state) => {
             state.allowedActions.forEach((action) => {
-                state.Q[action] = state.Q[action] + that.alpha * delta * state.Q[action];
-                state.Z[action] = state.Z[action] + that.gamma * that.lambda * state.Z[action];
+                state.Q[action] = state.Q[action] + that.alpha * delta * state.Z[action];
+                state.Z[action] = that.gamma * that.lambda * state.Z[action];
             });
         });
 
