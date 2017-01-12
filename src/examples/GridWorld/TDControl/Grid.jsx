@@ -111,6 +111,7 @@ class Grid extends GridBase {
         let Z = state.Z[action];
         let {xmin, ymin,  xmid, ymid, xmax, ymax} = state.coords;
         let cx, cy;
+        // scaler
         let C = 1 / 3;
 
         if (action === 0) {
@@ -128,16 +129,16 @@ class Grid extends GridBase {
         }
 
         cellContext.append('circle')
-               .attr('cx', cx)
-               .attr('cy', cy)
-               // log so that size of circle doesn't change too dramatically
-               // among neighbouring cells, 1 to avoid log of 0, and negative radius
-        /* .attr('r', Math.log(Z * 1000 + 1))*/
+                   .attr('cx', cx)
+                   .attr('cy', cy)
+                   // log so that size of circle doesn't change too dramatically
+                   // among neighbouring cells, 1 to avoid log of 0, and
+                   // negative radius
                    .attr('r', Math.log(Z * 1000 + 1))
-               .attr('fill', '#FF0')
-               .attr('fill-opacity', 1)
-               .attr('stroke', '#000')
-               .attr('id', 'cpos');
+                   .attr('fill', '#FF0')
+                   .attr('fill-opacity', 1)
+                   .attr('stroke', '#000')
+                   .attr('id', 'cpos');
     }
 
 
