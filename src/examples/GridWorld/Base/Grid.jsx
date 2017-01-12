@@ -15,7 +15,7 @@ class Grid extends Component {
     drawGrid() {
         const context = this.setContext();
         this.drawCells(context);
-        /* this.drawAgent(context);*/
+        this.drawAgent(context);
     }
 
     redrawGrid() {
@@ -30,6 +30,17 @@ class Grid extends Component {
 
     drawTrace(context) {
         /* todo */
+    }
+
+    drawCliff(context, state) {
+        context.append('rect')
+               .attr('x', state.coords.xmin)
+               .attr('y', state.coords.ymin)
+               .attr('height', state.cellHeight)
+               .attr('width', state.cellWidth)
+               .attr('stroke', 'black')
+               .attr('stroke-width', 1)
+               .attr('fill', '#AAA');
     }
 
     calcCoords(x, y, height, width) {
@@ -60,7 +71,6 @@ class Grid extends Component {
      */
 
     writeStateId(cellContext, state) {
-        console.debug('lele');
         cellContext.append('text')
                    .attr('x', state.coords.xmax)
                    .attr('y', state.coords.ymin)

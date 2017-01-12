@@ -12,9 +12,12 @@ class Grid extends GridBase {
         let that = this;
         agent.env.states.forEach(function (st) {
             let grp = context.append('g');
-            let fillColor = st.isCliff ? '#AAA' : that.genRGBColorString(1);
 
-            that.drawOneCell(grp, st, legendsCtrl);
+            if (st.isCliff) {
+                that.drawCliff(grp, st);
+            } else {
+                that.drawOneCell(grp, st, legendsCtrl);
+            }
 
             /* grp.append('rect')
              *    .attr('x', st.coords.xmin)
