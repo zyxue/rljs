@@ -162,7 +162,7 @@ class Grid extends Component {
                .attr('cx', coords.xmid)
                .attr('cy', coords.ymid)
                .attr('r', 15)
-               .attr('fill', '#FF0')
+               .attr('fill', '#FFD800')
                .attr('fill-opacity', 1)
                .attr('stroke', '#000')
                .attr('id', 'cpos')
@@ -246,28 +246,28 @@ class Grid extends Component {
     genPointsStrForAgentAction(action, coords) {
         let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
-        // scaler
-        let S = 5 / 6
+        // a couple of scalers
+        let S = 5 / 9;
+        let C = 6 / 19;
         let str;
         if (action === 0) {
             str = (xmid - xmin) * (1 - S) + xmin + ',' + ymid + ' ' +
-                  xmid + ',' + (ymax + ymid) / 2 + ' ' +
-                  xmid + ',' + (ymin + ymid) / 2;
+                  xmid + ',' + (  C * (ymax - ymid) + ymid)  + ' ' +
+                  xmid + ',' + (- C * (ymid - ymin) + ymid);
 
         } else if (action === 1) {
             str = xmid + ',' + ((ymid - ymin) * (1 - S) + ymin) + ' ' +
-               (xmin + xmid) / 2 + ',' + ymid + ' ' +
-               (xmax + xmid) / 2 + ',' + ymid;
-
+                  (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
+                  (  C * (xmax - xmid) + xmid) + ',' + ymid;
         } else if (action === 2) {
             str = (xmax - xmid) * S + xmid  + ',' + ymid + ' ' +
-                  xmid + ',' + (ymax + ymid) / 2 + ' ' +
-                  xmid + ',' + (ymin + ymid) / 2;
+                  xmid + ',' + (  C * (ymax - ymid) + ymid) + ' ' +
+                  xmid + ',' + (- C * (ymid - ymin) + ymid);
 
         } else if (action === 3) {
             str = xmid + ',' + ((ymax - ymid) * S + ymid) + ' ' +
-               (xmin + xmid) / 2 + ',' + ymid + ' ' +
-               (xmax + xmid) / 2 + ',' + ymid;
+                  (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
+                  (  C * (xmax - xmid) + xmid) + ',' + ymid;
         }
         return str;
     }
