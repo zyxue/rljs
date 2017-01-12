@@ -1,4 +1,4 @@
-import {zeros, randi} from '../utils';
+import {randi} from '../utils';
 
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
@@ -41,6 +41,9 @@ TDAgent.prototype = {
         this.numStepsCurrentEpisode = 0;
         this.s0 = this.env.initState();
         this.a0 = this.chooseAction(this.s0);
+        this.reward = null;
+        this.s1 = null;
+        this.a1 = null;
         this.resetTrace();
     },
 
@@ -98,16 +101,10 @@ TDAgent.prototype = {
         return this.Q[idx];
     },
 
-    sarsaLambdaAct: function() {
+    sarsaLambdaUpdate: function() {
         // implement the "repeat (for each step of episode)" part of Figure
         // 7.11: Tabular Sarsa(λ)
-
-        let {s0, a0} = this;
-        let [reward, s1] = this.env.gotoNextState(s0, a0);
-        let a1 = this.chooseAction(s1);
-
-        this.numStepsCurrentEpisode += 1;
-        // console.debug(s0, a0, reward, s1, a1);
+        let {s0, a0, reward, s1, a1} = this;
 
         let delta = reward + this.gamma * s1.Q[a1] - s0.Q[a0];
         s0.Z[a0] = s0.Z[a0] + 1;
@@ -119,25 +116,11 @@ TDAgent.prototype = {
                 state.Z[action] = that.gamma * that.lambda * state.Z[action];
             });
         });
-
-        if (this.env.isTerminal(s0)) {
-            this.numEpisodesExperienced += 1;
-            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
-            this.resetEpisode();
-        } else {
-            this.s0 = s1;
-            this.a0 = a1;
-        }
     },
 
-    qLambdaAct: function() {
+    qLambdaUpdate: function() {
         // implement the Watkins' Q(λ) in Figure 7.14
-
-        let {s0, a0} = this;
-        let [reward, s1] = this.env.gotoNextState(s0, a0);
-        let a1 = this.chooseAction(s1);
-
-        this.numStepsCurrentEpisode += 1;
+        let {s0, a0, reward, s1, a1} = this;
 
         let aStar = this.takeGreedyAction(s1);
         let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
@@ -154,25 +137,40 @@ TDAgent.prototype = {
                 }
             });
         });
+    },
 
+    takeAction: function() {
+        let {s0, a0} = this;
+        let [reward, s1] = this.env.gotoNextState(s0, a0);
+        this.reward = reward;
+        this.s1 = s1;
+        this.a1 = this.chooseAction(this.s1);
+        this.numStepsCurrentEpisode += 1;
+    },
+
+    afterUpdate: function () {
         if (this.env.isTerminal(this.s0)) {
             this.numEpisodesExperienced += 1;
             this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
             this.resetEpisode();
         } else {
-            this.s0 = s1;
-            this.a0 = a1;
+            this.s0 = this.s1;
+            this.a0 = this.a1;
         }
     },
 
     act: function() {
+        this.takeAction();
+
         if (this.learningAlgo === 'sarsaLambda') {
-            this.sarsaLambdaAct();
+            this.sarsaLambdaUpdate();
         } else if (this.learningAlgo === 'qLambda') {
-            this.qLambdaAct();
+            this.qLambdaUpdate();
         } else {
             console.error('unimplemented learning algorithm: ' + this.learningAlgo);
         }
+
+        this.afterUpdate();
     },
 
     learnFromOneEpisode: function() {
