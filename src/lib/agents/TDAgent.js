@@ -98,7 +98,7 @@ TDAgent.prototype = {
         return this.Q[idx];
     },
 
-    sarsaAct: function() {
+    sarsaLambdaAct: function() {
         // implement the "repeat (for each step of episode)" part of Figure
         // 7.11: Tabular Sarsa(λ)
 
@@ -167,7 +167,7 @@ TDAgent.prototype = {
 
     act: function() {
         if (this.learningAlgo === 'sarsaLambda') {
-            this.sarsaAct();
+            this.sarsaLambdaAct();
         } else if (this.learningAlgo === 'qLambda') {
             this.qLambdaAct();
         } else {
