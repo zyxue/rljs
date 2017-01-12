@@ -24,7 +24,7 @@ class Control extends React.Component {
         // to avoid Do not mutate state directly. Use setState() warning
         let env = this.state.env;
         env[key] = parseFloat(event.target.value);
-        console.log(typeof env[key]);
+        // console.log(typeof env[key]);
         this.setState({env: env});
     }
 
@@ -51,7 +51,7 @@ class Control extends React.Component {
 
     startConsecutiveActions(actingRate) {
         let ar = actingRate === undefined? this.state.actingRate: actingRate;
-        console.debug(ar);
+        // console.debug(ar);
         let intervalId = setInterval (() => {
             this.state.agent.act();
             this.setState({agent: this.state.agent});

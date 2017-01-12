@@ -76,9 +76,8 @@ GridWorld.prototype = {
             if (a0 === 1) {nx = x; ny = y - 1;}
             if (a0 === 2) {nx = x + 1; ny = y;}
             if (a0 === 3) {nx = x; ny = y + 1;}
-            // console.debug(a0, x, y, nx, ny);
             let s1Id = this.xytos(nx, ny);
-            // console.debug(s1Id, this.states);
+            // console.debug(a0, x, y, nx, ny, s1Id);
             s1 = this.states[s1Id];
             if (s1.isCliff) {
                 s1 = s0;
