@@ -130,7 +130,7 @@ class Grid extends Component {
             if (a === action) normedQval = normed;
         });
 
-        let ratio = (qSum > 0.001) ? Math.abs(normedQval) / qSum : 0;
+        let ratio = (qSum > 0) ? Math.abs(normedQval) / qSum : 0;
 
         if (action === 0) {nx = - maxH * ratio; ny = 0;}
         if (action === 1) {nx = 0; ny = - maxV * ratio;}
