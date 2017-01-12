@@ -116,9 +116,21 @@ class Grid extends Component {
         /* maximum length of horizontal and vertical length */
         let maxH = state.cellWidth / 2;
         let maxV = state.cellHeight / 2;
+
+        let minQ = Q[state.allowedActions[0]];
+        state.allowedActions.forEach((a) => {
+            if (Q[a] < minQ) minQ = Q[a];
+        });
+
         let qSum = 0;
-        state.allowedActions.forEach((a) => {qSum += Math.abs(Q[a])});
-        let ratio = qSum != 0 ? Math.abs(Q[action]) / qSum : 0.5;
+        let normedQval = null;
+        state.allowedActions.forEach((a) => {
+            let normed = Q[a] - minQ;
+            qSum += normed
+            if (a === action) normedQval = normed;
+        });
+
+        let ratio = (qSum > 0.001) ? Math.abs(normedQval) / qSum : 0;
 
         if (action === 0) {nx = - maxH * ratio; ny = 0;}
         if (action === 1) {nx = 0; ny = - maxV * ratio;}
