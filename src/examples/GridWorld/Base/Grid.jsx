@@ -28,6 +28,10 @@ class Grid extends Component {
         /* to be overwritten */
     }
 
+    drawTrace(context) {
+        /* todo */
+    }
+
     calcCoords(x, y, height, width) {
         /* the 6 numbers that define the coordinates of 5 points in side each
            square, useful for e.g. drawing triagles corresponding to Q values at
@@ -43,47 +47,49 @@ class Grid extends Component {
                 xmax:xmax, ymax:ymax};
     }
 
-    writeStateValue(cellContext, val, coords) {
-        cellContext.append('text')
-                   .attr('x', coords.xmid)
-                   .attr('y', coords.ymid)
-                   .attr("text-anchor", "middle")
-                   .attr("dominant-baseline", "middle")
-                   .attr('font-size', 10)
-                   .attr('fill', 'blue')
-                   .text(val.toFixed(2));
-    }
+    /* writeStateValue(cellContext, val, coords) {
+     *     cellContext.append('text')
+     *                .attr('x', coords.xmid)
+     *                .attr('y', coords.ymid)
+     *                .attr("text-anchor", "middle")
+     *                .attr("dominant-baseline", "middle")
+     *                .attr('font-size', 10)
+     *                .attr('fill', 'blue')
+     *                .text(val.toFixed(2));
+     * }
+     */
 
-    writeStateId(cellContext, id, coords) {
+    writeStateId(cellContext, state) {
+        console.debug('lele');
         cellContext.append('text')
-                   .attr('x', coords.xmax)
-                   .attr('y', coords.ymin)
+                   .attr('x', state.coords.xmax)
+                   .attr('y', state.coords.ymin)
                    .attr("text-anchor", "end")
                    .attr("dominant-baseline", "text-before-edge")
-
                    .attr('font-size', 10)
                    .attr('fill', 'blue')
-                   .text(id.toFixed(0));
+                   .text(state.id.toFixed(0));
     }
 
-    writeStateCoord(cellContext, stateCoordx, stateCoordy, coords) {
+    writeStateCoord(cellContext, state) {
         cellContext.append('text')
-                   .attr('x', coords.xmin)
-                   .attr('y', coords.ymin)
+                   .attr('x', state.coords.xmin)
+                   .attr('y', state.coords.ymin)
                    .attr("text-anchor", "start")
                    .attr("dominant-baseline", "text-before-edge")
 
                    .attr('font-size', 10)
                    .attr('fill', 'blue')
-                   .text('(' + stateCoordx + ',' + stateCoordy + ')');
+                   .text('(' + state.x + ',' + state.y + ')');
     }
 
-    writeReward(cellContext, reward, coords) {
-        let color = 'black';
+    writeReward(cellContext, state) {
+        let reward = state.reward
+        let color = 'blue';
         let fontWeight = reward > 0 ? 800 : 450;
         cellContext.append('text')
-                   .attr('x', coords.xmax)
-                   .attr('y', coords.ymax)
+                   .attr('x', state.coords.xmax)
+                   .attr('y', state.coords.ymax)
                    .attr("text-anchor", "end")
                    .attr("dominant-baseline", "text-after-edge")
                    .attr('font-size', 10)
@@ -91,8 +97,34 @@ class Grid extends Component {
         /* .attr('stroke', 'black')
          * .attr('stroke-width', 0.1)*/
                    .attr('fill', color)
-                   .text(reward.toFixed(1.1));
+                   .text('r' + reward.toFixed(1.1));
     }
+
+    drawPolicyArrow(cellContext, state, action) {
+        let nx, ny;
+        let {Q, coords} = state;
+        /* maximum length of horizontal and vertical length */
+        let maxH = state.cellWidth / 2;
+        let maxV = state.cellHeight / 2;
+        let qSum = 0;
+        state.allowedActions.forEach((a) => {qSum += Math.abs(Q[a])});
+        let ratio = qSum != 0 ? Math.abs(Q[action]) / qSum : 0.5;
+
+        if (action === 0) {nx = - maxH * ratio; ny = 0;}
+        if (action === 1) {nx = 0; ny = - maxV * ratio;}
+        if (action === 2) {nx = maxH * ratio; ny = 0;}
+        if (action === 3) {nx = 0; ny = maxV * ratio;}
+
+        let pa = cellContext.append('line')
+                            .attr('x1', coords.xmid)
+                            .attr('y1', coords.ymid)
+                            .attr('x2', coords.xmid + nx)
+                            .attr('y2', coords.ymid + ny)
+                            .attr('stroke', 'black')
+                            .attr('stroke-width', 1)
+                            .attr("marker-end", "url(#arrowhead)");
+    }
+
 
     drawAgent(context) {
         const {height, width, agent, updateAgentAction} = this.props;
@@ -129,25 +161,9 @@ class Grid extends Component {
                    .attr('stroke-width', 0.5);
     }
 
-
-    drawTrace(cellContext, Z, coords) {
-        /* let pointsStr = genPointsStrForAgentAction(action, coords);*/
-        /* console.debug(pointsStr);*/
-        cellContext.append('circle')
-               .attr('cx', coords.xmid)
-               .attr('cy', coords.ymid)
-               // log so that size of circle doesn't change too dramatically
-               // among neighbouring cells, 1 to avoid log of 0, and negative radius
-               .attr('r', Math.log(Z * 1000 + 1))
-               .attr('fill', '#FF0')
-               .attr('fill-opacity', 1)
-               .attr('stroke', '#000')
-               .attr('id', 'cpos');
-    }
-
-    highlightState(context, state, cellHeight, cellWidth,
-                   {fillColor=null, fillOpacity=1, strokeColor='black', strokeWidth=0}) {
-        let coords = this.calcCoords(state.x, state.y, cellHeight, cellWidth);
+    highlightState(context, state,
+                   {fillColor=null, fillOpacity=1, strokeColor='black', strokeWidth=0}={}) {
+        let coords = state.coords;
         let line = d3.svg.line()
                      .x(function(d) { return d[0]; })
                      .y(function(d) { return d[1]; });
