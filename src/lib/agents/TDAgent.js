@@ -65,8 +65,9 @@ TDAgent.prototype = {
     },
 
     takeRandomAction: function(s0) {
-        let randomInt = randi(0, s0.allowedActions.legnth);
-        return s0.allowedActions[randomInt];
+        let randomInt = randi(0, s0.allowedActions.length);
+        let a0 = s0.allowedActions[randomInt];
+        return a0;
     },
 
     takeGreedyAction: function(s0) {
