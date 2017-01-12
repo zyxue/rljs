@@ -6,10 +6,25 @@ import React from 'react';
 
 
 class Control extends React.Component {
-    toggleLegend(key, event) {
-        let showLegend = this.state.showLegend;
-        showLegend[key] = !showLegend[key];
-        this.setState(showLegend: showLegend);
+    updateAgent(attr, event) {
+        let agent = this.state.agent;
+        console.debug('updated ' + attr + ' to ' + event.target.value);
+        agent[attr] = event.target.value;
+        this.setState({agent: agent});
+    }
+
+    updateAgentAction() {
+        let agent = this.state.agent;
+        agent.a0 = (agent.a0 + 1) % 4;
+        this.setState({agent: agent});
+    }
+
+    updateActingRate(event) {
+        let newActingRate = event.target.value;
+        this.setState({actingRate: newActingRate});
+
+        this.stopConsecutiveActions();
+        this.startConsecutiveActions(newActingRate);
     }
 
     updateEnvDimension(key, event) {
@@ -28,25 +43,10 @@ class Control extends React.Component {
         this.setState({env: env});
     }
 
-
-    updateAgent(key, event) {
-        let agent = this.state.agent;
-        agent[key] = event.target.value;
-        this.setState({agent: agent});
-    }
-
-    updateAgentAction() {
-        let agent = this.state.agent;
-        agent.a0 = (agent.a0 + 1) % 4;
-        this.setState({agent: agent});
-    }
-
-    updateActingRate(event) {
-        let newActingRate = event.target.value;
-        this.setState({actingRate: newActingRate});
-
-        this.stopConsecutiveActions();
-        this.startConsecutiveActions(newActingRate);
+    toggleLegend(key, event) {
+        let legendsCtrl = this.state.legendsCtrl;
+        legendsCtrl[key] = !legendsCtrl[key];
+        this.setState(legendsCtrl: legendsCtrl);
     }
 
     startConsecutiveActions(actingRate) {
@@ -116,7 +116,7 @@ class Control extends React.Component {
         this.setState({selectedState: st});
     }
 
-    handleClick(action, event) {
+    handleUserCtrlButtonClick(action, event) {
         if (action === 'act') {
             this.state.agent.act();
         } else if (action === 'toggle') {

@@ -5,5 +5,23 @@
 .slider {
     display: inline-block;
     vertical-align: middle;
-    width: 10%;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+
+}
+
+input[type=number] {
+    width: 5em;
+}
+
+.dashboard-row {
+    margin-bottom: 3px;
+}
+
+button.control {
+    margin-right: 2px;
+    padding: 2px 4px;
 }

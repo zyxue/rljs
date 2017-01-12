@@ -1,10 +1,43 @@
 import React from 'react';
-import {Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 import {TDAgent} from '../../../lib/Reinforce-js';
 
-import Control from '../Base/Control.jsx';
 import Env from '../Base/Env.js';
+import Control from '../Base/Control.jsx';
+
+import Grid from './Grid.jsx';
+import Dashboard from './Dashboard.jsx';
+
+
+class Introduction extends React.Component {
+    render() {
+        return (
+            <div>
+                <h4>Instruction:</h4>
+                <ul>
+                    <li>Act: take one action</li>
+                    <li>Toggle: Take actions continously indefinitely</li>
+                    <li>Learn: Learn from a batch of episodes, where batch size is tunable</li>
+                </ul>
+
+
+                <ul>
+                    <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
+                    <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
+                    <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
+                    <li>Gridworld is deterministic! </li>
+                    <li>Trace-decay parameter (λ)</li>
+                </ul>
+
+
+                <p>Try hit learn button if you don't see much going on.</p>
+                <p>Currently, only standard SARSA(λ) is implemented. Colors of each Q triangle reflect its learn values.</p>
+                <p>Reward shown in the legend does not include per step penalty</p>
+            </div>
+        );
+    }
+}
 
 
 class View extends Control {
@@ -23,11 +56,18 @@ class View extends Control {
 
             selectedState: null,
 
-            showLegend: {
-                stateValue: false,
+            legendsCtrl: {
+                /* stateValue: false,
+                 * stateId: true,
+                 * stateCoord: false,
+                 * reward: true,
+                 * etrace: true*/
+
+                qValue: true,
                 stateId: true,
-                stateCoord: false,
+                stateCoord: true,
                 reward: true,
+                policy: true, // show policy as arrows
                 etrace: true
             }
         };
@@ -35,148 +75,48 @@ class View extends Control {
 
     render() {
         return (
-            <div className="GridWorldTD">
-                {/* <p> <strong>Agent status: </strong>
-                    <span>γ = </span><span className="text-primary">{this.state.agent.gamma}</span>; &nbsp;
-                    <span>ε = </span><span className="text-primary">{this.state.agent.epsilon}</span>; &nbsp;
-                    <span>α = </span><span className="text-primary">{this.state.agent.alpha}</span>; &nbsp;
-                    <span>λ = </span><span className="text-primary">{this.state.agent.lambda}</span>; &nbsp;
-                    <span># Ep. experienced: </span><span className="text-primary">{this.state.agent.numEpisodesExperienced}</span>;
-                    </p> */}
+            <div>
+                <Row style={{border: 'red 0.5px solid'}}>
+                    <div>
+                        <Dashboard
+                            agent={this.state.agent}
+                            legendsCtrl={this.state.legendsCtrl}
 
-                <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
-
-                    {/* <Grid
-                        height={600}
-                        width={700}
-                        id="grid-TD-control"
-                        agent={this.state.agent}
-                        env={this.state.env}
-                        showLegend={this.state.showLegend}
-                        selectedState={this.state.selectedState}
-                        updateSelectedState={this.updateSelectedState.bind(this)}
-                        updateAgentAction={this.updateAgentAction.bind(this)}
+                            updateAgent={this.updateAgent.bind(this)}
+                            handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
+                            toggleLegend={this.toggleLegend.bind(this)}
                         />
-                      */}
-
-                    {/* <Grid
-                        height={600}
-                        width={700}
-                        id="TD-grid"
-                        agent={this.state.agent}
-
-                        showQTriangles={this.state.showQTriangles}
-                        showQVals={this.state.showQVals}
-                        showStateVals={this.state.showStateVals}
-                        showStateCoords={this.state.showStateCoords}
-                        showRewardVals={this.state.showRewardVals}
-                        /> */}
-
-                <ul>
-                    <li>The agent always starts at initial state, and then try to navigate to the goal state. At each state, the agent has 4 actions. If it hits the walls or edges, it will stay put.</li>
-                    <li>Arrows show the direction of greedy action, when the policy converges, it should lead directly to the goal state, which is also reflected by the green color of triangle</li>
-                    <li>Try toggle after learned from a few hundreds of episode and see how eligbility trace changes. Also play with λ, and see how it affects the trace. The x axis of trace is the number of states times that of actions. </li>
-                    <li>Gridworld is deterministic! </li>
-                    <li>Trace-decay parameter (λ)</li>
-                </ul>
-
-                </Col>
-
-                <Col xs={12} md={4}>
-                    {/* <div className="row">
-                        <Line
-                        height={150}
-                        width={300}
-                        id={'TD-num-steps-per-episode'}
-                        data={this.state.agent.numStepsPerEpisode}
-                        title={'# steps/episode'}
+                    </div>
+                </Row>
+                
+                <Row>
+                    <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
+                        {this.state.agent.gamma}
+                        <Grid
+                            height={600}
+                            width={700}
+                            id="grid-TD-control"
+                            agent={this.state.agent}
+                            legendsCtrl={this.state.legendsCtrl}
+                            selectedState={this.state.selectedState}
                         />
-                        </div>
+                    </Col>
 
-                        <div className="row">
-                        <Line
-                        height={150}
-                        width={300}
-                        id={'TD-etrace'}
-                        data={this.state.agent.Z}
-                        title={'eligibility trace'}
-                        />
-                        </div>
-
-                        <div className="row">
-                        <Col md={5}>Learning algorithm:</Col>
-                        <Col md={7}>
-                        <select value={this.state.learningAlgo} onChange={this.updateAgent.bind(this, 'learningAlgo')}>
-                        <option value="sarsa">SARSA(λ)</option>
-                        <option value="qlearning">Q(λ) (Watkins's)</option>
-                        </select>
-                        </Col>
-
-                        <Col md={2}>γ =</Col>
-                        <Col md={4}>
-                        <input type="text" value={this.state.agent.gamma} size="10"
-                        onChange={this.updateAgent.bind(this, 'gamma')} />
-                        </Col>
-
-                        <Col md={2}>ε =</Col>
-                        <Col md={4}>
-                        <input type="text" value={this.state.agent.epsilon} size="10"
-                        onChange={this.updateAgent.bind(this, 'epsilon')} />
-                        </Col>
-
-                        <Col md={2}>α =</Col>
-                        <Col md={4}>
-                        <input type="text" value={this.state.agent.alpha} size="10"
-                        onChange={this.updateAgent.bind(this, 'alpha')} />
-                        </Col>
-
-                        <Col md={2}>λ =</Col>
-                        <Col md={4}>
-                        <input type="text" value={this.state.agent.lambda} size="10"
-                        onChange={this.updateAgent.bind(this, 'lambda')} />
-                        </Col>
-
-                        <Col md={5}>batch size = </Col>
-                        <Col md={7}>
-                        <input type="text" value={this.state.agent.batchSize} size="10"
-                        onChange={this.updateAgent.bind(this, 'batchSize')} />
-                        </Col>
-
-                        <Col md={5}>acting rate: =</Col>
-                        <Col md={7}>
-                        <input type="text" value={this.state.actingRate} size="10"
-                        onChange={this.updateActingRate.bind(this)} />
-                        </Col>
-
-                        </div>
+                    {/* updateSelectedState={this.updateSelectedState.bind(this)}
+                        updateAgentAction={this.updateAgentAction.bind(this)} */}
 
 
-                        <ButtonToolbar>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'act')}>Act</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggle')}>Toggle</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
-                        <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
-                        </ButtonToolbar>
+                    <Col xs={12} md={4}>
+                        <p> will put some plots here</p>
+                        {/* <Plots /> */}
+                    </Col>
+                </Row>
 
-                        <h4>Instruction:</h4>
-                        <ul>
-                        <li>Act: take one action</li>
-                        <li>Toggle: Take actions continously indefinitely</li>
-                        <li>Learn: Learn from {this.state.batchSize} episodes</li>
-                        </ul>
-
-                        <h4>Toggle legends:</h4>
-                        <ul>
-                        <li><a className="toggle-button" onClick={this.toggleQTriangles.bind(this)}>Q triangles</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleQVals.bind(this)}>Q values</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleStateVals.bind(this)}>States</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleStateCoords.bind(this)}>State coordinates</a></li>
-                        <li><a className="toggle-button" onClick={this.toggleRewardVals.bind(this)}>Rewards</a></li>
-                        </ul> */}
-
-                    <p>Try hit learn button if you don't see much going on.</p>
-                    <p>Currently, only standard SARSA(λ) is implemented. Colors of each Q triangle reflect its learn values.</p>
-                </Col>
+                <Row>
+                    <div>
+                        <Introduction />
+                    </div>
+                </Row>
             </div>
         );
     }
