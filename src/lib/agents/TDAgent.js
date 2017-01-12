@@ -3,6 +3,7 @@ import {zeros, randi} from '../utils';
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType='accumulatingTrace',
+                             learningAlgo='sarsaLambda',
                              batchSize=200}={}) {
     // store pointer to environment
     this.env = env;
@@ -16,7 +17,7 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
     // Trace-decay parameter
     this.lambda = lambda;
 
-    this.learningAlgo = 'sarsaLambda';
+    this.learningAlgo = learningAlgo;
 
     // for learning from multiple episodes in batch
     this.batchSize = batchSize;
@@ -104,27 +105,32 @@ TDAgent.prototype = {
         let s0 = this.s0;
         let a0 = this.a0;
 
-        let res = this.env.gotoNextState(s0, a0);
-        let reward = res.reward;
-        let s1 = res.nextState;
+        let [reward, s1] = this.env.gotoNextState(s0, a0);
         let a1 = this.chooseAction(s1);
 
         this.numStepsCurrentEpisode += 1;
         // console.debug(s0, a0, reward, s1, a1);
 
-        let delta = reward + this.gamma * this.getQ(s1, a1) - this.getQ(s0, a0);
-        let idx0 = this._getIdx(s0, a0);
-        this.Z[idx0] = this.Z[idx0] + 1;
+        let delta = reward + this.gamma * s1.Q[a1] - s0.Q[a0];
+        s0.Z[a0] = s0.Z[a0] + 1;
 
-        for (let si=0; si < this.numStates; si++) {
-            for (let aj=0; aj < this.maxNumActions; aj++) {
-                let idx = this._getIdx(si, aj);
-                this.Q[idx] = this.Q[idx] + this.alpha * delta * this.Z[idx];
-                this.Z[idx] = this.gamma * this.lambda * this.Z[idx];
-            }
-        }
+        let that = this;
+        this.env.states.forEach((state) => {
+            state.allowedActions.forEach((action) => {
+                state.Q[action] = state.Q[action] + that.alpha * delta * state.Q[action];
+                state.Z[action] = state.Z[action] + that.gamma * that.lambda * state.Z[action];
+            });
+        });
 
-        if (this.env.isTerminal(this.s0)) {
+        // for (let si=0; si < this.numStates; si++) {
+        //     for (let aj=0; aj < this.maxNumActions; aj++) {
+        //         let idx = this._getIdx(si, aj);
+        //         this.Q[idx] = this.Q[idx] + this.alpha * delta * this.Z[idx];
+        //         this.Z[idx] = this.gamma * this.lambda * this.Z[idx];
+        //     }
+        // }
+
+        if (this.env.isTerminal(s0)) {
             this.numEpisodesExperienced += 1;
             this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
             this.resetEpisode();
@@ -178,11 +184,12 @@ TDAgent.prototype = {
     },
 
     act: function() {
-        // this.sarsaAct();
-        if (this.learningAlgo === 'sarsa') {
+        if (this.learningAlgo === 'sarsaLambda') {
             this.sarsaAct()
-        } else if (this.learningAlgo === 'qlearning') {
+        } else if (this.learningAlgo === 'qlearningLambda') {
             this.qLearningAct();
+        } else {
+            console.error('unimplemented learning algorithm: ' + this.learningAlgo);
         }
     },
 
