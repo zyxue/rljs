@@ -143,7 +143,7 @@ class Grid extends Component {
                             .attr('x2', coords.xmid + nx)
                             .attr('y2', coords.ymid + ny)
                             .attr('stroke', 'black')
-                            .attr('stroke-width', 1)
+                            .attr('stroke-width', 1 * Math.pow(1 + ratio, 2) )
                             .attr("marker-end", "url(#arrowhead)");
     }
 
