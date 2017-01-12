@@ -133,7 +133,7 @@ class Grid extends GridBase {
                // log so that size of circle doesn't change too dramatically
                // among neighbouring cells, 1 to avoid log of 0, and negative radius
         /* .attr('r', Math.log(Z * 1000 + 1))*/
-                   .attr('r', Math.log(0.1 * 1000 + 1))
+                   .attr('r', Math.log(Z * 1000 + 1))
                .attr('fill', '#FF0')
                .attr('fill-opacity', 1)
                .attr('stroke', '#000')
