@@ -58,7 +58,6 @@ class SelectTag extends Component {
     }
 }
 
-
 class GreekLetterParams extends Component {
     // parameters critical to the learning algorithm
 
@@ -182,21 +181,24 @@ class EnvDimensions extends Component {
             return {value:i, text:i}
         });
 
-        let params = {
+        let numRowsParams = {
             label: '# rows:', attr: 'numRows', options: allowedDimensions,
+        };
+
+        let numColsParams = {
+            label: '# cols:', attr: 'numCols', options: allowedDimensions,
+        };
+
+        let stepRewardParams = {
+            label: 'step reward: ', attr: 'stepReward',
+            min: -1, max: 1, step: 0.01
         };
 
         return (
             <div>
-                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={params} />
-
-                <Col className="nopadding" md={3}>
-                    # columns:
-                </Col>
-                <Col className="nopadding" md={3}>
-                    <span className="text-primary">{env.numCols}</span>
-                </Col>
-                <div>TODO</div>
+                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numRowsParams} />
+                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numColsParams} />
+                <NumberInputTag objectToUpdate={env} updateMethod={updateEnv} params={stepRewardParams} />
             </div>
         );
     }
