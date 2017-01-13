@@ -79,6 +79,7 @@ class View extends Control {
                             legendsCtrl={this.state.legendsCtrl}
 
                             updateAgent={this.updateAgent.bind(this)}
+                            updateEnv={this.updateEnv.bind(this)}
                             handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
                             toggleLegend={this.toggleLegend.bind(this)}
                         />

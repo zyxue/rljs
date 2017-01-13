@@ -14,6 +14,7 @@ class Grid extends Component {
 
     drawGrid() {
         const context = this.setContext();
+        this.addDimensionsToStates();
         this.drawCells(context);
         this.drawAgent(context);
     }
@@ -324,7 +325,6 @@ class Grid extends Component {
     }
 
     componentDidMount() {
-        this.addDimensionsToStates();
         this.drawGrid();
     }
 

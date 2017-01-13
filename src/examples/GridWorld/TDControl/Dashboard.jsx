@@ -39,7 +39,7 @@ class SelectTag extends Component {
     render () {
         let {objectToUpdate, updateMethod, params} = this.props;
         let options = params.options.map((p) => {
-            return <option key={p.value} value={p.value}>{p.text}</option>
+            return <option key={params.attr + '-' + p.value} value={p.value}>{p.text}</option>
         });
 
         return (
@@ -106,8 +106,6 @@ class OtherParams extends Component {
         );
     }
 }
-
-
 
 class EligibilityTrace extends Component {
     render () {
@@ -176,18 +174,21 @@ class AgentStatus extends Component {
 }
 
 
-class EnvStatus extends Component {
+class EnvDimensions extends Component {
     render () {
         let {env, updateEnv} = this.props;
+
+        let allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
+            return {value:i, text:i}
+        });
+
+        let params = {
+            label: '# rows:', attr: 'numRows', options: allowedDimensions,
+        };
+
         return (
             <div>
-                <h4>Environment: </h4>
-                <Col className="nopadding" md={3}>
-                    # rows:
-                </Col>
-                <Col className="nopadding" md={3}>
-                    <span className="text-primary">{env.numRows}</span>;
-                </Col>
+                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={params} />
 
                 <Col className="nopadding" md={3}>
                     # columns:
@@ -200,6 +201,19 @@ class EnvStatus extends Component {
         );
     }
 }
+
+class EnvStatus extends Component {
+    render () {
+        let {env, updateEnv} = this.props;
+        return (
+            <div>
+                <h4>Environment:</h4>
+                <EnvDimensions env={env} updateEnv={updateEnv} />
+            </div>
+        );
+    }
+}
+
 
 
 

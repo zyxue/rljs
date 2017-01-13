@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import * as d3 from 'd3';
 
 
-import GridBase from '../Base/Grid.jsx';
+import BaseGrid from '../Base/Grid.jsx';
 
 
-class Grid extends GridBase {
+class Grid extends BaseGrid {
     drawCells(context) {
         const {agent, legendsCtrl} = this.props;
 

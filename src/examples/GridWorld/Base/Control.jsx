@@ -18,11 +18,23 @@ class Control extends React.Component {
         }
     }
 
+    updateEnv(attr, event) {
+        let agent = this.state.agent;
+        console.debug('updated ' + attr + ' to ' + event.target.value);
+        agent.env[attr] = event.target.value;
+        // resetting is important, don't forget! it resets all states.
+        // agent.reset() resets env, too.
+        agent.env.reset();
+        agent.reset();
+        this.setState({agent: agent});
+    }
+
     updateAgentAction() {
         let agent = this.state.agent;
         agent.a0 = (agent.a0 + 1) % 4;
         this.setState({agent: agent});
     }
+
 
     updateEnvDimension(key, event) {
         // to avoid Do not mutate state directly. Use setState() warning
