@@ -4,7 +4,7 @@ import {randi} from '../utils';
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType='accumulatingTrace',
                              learningAlgo='sarsaLambda',
-                             batchSize=200}={}) {
+                             batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
 
@@ -21,6 +21,8 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
 
     // for learning from multiple episodes in batch
     this.batchSize = batchSize;
+    // only useful when visualizing the agent taking actions continously
+    this.actingRate = actingRate;
     this.reset();
 };
 
@@ -90,15 +92,6 @@ TDAgent.prototype = {
 
     chooseAction: function(s0) {
         return Math.random() < this.epsilon ? this.takeRandomAction(s0) : this.takeGreedyAction(s0);
-    },
-
-    _getIdx: function(s, a) {
-        return s * this.maxNumActions + a;
-    },
-
-    getQ: function(s, a) {
-        let idx = this._getIdx(s, a);
-        return this.Q[idx];
     },
 
     sarsaLambdaUpdate: function() {
@@ -195,24 +188,21 @@ TDAgent.prototype = {
         }
     },
 
-    learn: function(r1) {
-        // learn till it converges
-    },
 
-    updateModel: function(s0, a0, r0, s1, a1) {
-    },
+    // updateModel: function(s0, a0, r0, s1, a1) {
+    // },
 
-    plan: function() {
-    },
+    // plan: function() {
+    // },
 
-    learnFromTuple: function(s0, a0, r0, s1, a1, lambda) {
-    },
+    // learnFromTuple: function(s0, a0, r0, s1, a1, lambda) {
+    // },
 
-    updatePriority: function(s,a,u) {
-    },
+    // updatePriority: function(s,a,u) {
+    // },
 
-    updatePolicy: function(s) {
-    }
+    // updatePolicy: function(s) {
+    // }
 };
 
 export default TDAgent;
