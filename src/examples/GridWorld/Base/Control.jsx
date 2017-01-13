@@ -11,20 +11,17 @@ class Control extends React.Component {
         console.debug('updated ' + attr + ' to ' + event.target.value);
         agent[attr] = event.target.value;
         this.setState({agent: agent});
+
+        if (attr === 'actingRate') {
+            this.stopConsecutiveActions();
+            this.startConsecutiveActions(agent.actingRate);
+        }
     }
 
     updateAgentAction() {
         let agent = this.state.agent;
         agent.a0 = (agent.a0 + 1) % 4;
         this.setState({agent: agent});
-    }
-
-    updateActingRate(event) {
-        let newActingRate = event.target.value;
-        this.setState({actingRate: newActingRate});
-
-        this.stopConsecutiveActions();
-        this.startConsecutiveActions(newActingRate);
     }
 
     updateEnvDimension(key, event) {
@@ -50,7 +47,7 @@ class Control extends React.Component {
     }
 
     startConsecutiveActions(actingRate) {
-        let ar = actingRate === undefined? this.state.actingRate: actingRate;
+        let ar = actingRate === undefined? this.state.agent.actingRate: actingRate;
         // console.debug(ar);
         let intervalId = setInterval (() => {
             this.state.agent.act();
@@ -67,12 +64,12 @@ class Control extends React.Component {
     }
 
     inConsecutiveActions() {
-        /* check if consecutive action mode is on */
+        // check if consecutive action mode is on
         return this.state.intervalId === undefined? false : true;
     }
 
     toggleConsecutiveActions() {
-        /* console.debug(this.state.intervalId);*/
+        // console.debug(this.state.intervalId);
         if (this.inConsecutiveActions()) {
             this.stopConsecutiveActions();
         } else {

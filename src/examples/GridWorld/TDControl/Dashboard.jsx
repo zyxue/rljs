@@ -19,7 +19,7 @@ class NumberInputTag extends Component {
                 <Col className="nopadding" md={3}>
                     <span>{params.label}</span>
                     <span className="text-primary">
-                        {objectToUpdate[params.attr]}
+                        {params.hideValue ? null : objectToUpdate[params.attr]}
                     </span>
                 </Col>
                 <Col className="nopadding" md={3}>
@@ -60,6 +60,8 @@ class SelectTag extends Component {
 
 
 class GreekLetterParams extends Component {
+    // parameters critical to the learning algorithm
+
     render () {
         let params =             [
             // attr: the attribute to change of the agent
@@ -81,6 +83,30 @@ class GreekLetterParams extends Component {
         );
     }
 }
+
+class OtherParams extends Component {
+    // other parameters of the agent in general
+    render () {
+        let params = [
+            // hideValue can be a bad design
+            {label: 'batch size:', attr: 'batchSize',   min: 1, max: 2000, step: 10, hideValue:true},
+            // in microseconds
+            {label: 'acting rate:', attr: 'actingRate',   min: 1, max: 10000, step: 10, hideValue:true},
+        ];
+
+        let inputs = params.map((params) => {
+            return (<NumberInputTag key={params.attr}
+                                    objectToUpdate={this.props.agent}
+                                    updateMethod={this.props.updateAgent}
+                                    params={params} />);
+        })
+
+        return (
+            <div>{inputs}</div>
+        );
+    }
+}
+
 
 
 class EligibilityTrace extends Component {
@@ -109,11 +135,9 @@ class AgentParamsCtrl extends Component {
             <div>
                 <GreekLetterParams agent={agent} updateAgent={updateAgent} />
                 <EligibilityTrace agent={agent} updateAgent={updateAgent} />
+                <OtherParams agent={agent} updateAgent={updateAgent} />
             </div>
         );
-
-//            {label: 'BS = ', attr: 'batchSize',  min: 0, max: 3000, step: 20},
-
     }
 }
 

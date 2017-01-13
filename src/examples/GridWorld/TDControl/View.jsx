@@ -48,12 +48,8 @@ class View extends Control {
         let agent = new TDAgent(env);
 
         this.state = {
-            env: env,
             agent: agent,
-            /* the interval between consecutive actions taken by action in
-            number of microseconds*/
-            actingRate: 100,
-
+            env: env,
             selectedState: null,
 
             legendsCtrl: {
