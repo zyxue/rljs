@@ -21,7 +21,8 @@ class Control extends React.Component {
     updateEnv(attr, event) {
         let agent = this.state.agent;
         console.debug('updated ' + attr + ' to ' + event.target.value);
-        agent.env[attr] = event.target.value;
+        // data type is an issue!
+        agent.env[attr] = Number(event.target.value);
         // resetting is important, don't forget! it resets all states.
         // agent.reset() resets env, too.
         agent.env.reset();
