@@ -51,7 +51,10 @@ GridWorld.prototype = {
         this.terminalState.reward = this.terminalReward;
 
         let that = this;
-        this.cliffStateIds.forEach((id) => {that.states[id].isCliff = true});
+        this.cliffStateIds.forEach((id) => {
+            // check is important when the grid size is reduced
+            if (id < that.numCells) that.states[id].isCliff = true;
+        });
     },
 
     calcReward: function(s0, action, s1) {
