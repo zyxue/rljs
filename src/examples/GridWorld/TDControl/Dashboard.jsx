@@ -13,16 +13,16 @@ class NumberInputTag extends Component {
     render () {
         // obj includes information necessary for rendering this component
         // accordingly
-        let {objectToUpdate, updateMethod, params} = this.props;
+        let {objectToUpdate, updateMethod, params, labelNumCols, inputNumCols} = this.props;
         return (
             <div>
-                <Col className="nopadding" md={3}>
+                <Col className="nopadding" md={labelNumCols ? labelNumCols: 3}>
                     <span>{params.label}</span>
                     <span className="text-primary">
                         {params.hideValue ? null : objectToUpdate[params.attr]}
                     </span>
                 </Col>
-                <Col className="nopadding" md={3}>
+                <Col className="nopadding" md={inputNumCols ? labelNumCols: 3}>
                     <div className="slider">
                         <input type="number" min={params.min} max={params.max} step={params.step}
                                value={objectToUpdate[params.attr]} 
