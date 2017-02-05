@@ -30,29 +30,6 @@ class Control extends React.Component {
         this.setState({agent: agent});
     }
 
-    updateAgentAction() {
-        let agent = this.state.agent;
-        agent.a0 = (agent.a0 + 1) % 4;
-        this.setState({agent: agent});
-    }
-
-
-    updateEnvDimension(key, event) {
-        // to avoid Do not mutate state directly. Use setState() warning
-        let env = this.state.env;
-        env[key] = event.target.value;
-        env.reset();        // resetting is important, don't forget!
-        this.setState({env: env});
-    }
-
-    updateEnvStepReward(key, event) {
-        // to avoid Do not mutate state directly. Use setState() warning
-        let env = this.state.env;
-        env[key] = parseFloat(event.target.value);
-        // console.log(typeof env[key]);
-        this.setState({env: env});
-    }
-
     toggleLegend(key, event) {
         let legendsCtrl = this.state.legendsCtrl;
         legendsCtrl[key] = !legendsCtrl[key];
