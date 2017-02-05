@@ -191,7 +191,7 @@ class EnvDimensions extends Component {
 
         let stepRewardParams = {
             label: 'step reward: ', attr: 'stepReward',
-            min: -1, max: 1, step: 0.01
+            min: -1, max: 1, step: 0.01, hideValue:true
         };
 
         return (
