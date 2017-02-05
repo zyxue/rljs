@@ -96,6 +96,7 @@ class View extends Control {
                             agent={this.state.agent}
                             legendsCtrl={this.state.legendsCtrl}
                             selectedState={this.state.selectedState}
+                            updateSelectedState={this.updateSelectedState.bind(this)}
                         />
                     </Col>
 

@@ -9,6 +9,11 @@ class Grid extends BaseGrid {
     drawCells(context) {
         const {agent, legendsCtrl} = this.props;
 
+        this.highlightState(context, agent.env.startingState,
+                            {fillColor: 'blue', fillOpacity: 0.3});
+        this.highlightState(context, agent.env.terminalState,
+                            {fillColor: 'green', fillOpacity: 0.3});
+
         let that = this;
         agent.env.states.forEach(function (st) {
             let grp = context.append('g');
@@ -19,33 +24,25 @@ class Grid extends BaseGrid {
                 that.drawOneCell(grp, st, legendsCtrl);
             }
 
-            /* grp.append('rect')
-             *    .attr('x', st.coords.xmin)
-             *    .attr('y', st.coords.ymin)
-             *    .attr('height', st.cellHeight)
-             *    .attr('width', st.cellWidth)
-             *    .attr('stroke', 'black')
-             *    .attr('stroke-width', 1)
-             *    .attr('fill', fillColor)
-             * // add a click event
-             *    .style('cursor', 'pointer')
-             *    .on('click', function() {
-             *        // here, this is the rect object
-             *        // console.debug(this);
-             *        // console.debug(that.handleMouseClick);
-             *        that.handleMouseClick(this, st);
-             *    });*/
-
-        }) 
+            grp.append('rect')
+               .attr('x', st.coords.xmin)
+               .attr('y', st.coords.ymin)
+               .attr('height', st.cellHeight)
+               .attr('width', st.cellWidth)
+               .attr('stroke-width', 0)
+               .attr('fill-opacity', 0)
+               // add a click event
+               .style('cursor', 'pointer')
+               .on('click', function() {
+                   // console.debug(this);
+                   // console.debug(that.handleStateMouseClick);
+                   that.handleStateMouseClick(this, st);
+               });
+        });
         
         if (this.props.selectedState !== null)
             this.highlightState(context, this.props.selectedState,
                                 {fillColor: 'orange', fillOpacity: 0.5});
-
-        this.highlightState(context, agent.env.startingState,
-                            {fillColor: 'blue', fillOpacity: 0.3});
-        this.highlightState(context, agent.env.terminalState,
-                            {fillColor: 'green', fillOpacity: 0.3});
     }
 
     drawOneCell(cellContext, state, legendsCtrl) {
@@ -64,6 +61,12 @@ class Grid extends BaseGrid {
         if (lc.stateId) this.writeStateId(cellContext, state);
         if (lc.stateCoord) this.writeStateCoord(cellContext, state);
         if (lc.reward) this.writeReward(cellContext, state);
+    }
+
+    handleStateMouseClick(rect, state) {
+        /* console.debug('state: ', state);*/
+        this.props.updateSelectedState(state);
+        /* console.debug('selectedState: ' + this.props.selectedState);*/
     }
 
     genQPointsStr(coords, action) {
@@ -102,7 +105,7 @@ class Grid extends BaseGrid {
         cellContext.append('polygon')
                    .attr('points', pointsStr)
                    .attr('fill', color)
-                   .attr('fill-opacity', 1)
+                   .attr('fill-opacity', 0)
                    .attr('stroke', 'black')
                    .attr('stroke-width', 0.5);
     }

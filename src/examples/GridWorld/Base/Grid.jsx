@@ -6,12 +6,6 @@ https://github.com/alanbsmith/react-d3-example/blob/master/src/ProgressArc.js */
 
 
 class Grid extends Component {
-    handleMouseClick(rect, state) {
-        /* console.debug('state: ', state);*/
-        this.props.updateSelectedState(state);
-        /* console.debug('selectedState: ' + this.props.selectedState);*/
-    }
-
     drawGrid() {
         const context = this.setContext();
         this.addDimensionsToStates();
@@ -31,6 +25,10 @@ class Grid extends Component {
 
     drawTrace(context) {
         /* todo */
+    }
+
+    handleStateMouseClick(rect, state) {
+        /* to be overwritten */
     }
 
     drawCliff(context, state) {
