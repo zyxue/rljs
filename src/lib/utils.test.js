@@ -1,8 +1,12 @@
 import * as utils from './utils.js';
 
 
-test('zeros', () => {
+test('zeros(2) returns [0, 0]', () => {
     expect(utils.zeros(2)).toEqual([0, 0]);
+});
+
+test('zeros() returns []', () => {
+    expect(utils.zeros()).toEqual([]);
 });
 
 test('random integer generator between 0 and 1', () => {
