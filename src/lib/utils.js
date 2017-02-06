@@ -42,19 +42,15 @@ export let sampleWeighted = function(p) {
 };
 
 export let zeros = function(n) {
-    if (typeof(n) === 'undefined' || isNaN(n)) {
+    if (typeof(n) === 'undefined' || Number.isNaN(n)) {
         return [];
     }
-    if (typeof ArrayBuffer === 'undefined') {
-        // lacking browser support
-        let arr = new Array(n);
-        for (let i = 0; i < n; i++) {
-            arr[i] = 0;
-        }
-        return arr;
-    } else {
-        return new Float64Array(n);
+
+    let arr = new Array(n);
+    for (let i = 0; i < n; i++) {
+        arr[i] = 0;
     }
+    return arr;
 };
 
 

@@ -1,6 +1,10 @@
-import {RL} from './rl.js';
+import * as utils from './utils.js';
 
-console.log(RL);
+
+test('zeros', () => {
+    expect(utils.zeros(2)).toEqual([0, 0]);
+});
+
 
 // it('sampleWeighted', () => {
 //     console.log(RL.sampleWeighted);
