@@ -308,30 +308,31 @@ class Dashboard extends Component {
                         <AgentStatus agent={agent} updateAgent={updateAgent} />
                     </Col>
 
-                    <Col className="env-control" xs={12} md={4}>
-                        <EnvStatus env={agent.env} updateEnv={updateEnv} />
-                    </Col>
-
-                    <Col className="cell-control" xs={12} md={4}>
-                        <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState}
-                                    setSelectedStateAs={setSelectedStateAs}
-                                    adjustSelectedStateReward={adjustSelectedStateReward}
-                        />
-                    </Col>
-
-                </Row>
-
-                <Row className="dashboard-row">
-                    <Col xs={12} md={4}>
-                        <UserCtrlButtons handleClick={handleUserCtrlButtonClick} />
-                    </Col>
 
                     <Col xs={12} md={8}>
-                        <LegendsCtrlButtons handleClick={toggleLegend} />
+                        <Row className="dashboard-row">
+                            <Col className="env-control" xs={12} md={4}>
+                                <EnvStatus env={agent.env} updateEnv={updateEnv} />
+                            </Col>
+
+                            <Col className="cell-control" xs={12} md={8}>
+                                <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState}
+                                            setSelectedStateAs={setSelectedStateAs}
+                                            adjustSelectedStateReward={adjustSelectedStateReward}/>
+                            </Col>
+                        </Row>
+                        <Row className="dashboard-row">
+                            <Col className="nopadding" xs={12} md={3}>
+                                <UserCtrlButtons handleClick={handleUserCtrlButtonClick} />
+                            </Col>
+
+                            <Col className="nopadding" xs={12} md={9}>
+                                <LegendsCtrlButtons handleClick={toggleLegend} />
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
-
-           </div>
+            </div>
         );
     }
 }
