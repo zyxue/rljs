@@ -1,5 +1,4 @@
-import R from '../Recurrent-js';
-import {getopt, sampleWeighted} from '../utils';
+import {getopt, sampleWeighted, zeros} from '../utils';
 
 
 // DPAgent performs Value Iteration
@@ -20,8 +19,8 @@ DPAgent.prototype = {
         // reset the agent's policy and value function
         this.numStates = this.env.getNumStates();
         this.numActions = this.env.getMaxNumActions();
-        this.V = R.zeros(this.numStates);
-        this.P = R.zeros(this.numStates * this.numActions);
+        this.V = zeros(this.numStates);
+        this.P = zeros(this.numStates * this.numActions);
         // initialize uniform random policy
         for (let s = 0; s < this.numStates; s++) {
             let poss = this.env.allowedActions(s);
@@ -34,7 +33,7 @@ DPAgent.prototype = {
 
     evaluatePolicy: function() {
         // perform a synchronous update of the value function
-        let Vnew = R.zeros(this.numStates);
+        let Vnew = zeros(this.numStates);
         for (let s = 0; s < this.numStates; s++) {
             // integrate over actions in a stochastic policy note that we
             // assume that policy probability mass over allowed actions sums
