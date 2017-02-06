@@ -80,6 +80,7 @@ class Control extends React.Component {
     setSelectedStateAs(key) {
         let env = this.state.env;
         let st = this.state.selectedState;
+
         if (key === 'startingState') {
             st.isCliff = false;
             env.startingState = st;

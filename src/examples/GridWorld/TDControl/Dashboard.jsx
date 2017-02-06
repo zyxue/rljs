@@ -221,16 +221,19 @@ class EnvStatus extends Component {
 
 class CellStatus extends Component {
     render () {
-        let {env, updateEnv} = this.props;
+        let {env, updateEnv, setSelectedStateAs, selectedState} = this.props;
+        let disabled = selectedState === null? true: false;
+        let sliderReward = selectedState === null? 0: selectedState.reward;
+
         return (
             <div>
                 <h4>Cell: </h4>
-                {/* <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
-                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
-                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
-                    <Button bsStyle='primary' disabled={disabled} onClick={this.setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
-                    </ButtonToolbar> */}
-                <div>TODO</div>
+                <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
+                    {/* bind() seems to have to be used everytime the function is passed */}
+                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
+                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
+                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
+                </ButtonToolbar> 
             </div>
         );
     }
@@ -288,8 +291,8 @@ class LegendsCtrlButtons extends Component {
 
 class Dashboard extends Component {
     render() {
-        let {agent, updateAgent, updateEnv,
-             handleUserCtrlButtonClick, toggleLegend} = this.props;
+        let {agent, selectedState, updateAgent, updateEnv, 
+             handleUserCtrlButtonClick, toggleLegend, setSelectedStateAs} = this.props;
         return (
             <div className="dashboard">
                 <Row className="dashboard-row">
@@ -302,7 +305,7 @@ class Dashboard extends Component {
                     </Col>
 
                     <Col className="cell-control" xs={12} md={4}>
-                        <CellStatus env={agent.env} updateEnv={updateEnv} />
+                        <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState} setSelectedStateAs={setSelectedStateAs}/>
                     </Col>
 
                 </Row>

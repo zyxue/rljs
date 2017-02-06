@@ -77,11 +77,13 @@ class View extends Control {
                         <Dashboard
                             agent={this.state.agent}
                             legendsCtrl={this.state.legendsCtrl}
+                            selectedState={this.state.selectedState}
 
                             updateAgent={this.updateAgent.bind(this)}
                             updateEnv={this.updateEnv.bind(this)}
                             handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
                             toggleLegend={this.toggleLegend.bind(this)}
+                            setSelectedStateAs={this.setSelectedStateAs.bind(this)}
                         />
                     </div>
                 </Row>
