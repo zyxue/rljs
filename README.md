@@ -13,3 +13,6 @@ https://rljs.herokuapp.com/#/gridworld-td, which is still very rough.
 There is also another repo for hosting machine-learning related notebooks I
 created when learning/implementing algorithms at
 https://github.com/zyxue/sutton-barto-rl-exercises.
+
+
+ES2015/ES6
