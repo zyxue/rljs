@@ -36,7 +36,7 @@ class EligibilityTracePlots extends React.Component {
 
         });
 
-        console.debug(plots);
+        // console.debug(plots);
         return (
             <div>
                 {plots}
