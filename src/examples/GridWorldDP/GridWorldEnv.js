@@ -1,4 +1,4 @@
-import R from '../../lib/Recurrent-js';
+import {zeros} from '../../lib/utils.js';
 
 
 var GridWorld = function() {
@@ -17,9 +17,9 @@ GridWorld.prototype = {
         this.gs = this.gh * this.gw; // number of states
 
         // specify some rewards
-        let Rarr = R.zeros(this.gs);
+        let Rarr = zeros(this.gs);
         /* cliffs */
-        let T = R.zeros(this.gs);
+        let T = zeros(this.gs);
 
         let plusOneIdx = [55];
         for (let i = 0; i < plusOneIdx.length; i++) {
