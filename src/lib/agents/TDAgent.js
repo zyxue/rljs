@@ -107,6 +107,7 @@ TDAgent.prototype = {
             state.allowedActions.forEach((action) => {
                 state.Q[action] = state.Q[action] + that.alpha * delta * state.Z[action];
                 state.Z[action] = that.gamma * that.lambda * state.Z[action];
+                state.epiHistZ[action].push(state.Z[action])
             });
         });
     },
@@ -128,6 +129,7 @@ TDAgent.prototype = {
                 } else {
                     state.Z[action] = 0;
                 }
+                state.epiHistZ[action].push(state.Z[action])
             });
         });
     },

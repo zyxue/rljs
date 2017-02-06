@@ -5,9 +5,45 @@ import {TDAgent} from '../../../lib/Reinforce-js';
 
 import Env from '../Base/Env.js';
 import Control from '../Base/Control.jsx';
+import Line from '../Base/Line.jsx';
 
 import Grid from './Grid.jsx';
 import Dashboard from './Dashboard.jsx';
+
+
+
+class EligibilityTracePlots extends React.Component {
+    render() {
+        let ACTION_MAP = {0: '←', 1: '↑', 2: '→', 3: '↓'};
+        let st = this.props.selectedState;
+        let plots = st.allowedActions.map((aid) => {
+            let xlabel = aid === st.allowedActions[st.allowedActions.length - 1]? 'Step' : '';
+            let key = "epiHistZ-state" + st.id + '-action-' + aid;
+            return (
+                <div key={key} className="row">
+                <Line
+                height={37.5}
+                width={300}
+                margin={{top:30, left: 40, bottom: 30}}
+                id={key}
+                data={st.epiHistZ[aid]}
+                title={'Z at State ' + st.id + ', ' + 'action: ' + ACTION_MAP[aid]}
+                xlabel={xlabel}
+                ylabel={'Z'}
+                />
+            </div>
+            )
+
+        });
+
+        console.debug(plots);
+        return (
+            <div>
+                {plots}
+            </div>
+        );
+    }
+}
 
 
 class Introduction extends React.Component {
@@ -103,13 +139,23 @@ class View extends Control {
                         />
                     </Col>
 
-                    {/* updateSelectedState={this.updateSelectedState.bind(this)}
-                        updateAgentAction={this.updateAgentAction.bind(this)} */}
-
-
                     <Col xs={12} md={4}>
                         <p> will put some plots here</p>
-                        {/* <Plots /> */}
+
+                        <div className="row">
+                            <Line
+                                height={150}
+                                width={300}
+                                margin={{top:30, left: 40, bottom:30}}
+                                id={'TD-num-steps-per-episode'}
+                                data={this.state.agent.numStepsPerEpisode}
+                                xlabel={'# episodes'}
+                                ylabel={'# steps'}
+                            />
+                        </div>
+
+                        <EligibilityTracePlots selectedState={this.state.selectedState !== null? this.state.selectedState : this.state.env.states[0]}/>
+
                     </Col>
                 </Row>
 
