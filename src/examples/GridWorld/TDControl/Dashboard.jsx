@@ -9,13 +9,13 @@ class NumberInputTag extends Component {
         let {objectToUpdate, updateMethod, params, labelNumCols, inputNumCols} = this.props;
         return (
             <div>
-                <Col className="nopadding" md={labelNumCols ? labelNumCols: 3}>
+                <Col className="nopadding" md={labelNumCols}>
                     <span>{params.label}</span>
                     <span className="text-primary">
                         {params.hideValue ? null : objectToUpdate[params.attr]}
                     </span>
                 </Col>
-                <Col className="nopadding" md={inputNumCols ? labelNumCols: 3}>
+                <Col className="nopadding" md={inputNumCols}>
                     <div className="slider">
                         <input type="number" min={params.min} max={params.max} step={params.step}
                                value={objectToUpdate[params.attr]} 
@@ -27,9 +27,26 @@ class NumberInputTag extends Component {
     }
 }
 
-
 NumberInputTag.propTypes = {
-    labelNumCols: React.PropTypes.string
+    objectToUpdate: React.PropTypes.object.isRequired,
+    updateMethod: React.PropTypes.func.isRequired,
+    params: React.PropTypes.shape({
+        label: React.PropTypes.string.isRequired,
+        attr: React.PropTypes.string.isRequired,
+        min: React.PropTypes.number.isRequired,
+        max: React.PropTypes.number.isRequired,
+        step: React.PropTypes.number.isRequired,
+        hideValue: React.PropTypes.bool
+    }).isRequired,
+
+    // This feels very bad API design
+    labelNumCols: React.PropTypes.number,
+    inputNumCols: React.PropTypes.number,
+};
+
+NumberInputTag.defaultProps = {
+    labelNumCols: 3,
+    inputNumCols: 3,
 };
 
 class SelectTag extends Component {
@@ -54,6 +71,27 @@ class SelectTag extends Component {
         );
     }
 }
+
+
+SelectTag.propTypes = {
+    objectToUpdate: React.PropTypes.object.isRequired,
+    updateMethod: React.PropTypes.func.isRequired,
+    params: React.PropTypes.shape({
+        label: React.PropTypes.string.isRequired,
+        attr: React.PropTypes.string.isRequired,
+        options: React.PropTypes.arrayOf(React.PropTypes.shape({
+            value: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.number
+            ]),
+            text: React.PropTypes.oneOfType([
+                React.PropTypes.string,
+                React.PropTypes.number
+            ]).isRequired,
+        })),
+    }).isRequired,
+};
+
 
 class GreekLetterParams extends Component {
     // parameters critical to the learning algorithm
