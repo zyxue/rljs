@@ -1,7 +1,3 @@
-import React, { Component, PropTypes } from 'react';
-import * as d3 from 'd3';
-
-
 import BaseGrid from '../Base/Grid.jsx';
 
 

@@ -38,35 +38,35 @@ function genRGBColorString(val) {
            Math.floor(rgbColor.blue) + ')';
 }
 
-
-function genPointsStr(action, coords) {
-    let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
-
-    /* given an action, it generate the 3 points needed to form a triagle*/
-    let str;
-    if (action === 0) {
-        str = xmin + ',' + ymin + ' ' +
-              xmin + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 1) {
-        str = xmin + ',' + ymin + ' ' +
-              xmax + ',' + ymin + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 2) {
-        str = xmax + ',' + ymin + ' ' +
-              xmax + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-
-    } else if (action === 3) {
-        str = xmin + ',' + ymax + ' ' +
-              xmax + ',' + ymax + ' ' +
-              xmid + ',' + ymid;
-    }
-   return str;
-}
-
+/* 
+ * function genPointsStr(action, coords) {
+ *     let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
+ * 
+ *     // given an action, it generate the 3 points needed to form a triagle
+ *     let str;
+ *     if (action === 0) {
+ *         str = xmin + ',' + ymin + ' ' +
+ *               xmin + ',' + ymax + ' ' +
+ *               xmid + ',' + ymid;
+ * 
+ *     } else if (action === 1) {
+ *         str = xmin + ',' + ymin + ' ' +
+ *               xmax + ',' + ymin + ' ' +
+ *               xmid + ',' + ymid;
+ * 
+ *     } else if (action === 2) {
+ *         str = xmax + ',' + ymin + ' ' +
+ *               xmax + ',' + ymax + ' ' +
+ *               xmid + ',' + ymid;
+ * 
+ *     } else if (action === 3) {
+ *         str = xmin + ',' + ymax + ' ' +
+ *               xmax + ',' + ymax + ' ' +
+ *               xmid + ',' + ymid;
+ *     }
+ *    return str;
+ * }
+ * */
 
 function genPointsStrForAgentAction(action, coords) {
     let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
@@ -135,7 +135,7 @@ class Grid extends Component {
     }
 
     drawCells(context) {
-        const {height, width, agent, env, showLegend} = this.props;
+        const {height, width, env, showLegend} = this.props;
         const {numRows, numCols} = env;
         const cellHeight = height / numRows;
         const cellWidth = width  / numCols;

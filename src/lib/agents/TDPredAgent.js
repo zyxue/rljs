@@ -59,7 +59,8 @@ TDPredAgent.prototype = {
     takeGreedyAction: function(s0) {
         // take a random first action instead of [0] to avoid bias
         let a0 = s0.allowedActions[R.randi(0, s0.allowedActions.length)];
-        let [rew, s1] = this.env.gotoNextState(s0, a0);
+        // reward is not needed
+        let [_, s1] = this.env.gotoNextState(s0, a0);
         let val = s1.V;
         for (let i=1; i < s0.allowedActions.length; i++) {
             let currAction = s0.allowedActions[i];
@@ -112,8 +113,8 @@ TDPredAgent.prototype = {
 
         let that = this;
         this.env.states.forEach((st, idx, arr) => {
-            st.V = st.V + that.alpha * delta * st.Z;
-            st.Z = that.gamma * that.lambda * st.Z
+            st.V += that.alpha * delta * st.Z;
+            st.Z *= that.gamma * that.lambda
             st.epiHistZ.push(st.Z);
         })
 

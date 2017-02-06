@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 
 import {TDAgent} from '../../../lib/Reinforce-js';
 
@@ -27,7 +27,7 @@ class EligibilityTracePlots extends React.Component {
                 margin={{top:30, left: 40, bottom: 30}}
                 id={key}
                 data={st.epiHistZ[aid]}
-                title={'Z at State ' + st.id + ', ' + 'action: ' + ACTION_MAP[aid]}
+                title={'Z at State ' + st.id + ', action: ' + ACTION_MAP[aid]}
                 xlabel={xlabel}
                 ylabel={'Z'}
                 />

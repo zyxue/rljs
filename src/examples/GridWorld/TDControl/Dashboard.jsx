@@ -1,13 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
-import {TDAgent} from '../../../lib/Reinforce-js';
-
-import Env from '../Base/Env.js';
-import Control from '../Base/Control.jsx';
-
-import Grid from './Grid.jsx';
-
 
 class NumberInputTag extends Component {
     render () {
@@ -33,6 +26,11 @@ class NumberInputTag extends Component {
         );
     }
 }
+
+
+NumberInputTag.propTypes = {
+    labelNumCols: React.PropTypes.string
+};
 
 class SelectTag extends Component {
     render () {
@@ -218,7 +216,7 @@ class EnvStatus extends Component {
 
 class CellStatus extends Component {
     render () {
-        let {env, updateEnv, selectedState, setSelectedStateAs, adjustSelectedStateReward} = this.props;
+        let {selectedState, setSelectedStateAs, adjustSelectedStateReward} = this.props;
         let disabled = selectedState === null? true: false;
         let sliderReward = selectedState === null? 0: selectedState.reward;
 

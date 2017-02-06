@@ -136,14 +136,14 @@ class Grid extends Component {
         if (action === 2) {nx = maxH * ratio; ny = 0;}
         if (action === 3) {nx = 0; ny = maxV * ratio;}
 
-        let pa = cellContext.append('line')
-                            .attr('x1', coords.xmid)
-                            .attr('y1', coords.ymid)
-                            .attr('x2', coords.xmid + nx)
-                            .attr('y2', coords.ymid + ny)
-                            .attr('stroke', 'black')
-                            .attr('stroke-width', 1 * Math.pow(1 + ratio, 2) )
-                            .attr("marker-end", "url(#arrowhead)");
+        cellContext.append('line')
+                   .attr('x1', coords.xmid)
+                   .attr('y1', coords.ymid)
+                   .attr('x2', coords.xmid + nx)
+                   .attr('y2', coords.ymid + ny)
+                   .attr('stroke', 'black')
+                   .attr('stroke-width', 1 * Math.pow(1 + ratio, 2) )
+                   .attr("marker-end", "url(#arrowhead)");
     }
 
 

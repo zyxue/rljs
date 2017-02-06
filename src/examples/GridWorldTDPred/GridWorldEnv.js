@@ -1,6 +1,3 @@
-import R from '../../lib/Recurrent-js';
-
-
 // these are reasonable default for learning purpose
 var GridWorld = function({numRows=7, numCols=7,
                           cliffStateIds=[2, 9, 16, 23, 30, 37, 31, 32, 33],
@@ -25,7 +22,7 @@ var GridWorld = function({numRows=7, numCols=7,
 
 GridWorld.prototype = {
     reset: function() {
-        let numCells = this.numCells = this.numRows * this.numCols;
+        this.numCells = this.numRows * this.numCols;
 
         this.states = [];
         for (let ri = 0; ri < this.numRows; ri++) {

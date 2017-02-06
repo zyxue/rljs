@@ -26,7 +26,7 @@ var GridWorld = function({numRows=7, numCols=7,
 
 GridWorld.prototype = {
     reset: function() {
-        let numCells = this.numCells = this.numRows * this.numCols;
+        this.numCells = this.numRows * this.numCols;
 
         this.states = [];
         for (let ri = 0; ri < this.numRows; ri++) {

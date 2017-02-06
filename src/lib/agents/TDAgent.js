@@ -61,7 +61,7 @@ TDAgent.prototype = {
     resetTrace: function() {
         // reset eligibility trace
         this.env.states.forEach(function(state) {
-            state.Z = {},        // current etrace
+            state.Z = {};        // current etrace
             state.epiHistZ = {}; // episodic historical etrace
             state.allowedActions.forEach(function(action) {
                 state.Z[action] = 0;
@@ -100,13 +100,13 @@ TDAgent.prototype = {
         let {s0, a0, reward, s1, a1} = this;
 
         let delta = reward + this.gamma * s1.Q[a1] - s0.Q[a0];
-        s0.Z[a0] = s0.Z[a0] + 1;
+        s0.Z[a0] += 1;
 
         let that = this;
         this.env.states.forEach((state) => {
             state.allowedActions.forEach((action) => {
-                state.Q[action] = state.Q[action] + that.alpha * delta * state.Z[action];
-                state.Z[action] = that.gamma * that.lambda * state.Z[action];
+                state.Q[action] += that.alpha * delta * state.Z[action];
+                state.Z[action] *= that.gamma * that.lambda;
                 state.epiHistZ[action].push(state.Z[action])
             });
         });
@@ -118,14 +118,14 @@ TDAgent.prototype = {
 
         let aStar = this.takeGreedyAction(s1);
         let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
-        s0.Z[a0] = s0.Z[a0] + 1;
+        s0.Z[a0] += 1;
 
         let that = this;
         this.env.states.forEach((state) => {
             state.allowedActions.forEach((action) => {
-                state.Q[action] = state.Q[action] + that.alpha * delta * state.Z[action];
-                if (a1 == aStar) {
-                    state.Z[action] = that.gamma * that.lambda * state.Z[action];
+                state.Q[action] += that.alpha * delta * state.Z[action];
+                if (a1 === aStar) {
+                    state.Z[action] *= that.gamma * that.lambda;
                 } else {
                     state.Z[action] = 0;
                 }
