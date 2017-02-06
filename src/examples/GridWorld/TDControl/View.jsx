@@ -84,6 +84,7 @@ class View extends Control {
                             handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
                             toggleLegend={this.toggleLegend.bind(this)}
                             setSelectedStateAs={this.setSelectedStateAs.bind(this)}
+                            adjustSelectedStateReward={this.adjustSelectedStateReward.bind(this)}
                         />
                     </div>
                 </Row>

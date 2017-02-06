@@ -34,7 +34,6 @@ class NumberInputTag extends Component {
     }
 }
 
-
 class SelectTag extends Component {
     render () {
         let {objectToUpdate, updateMethod, params} = this.props;
@@ -217,23 +216,31 @@ class EnvStatus extends Component {
 }
 
 
-
-
 class CellStatus extends Component {
     render () {
-        let {env, updateEnv, setSelectedStateAs, selectedState} = this.props;
+        let {env, updateEnv, selectedState, setSelectedStateAs, adjustSelectedStateReward} = this.props;
         let disabled = selectedState === null? true: false;
         let sliderReward = selectedState === null? 0: selectedState.reward;
 
         return (
             <div>
                 <h4>Cell: </h4>
-                <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
-                    {/* bind() seems to have to be used everytime the function is passed */}
-                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
-                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
-                    <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
-                </ButtonToolbar> 
+                <div className="row">
+                    <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
+                        {/* bind() seems to have to be used everytime the function is passed */}
+                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
+                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
+                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
+                    </ButtonToolbar>
+                </div>
+
+                <div className="row">
+                    <Col className="nopadding" md={3}>Adjust reward: </Col>
+                    <Col className="slider selected-reward" md={6}>
+                        <input type="range" min="-1" max="1" disabled={disabled} value={sliderReward}
+                               step="0.01" onChange={adjustSelectedStateReward.bind(this)}/>
+                    </Col>
+                </div>
             </div>
         );
     }
@@ -292,7 +299,8 @@ class LegendsCtrlButtons extends Component {
 class Dashboard extends Component {
     render() {
         let {agent, selectedState, updateAgent, updateEnv, 
-             handleUserCtrlButtonClick, toggleLegend, setSelectedStateAs} = this.props;
+             handleUserCtrlButtonClick, toggleLegend,
+             setSelectedStateAs, adjustSelectedStateReward} = this.props;
         return (
             <div className="dashboard">
                 <Row className="dashboard-row">
@@ -305,7 +313,10 @@ class Dashboard extends Component {
                     </Col>
 
                     <Col className="cell-control" xs={12} md={4}>
-                        <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState} setSelectedStateAs={setSelectedStateAs}/>
+                        <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState}
+                                    setSelectedStateAs={setSelectedStateAs}
+                                    adjustSelectedStateReward={adjustSelectedStateReward}
+                        />
                     </Col>
 
                 </Row>
