@@ -11,9 +11,11 @@ var GridWorld = function({numRows=7, numCols=7,
                          }={}) {
     this.numRows = numRows;
     this.numCols = numCols;
+    this.numCells = this.numRows * this.numCols;
+
     this.cliffStateIds = cliffStateIds;
     this.startingStateId = startingStateId;
-    this.terminalStateId = terminalStateId;
+    this.terminalStateId = Math.min(this.numCells - 1, terminalStateId);
 
     // the reward (usually negative and hence a penalty) for taking an action
     this.stepReward = stepReward;
@@ -26,35 +28,25 @@ var GridWorld = function({numRows=7, numCols=7,
 
 GridWorld.prototype = {
     reset: function() {
-        this.numCells = this.numRows * this.numCols;
-
         this.states = [];
         for (let ri = 0; ri < this.numRows; ri++) {
             for (let ci = 0; ci < this.numCols; ci++) {
                 let id = this.xytos(ci, ri);
-                this.states.push({
+                let st = {
                     id: id,
                     x: ci,
                     y: ri,
                     reward: 0,
-                    isCliff: false,
-                    allowedActions: this.getAllowedActions(id),
-                });
+                };
+                st.isCliff = (this.cliffStateIds.indexOf(st.id) !== -1 ? true : false);
+                st.allowedActions = this.getAllowedActions(st);
+                this.states.push(st);
             }
         }
 
-        // default starting state
         this.startingState = this.states[this.startingStateId];
-        // default terminal state
-        // this.terminalState = this.states[Math.floor(this.numCells / 2)];
         this.terminalState = this.states[this.terminalStateId];
         this.terminalState.reward = this.terminalReward;
-
-        let that = this;
-        this.cliffStateIds.forEach((id) => {
-            // check is important when the grid size is reduced
-            if (id < that.numCells) that.states[id].isCliff = true;
-        });
     },
 
     calcReward: function(s0, action, s1) {
@@ -99,7 +91,7 @@ GridWorld.prototype = {
         return state.id === this.terminalState.id ? true : false;
     },
 
-    getAllowedActions: function(stateId) {
+    getAllowedActions: function(state) {
         // var actionMapping = {
         //     0: '←',
         //     1: '↑',
@@ -107,21 +99,29 @@ GridWorld.prototype = {
         //     3: '→'
         // };
 
-        let x = this.stox(stateId);
-        let y = this.stoy(stateId);
-        let as = [];
-        if (x > 0) {
-            as.push(0);
+        const as = [];
+        if (! state.isCliff) {
+            // Allow agent to go against towards border, but should stay put
+            [0, 1, 2, 3].forEach((a) => as.push(a));
+
+            // // NOT allow agent to go towards grid border 
+            // const stateId = state.Id;
+            // let x = this.stox(stateId);
+            // let y = this.stoy(stateId);
+            // if (x > 0) {
+            //     as.push(0);
+            // }
+            // if (y > 0) {
+            //     as.push(1);
+            // }
+            // if (x < this.numCols - 1) {
+            //     as.push(2);
+            // }
+            // if (y < this.numRows - 1) {
+            //     as.push(3);
+            // }
         }
-        if (y > 0) {
-            as.push(1);
-        }
-        if (x < this.numCols - 1) {
-            as.push(2);
-        }
-        if (y < this.numRows - 1) {
-            as.push(3);
-        }
+
         return as;
     },
 
