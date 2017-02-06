@@ -1,4 +1,4 @@
-import R from '../Recurrent-js';
+import {randi} from '../utils.js';
 
 
 let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
@@ -52,13 +52,13 @@ TDPredAgent.prototype = {
     },
 
     takeRandomAction: function(s0) {
-        let randomInt = R.randi(0, s0.allowedActions.length);
+        let randomInt = randi(0, s0.allowedActions.length);
         return s0.allowedActions[randomInt];
     },
 
     takeGreedyAction: function(s0) {
         // take a random first action instead of [0] to avoid bias
-        let a0 = s0.allowedActions[R.randi(0, s0.allowedActions.length)];
+        let a0 = s0.allowedActions[randi(0, s0.allowedActions.length)];
         // reward is not needed
         let [_, s1] = this.env.gotoNextState(s0, a0);
         let val = s1.V;
