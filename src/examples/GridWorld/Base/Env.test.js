@@ -34,8 +34,9 @@ function initGridWorld() {
     });
 }
 
+const gw = initGridWorld();
+
 it('proper initialization', () => {
-    const gw = initGridWorld();
     expect(gw.numRows).toBe(2);
     expect(gw.numCols).toBe(3);
     expect(gw.numCells).toBe(6);
@@ -47,7 +48,6 @@ it('proper initialization', () => {
 });
 
 describe('proper reset after initialization', () => {
-    const gw = initGridWorld();
     it('6 cells in total', () => {
         expect(gw.states.length).toBe(6);
     });
@@ -73,7 +73,6 @@ describe('proper reset after initialization', () => {
             allowedActions: [0, 1, 2, 3]
         });
     })
-
 
     it('test a non-cliff state to the bottom', () => {
         expect(gw.states[4]).toEqual({
@@ -117,5 +116,48 @@ describe('proper reset after initialization', () => {
             isCliff: false,
             allowedActions: [0, 1, 2, 3]
         });
+    })
+});
+
+
+it('calcNextState', () => {
+    [
+        // s0: state where action is taken
+        // a:  action
+        // s1: next state
+
+        // top left corner
+        {s0Id: 0, a0Id: 0, s1Id: 0},
+        {s0Id: 0, a0Id: 1, s1Id: 0},
+        {s0Id: 0, a0Id: 2, s1Id: 0},
+        {s0Id: 0, a0Id: 3, s1Id: 3},
+
+        // terminal state
+        {s0Id: 2, a0Id: 0, s1Id: 0},
+        {s0Id: 2, a0Id: 1, s1Id: 0},
+        {s0Id: 2, a0Id: 2, s1Id: 0},
+        {s0Id: 2, a0Id: 3, s1Id: 0},
+
+        // bottom left corner
+        {s0Id: 3, a0Id: 0, s1Id: 3},
+        {s0Id: 3, a0Id: 1, s1Id: 0},
+        {s0Id: 3, a0Id: 2, s1Id: 4},
+        {s0Id: 3, a0Id: 3, s1Id: 3},
+
+        // bottom center
+        {s0Id: 4, a0Id: 0, s1Id: 3},
+        {s0Id: 4, a0Id: 1, s1Id: 4},
+        {s0Id: 4, a0Id: 2, s1Id: 5},
+        {s0Id: 4, a0Id: 3, s1Id: 4},
+
+        // bottom right corner
+        {s0Id: 5, a0Id: 0, s1Id: 4},
+        {s0Id: 5, a0Id: 1, s1Id: 2},
+        {s0Id: 5, a0Id: 2, s1Id: 5},
+        {s0Id: 5, a0Id: 3, s1Id: 5},
+    ].map((obj) => {
+        let {s0Id, a0Id, s1Id} = obj;
+        // console.log(obj);
+        expect(gw.calcNextState(gw.states[s0Id], a0Id).id).toBe(s1Id);
     })
 });

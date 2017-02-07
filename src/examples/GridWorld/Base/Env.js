@@ -67,10 +67,10 @@ GridWorld.prototype = {
             let x = this.stox(s0.id);
             let y = this.stoy(s0.id);
             let nx, ny;
-            if (a0 === 0) {nx = x - 1; ny = y;}
-            if (a0 === 1) {nx = x; ny = y - 1;}
-            if (a0 === 2) {nx = x + 1; ny = y;}
-            if (a0 === 3) {nx = x; ny = y + 1;}
+            if (a0 === 0) {nx = Math.max(x - 1, 0); ny = y;}
+            if (a0 === 1) {nx = x; ny = Math.max(y - 1, 0);}
+            if (a0 === 2) {nx = Math.min(x + 1, this.numCols - 1); ny = y;}
+            if (a0 === 3) {nx = x; ny = Math.min(y + 1, this.numRows - 1);}
             let s1Id = this.xytos(nx, ny);
             // console.debug(a0, x, y, nx, ny, s1Id);
             s1 = this.states[s1Id];
