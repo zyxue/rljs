@@ -219,3 +219,58 @@ it('gotoNextState', () => {
         expect(gw.gotoNextState(gw.states[s0Id], a0)).toEqual([reward, gw.states[s1Id]]);
     })
 });
+
+
+it('check if a state is a terminal state', () => {
+    expect(gw.isTerminal(gw.states[0])).toBe(false);
+    // cliff is not terminal
+    expect(gw.isTerminal(gw.states[1])).toBe(false);
+    expect(gw.isTerminal(gw.states[2])).toBe(true);
+});
+
+
+it('get allowed actions of a given state', () => {
+    gw.states.forEach((st) => {
+        let actions = gw.getAllowedActions(st);
+        if (st.isCliff) {
+            expect(actions).toEqual([]);
+        } else {
+            expect(actions).toEqual([0, 1, 2, 3]);
+        }
+    })
+});
+
+it('initialize state', () => {
+    expect(gw.initState().id).toBe(0);
+})
+
+it('get number of states in the current gridworld', () => {
+    expect(gw.getNumStates()).toBe(6);
+})
+
+it('stox: convert state Id to x coordinate', () => {
+    expect(gw.stox(0)).toBe(0);
+    expect(gw.stox(1)).toBe(1);
+    expect(gw.stox(2)).toBe(2);
+    expect(gw.stox(3)).toBe(0);
+    expect(gw.stox(4)).toBe(1);
+    expect(gw.stox(5)).toBe(2);
+});
+
+it('stoy: convert state Id to y coordinate', () => {
+    expect(gw.stoy(0)).toBe(0);
+    expect(gw.stoy(1)).toBe(0);
+    expect(gw.stoy(2)).toBe(0);
+    expect(gw.stoy(3)).toBe(1);
+    expect(gw.stoy(4)).toBe(1);
+    expect(gw.stoy(5)).toBe(1);
+});
+
+it('xytos: convert x, y coordinates to state Id', () => {
+    expect(gw.xytos(0, 0)).toBe(0);
+    expect(gw.xytos(1, 0)).toBe(1);
+    expect(gw.xytos(2, 0)).toBe(2);
+    expect(gw.xytos(0, 1)).toBe(3);
+    expect(gw.xytos(1, 1)).toBe(4);
+    expect(gw.xytos(2, 1)).toBe(5);
+});
