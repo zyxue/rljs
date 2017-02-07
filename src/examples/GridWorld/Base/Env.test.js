@@ -127,38 +127,38 @@ it('calcNextState', () => {
         // s1: next state
 
         // top left corner
-        {s0Id: 0, a0Id: 0, s1Id: 0},
-        {s0Id: 0, a0Id: 1, s1Id: 0},
-        {s0Id: 0, a0Id: 2, s1Id: 0},
-        {s0Id: 0, a0Id: 3, s1Id: 3},
+        {s0Id: 0, a0: 0, s1Id: 0},
+        {s0Id: 0, a0: 1, s1Id: 0},
+        {s0Id: 0, a0: 2, s1Id: 0},
+        {s0Id: 0, a0: 3, s1Id: 3},
 
         // terminal state
-        {s0Id: 2, a0Id: 0, s1Id: 0},
-        {s0Id: 2, a0Id: 1, s1Id: 0},
-        {s0Id: 2, a0Id: 2, s1Id: 0},
-        {s0Id: 2, a0Id: 3, s1Id: 0},
+        {s0Id: 2, a0: 0, s1Id: 0},
+        {s0Id: 2, a0: 1, s1Id: 0},
+        {s0Id: 2, a0: 2, s1Id: 0},
+        {s0Id: 2, a0: 3, s1Id: 0},
 
         // bottom left corner
-        {s0Id: 3, a0Id: 0, s1Id: 3},
-        {s0Id: 3, a0Id: 1, s1Id: 0},
-        {s0Id: 3, a0Id: 2, s1Id: 4},
-        {s0Id: 3, a0Id: 3, s1Id: 3},
+        {s0Id: 3, a0: 0, s1Id: 3},
+        {s0Id: 3, a0: 1, s1Id: 0},
+        {s0Id: 3, a0: 2, s1Id: 4},
+        {s0Id: 3, a0: 3, s1Id: 3},
 
         // bottom center
-        {s0Id: 4, a0Id: 0, s1Id: 3},
-        {s0Id: 4, a0Id: 1, s1Id: 4},
-        {s0Id: 4, a0Id: 2, s1Id: 5},
-        {s0Id: 4, a0Id: 3, s1Id: 4},
+        {s0Id: 4, a0: 0, s1Id: 3},
+        {s0Id: 4, a0: 1, s1Id: 4},
+        {s0Id: 4, a0: 2, s1Id: 5},
+        {s0Id: 4, a0: 3, s1Id: 4},
 
         // bottom right corner
-        {s0Id: 5, a0Id: 0, s1Id: 4},
-        {s0Id: 5, a0Id: 1, s1Id: 2},
-        {s0Id: 5, a0Id: 2, s1Id: 5},
-        {s0Id: 5, a0Id: 3, s1Id: 5},
+        {s0Id: 5, a0: 0, s1Id: 4},
+        {s0Id: 5, a0: 1, s1Id: 2},
+        {s0Id: 5, a0: 2, s1Id: 5},
+        {s0Id: 5, a0: 3, s1Id: 5},
     ].map((obj) => {
-        let {s0Id, a0Id, s1Id} = obj;
+        let {s0Id, a0, s1Id} = obj;
         // console.log(obj);
-        expect(gw.calcNextState(gw.states[s0Id], a0Id).id).toBe(s1Id);
+        expect(gw.calcNextState(gw.states[s0Id], a0).id).toBe(s1Id);
     })
 });
 
@@ -185,37 +185,37 @@ it('calcReward', () => {
 it('gotoNextState', () => {
     [
         // top left corner
-        {s0Id: 0, a0Id: 0, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0Id: 1, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0Id: 2, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0Id: 3, reward: -0.01, s1Id: 3},
+        {s0Id: 0, a0: 0, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 1, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 2, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 3, reward: -0.01, s1Id: 3},
 
         // terminal state
-        {s0Id: 2, a0Id: 0, reward: 1, s1Id: 0},
-        {s0Id: 2, a0Id: 1, reward: 1, s1Id: 0},
-        {s0Id: 2, a0Id: 2, reward: 1, s1Id: 0},
-        {s0Id: 2, a0Id: 3, reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 0, reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 1, reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 2, reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 3, reward: 1, s1Id: 0},
 
         // bottom left corner
-        {s0Id: 3, a0Id: 0, reward: -0.01, s1Id: 3},
-        {s0Id: 3, a0Id: 1, reward: -0.01, s1Id: 0},
-        {s0Id: 3, a0Id: 2, reward: -0.01, s1Id: 4},
-        {s0Id: 3, a0Id: 3, reward: -0.01, s1Id: 3},
+        {s0Id: 3, a0: 0, reward: -0.01, s1Id: 3},
+        {s0Id: 3, a0: 1, reward: -0.01, s1Id: 0},
+        {s0Id: 3, a0: 2, reward: -0.01, s1Id: 4},
+        {s0Id: 3, a0: 3, reward: -0.01, s1Id: 3},
 
         // bottom center
-        {s0Id: 4, a0Id: 0, reward: -0.01, s1Id: 3},
-        {s0Id: 4, a0Id: 1, reward: -0.01, s1Id: 4},
-        {s0Id: 4, a0Id: 2, reward: -0.01, s1Id: 5},
-        {s0Id: 4, a0Id: 3, reward: -0.01, s1Id: 4},
+        {s0Id: 4, a0: 0, reward: -0.01, s1Id: 3},
+        {s0Id: 4, a0: 1, reward: -0.01, s1Id: 4},
+        {s0Id: 4, a0: 2, reward: -0.01, s1Id: 5},
+        {s0Id: 4, a0: 3, reward: -0.01, s1Id: 4},
 
         // bottom right corner
-        {s0Id: 5, a0Id: 0, reward: -0.01, s1Id: 4},
-        {s0Id: 5, a0Id: 1, reward: -0.01, s1Id: 2},
-        {s0Id: 5, a0Id: 2, reward: -0.01, s1Id: 5},
-        {s0Id: 5, a0Id: 3, reward: -0.01, s1Id: 5},
+        {s0Id: 5, a0: 0, reward: -0.01, s1Id: 4},
+        {s0Id: 5, a0: 1, reward: -0.01, s1Id: 2},
+        {s0Id: 5, a0: 2, reward: -0.01, s1Id: 5},
+        {s0Id: 5, a0: 3, reward: -0.01, s1Id: 5},
     ].map((obj) => {
-        let {s0Id, a0Id, reward, s1Id} = obj;
+        let {s0Id, a0, reward, s1Id} = obj;
         // console.log(obj);
-        expect(gw.gotoNextState(gw.states[s0Id], a0Id)).toEqual([reward, gw.states[s1Id]]);
+        expect(gw.gotoNextState(gw.states[s0Id], a0)).toEqual([reward, gw.states[s1Id]]);
     })
 });
