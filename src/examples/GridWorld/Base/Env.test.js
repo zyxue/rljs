@@ -1,7 +1,7 @@
 import GridWorld from './Env';
 
 
-it('too big terminalStateId is reduced to the last cell', () => {
+it('too big terminalStateId should be reduced to the last cell', () => {
     const gw = new GridWorld({
         numRows: 2,
         numCols: 3,
