@@ -179,3 +179,43 @@ it('calcReward', () => {
         });
     });
 });
+
+
+
+it('gotoNextState', () => {
+    [
+        // top left corner
+        {s0Id: 0, a0Id: 0, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0Id: 1, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0Id: 2, reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0Id: 3, reward: -0.01, s1Id: 3},
+
+        // terminal state
+        {s0Id: 2, a0Id: 0, reward: 1, s1Id: 0},
+        {s0Id: 2, a0Id: 1, reward: 1, s1Id: 0},
+        {s0Id: 2, a0Id: 2, reward: 1, s1Id: 0},
+        {s0Id: 2, a0Id: 3, reward: 1, s1Id: 0},
+
+        // bottom left corner
+        {s0Id: 3, a0Id: 0, reward: -0.01, s1Id: 3},
+        {s0Id: 3, a0Id: 1, reward: -0.01, s1Id: 0},
+        {s0Id: 3, a0Id: 2, reward: -0.01, s1Id: 4},
+        {s0Id: 3, a0Id: 3, reward: -0.01, s1Id: 3},
+
+        // bottom center
+        {s0Id: 4, a0Id: 0, reward: -0.01, s1Id: 3},
+        {s0Id: 4, a0Id: 1, reward: -0.01, s1Id: 4},
+        {s0Id: 4, a0Id: 2, reward: -0.01, s1Id: 5},
+        {s0Id: 4, a0Id: 3, reward: -0.01, s1Id: 4},
+
+        // bottom right corner
+        {s0Id: 5, a0Id: 0, reward: -0.01, s1Id: 4},
+        {s0Id: 5, a0Id: 1, reward: -0.01, s1Id: 2},
+        {s0Id: 5, a0Id: 2, reward: -0.01, s1Id: 5},
+        {s0Id: 5, a0Id: 3, reward: -0.01, s1Id: 5},
+    ].map((obj) => {
+        let {s0Id, a0Id, reward, s1Id} = obj;
+        // console.log(obj);
+        expect(gw.gotoNextState(gw.states[s0Id], a0Id)).toEqual([reward, gw.states[s1Id]]);
+    })
+});
