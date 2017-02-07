@@ -50,8 +50,11 @@ GridWorld.prototype = {
     },
 
     calcReward: function(s0, action, s1) {
-        // reward of being in s, taking action a, and ending up in ns
+        // reward of being in s0, taking action, and ending up in s1
+
+        // exit step does not incur penalty
         let reward = s0.reward;
+
         // every non-exit step takes a bit of negative reward
         if (!this.isTerminal(s0)) reward += this.stepReward;
         return reward;

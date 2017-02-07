@@ -161,3 +161,21 @@ it('calcNextState', () => {
         expect(gw.calcNextState(gw.states[s0Id], a0Id).id).toBe(s1Id);
     })
 });
+
+
+it('calcReward', () => {
+    gw.states.forEach((s0) => {
+        s0.allowedActions.forEach((action) => {
+            if (! s0.isCliff) {
+                let s1 = gw.calcNextState(s0, action);
+                let reward = gw.calcReward(s0, action, s1);
+                if (gw.isTerminal(s0)) {
+                    // exit step does not incur penalty
+                    expect(reward).toBe(1);
+                } else {
+                    expect(reward).toBe(-0.01);
+                }
+            }
+        });
+    });
+});
