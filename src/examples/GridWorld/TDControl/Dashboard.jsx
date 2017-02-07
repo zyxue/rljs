@@ -16,7 +16,7 @@ class NumberInputTag extends Component {
                     </span>
                 </Col>
                 <Col className="nopadding" md={inputNumCols}>
-                    <div className="slider">
+                    <div>
                         <input type="number" min={params.min} max={params.max} step={params.step}
                                value={objectToUpdate[params.attr]} 
                                onChange={updateMethod.bind(this, params.attr)}/>
@@ -36,7 +36,7 @@ NumberInputTag.propTypes = {
         min: React.PropTypes.number.isRequired,
         max: React.PropTypes.number.isRequired,
         step: React.PropTypes.number.isRequired,
-        hideValue: React.PropTypes.bool
+        hideValue: React.PropTypes.bool,
     }).isRequired,
 
     // This feels very bad API design
@@ -51,17 +51,17 @@ NumberInputTag.defaultProps = {
 
 class SelectTag extends Component {
     render () {
-        let {objectToUpdate, updateMethod, params} = this.props;
+        let {objectToUpdate, updateMethod, params, labelNumCols, inputNumCols} = this.props;
         let options = params.options.map((p) => {
             return <option key={params.attr + '-' + p.value} value={p.value}>{p.text}</option>
         });
 
         return (
             <div>
-                <Col className="nopadding" md={3}>
+                <Col className="nopadding" md={labelNumCols}>
                     <span>{params.label}</span>
                 </Col>
-                <Col className="nopadding" md={9}>
+                <Col className="nopadding" md={inputNumCols}>
                     <select value={objectToUpdate[params.attr]}
                             onChange={updateMethod.bind(this, params.attr)}>
                         {options}
@@ -90,7 +90,17 @@ SelectTag.propTypes = {
             ]).isRequired,
         })),
     }).isRequired,
+
+    // This feels very bad API design
+    labelNumCols: React.PropTypes.number,
+    inputNumCols: React.PropTypes.number,
 };
+
+SelectTag.defaultProps = {
+    labelNumCols: 3,
+    inputNumCols: 9,
+};
+
 
 
 class GreekLetterParams extends Component {
@@ -199,7 +209,7 @@ class AgentStatus extends Component {
     render() {
         return (
             <div>
-                <h4>Agent:</h4>
+                <h5>Agent:</h5>
                 <AgentExperience agent={this.props.agent} />
                 <AgentParamsCtrl agent={this.props.agent} updateAgent={this.props.updateAgent} />
             </div>
@@ -224,16 +234,10 @@ class EnvDimensions extends Component {
             label: '# cols:', attr: 'numCols', options: allowedDimensions,
         };
 
-        let stepRewardParams = {
-            label: 'step reward: ', attr: 'stepReward',
-            min: -1, max: 1, step: 0.01, hideValue:true
-        };
-
         return (
             <div>
-                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numRowsParams} />
-                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numColsParams} />
-                <NumberInputTag objectToUpdate={env} updateMethod={updateEnv} params={stepRewardParams} />
+                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numRowsParams} labelNumCols={4} inputNumCols={3} />
+                <SelectTag objectToUpdate={env} updateMethod={updateEnv} params={numColsParams} labelNumCols={2} inputNumCols={2} />
             </div>
         );
     }
@@ -242,10 +246,18 @@ class EnvDimensions extends Component {
 class EnvStatus extends Component {
     render () {
         let {env, updateEnv} = this.props;
+
+        let stepRewardParams = {
+            label: 'step reward: ', attr: 'stepReward',
+            min: -1, max: 1, step: 0.01, hideValue:true
+        };
+
         return (
             <div>
-                <h4>Environment:</h4>
+                <h5>Environment:</h5>
                 <EnvDimensions env={env} updateEnv={updateEnv} />
+                <NumberInputTag objectToUpdate={env} updateMethod={updateEnv} params={stepRewardParams}
+                                labelNumCols={4} inputNumCols={8} />
             </div>
         );
     }
@@ -258,22 +270,32 @@ class CellStatus extends Component {
         let disabled = selectedState === null? true: false;
         let sliderReward = selectedState === null? 0: selectedState.reward;
 
+        let buttons = [
+            {key: 'startingState', text: 'Starting state'},
+            {key: 'terminalState', text: 'Terminal state'},
+            {key: 'cliff', text: 'Cliff'}
+        ].map((obj) => {
+            let {key, text} = obj;
+            {/* bind() seems to have to be used everytime the function is passed */}
+            return <Button disabled={disabled}
+                           bsStyle='warning' bsSize='xsmall'
+                           onClick={setSelectedStateAs.bind(this, key)}>{text}</Button>
+        });
+
         return (
             <div>
-                <h4>Cell: </h4>
-                <div className="row">
+                <h5>Cell: </h5>
+                <div className='dashboard-container'>
                     <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
-                        {/* bind() seems to have to be used everytime the function is passed */}
-                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'startingState')}>Starting state</Button>
-                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'terminalState')}>Terminal state</Button>
-                        <Button bsStyle='primary' disabled={disabled} onClick={setSelectedStateAs.bind(this, 'cliff')}>Cliff</Button>
+                        {buttons}
                     </ButtonToolbar>
                 </div>
 
-                <div className="row">
+                <div>
                     <Col className="nopadding" md={3}>Adjust reward: </Col>
-                    <Col className="slider selected-reward" md={6}>
-                        <input type="range" min="-1" max="1" disabled={disabled} value={sliderReward}
+                    <Col className="slider-container selected-reward" md={6}>
+                        <input className='slider'
+                               type="range" min="-1" max="1" disabled={disabled} value={sliderReward}
                                step="0.01" onChange={adjustSelectedStateReward.bind(this)}/>
                     </Col>
                 </div>
@@ -290,7 +312,7 @@ class UserCtrlButtons extends Component {
             let text = str.charAt(0).toUpperCase() + str.slice(1)
             return (
                 <Button className="control user-control" key={str}
-                        bsStyle='primary'
+                        bsStyle='primary' bsSize='xsmall'
                         onClick={handleClick.bind(this, str)}>
                     {text}
                 </Button>
@@ -298,7 +320,10 @@ class UserCtrlButtons extends Component {
         });
 
         return (
-            <div>{buttons}</div>
+            <div>
+                <h5>Main buttons:</h5>
+                <div>{buttons}</div>
+            </div>
         );
     }
 }
@@ -317,7 +342,7 @@ class LegendsCtrlButtons extends Component {
         ].map((obj) => {
             return (
                 <Button className="control legend-control" key={obj.key}
-                        bsStyle='success'
+                        bsStyle='success' bsSize="xsmall"
                         onClick={handleClick.bind(this, obj.key)}>
                     {obj.text}
                 </Button>
@@ -326,7 +351,8 @@ class LegendsCtrlButtons extends Component {
 
         return (
             <div>
-                Legends: {buttons}
+                <h5>Legends control:</h5>
+                <div>{buttons}</div>
             </div>
         );
     }
@@ -339,35 +365,32 @@ class Dashboard extends Component {
              setSelectedStateAs, adjustSelectedStateReward} = this.props;
         return (
             <div className="dashboard">
-                <Row className="dashboard-row">
-                    <Col className="agent-control" xs={12} md={4}>
-                        <AgentStatus agent={agent} updateAgent={updateAgent} />
-                    </Col>
+                <Col className="agent-control" xs={12} md={4}>
+                    <AgentStatus agent={agent} updateAgent={updateAgent} />
+                </Col>
 
 
-                    <Col xs={12} md={8}>
-                        <Row className="dashboard-row">
-                            <Col className="env-control" xs={12} md={4}>
-                                <EnvStatus env={agent.env} updateEnv={updateEnv} />
-                            </Col>
+                <Col xs={12} md={3}>
+                    <Row className="env-control">
+                        <EnvStatus env={agent.env} updateEnv={updateEnv} />
+                    </Row>
 
-                            <Col className="cell-control" xs={12} md={8}>
-                                <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState}
-                                            setSelectedStateAs={setSelectedStateAs}
-                                            adjustSelectedStateReward={adjustSelectedStateReward}/>
-                            </Col>
-                        </Row>
-                        <Row className="dashboard-row">
-                            <Col className="nopadding" xs={12} md={3}>
-                                <UserCtrlButtons handleClick={handleUserCtrlButtonClick} />
-                            </Col>
+                    <Row>
+                        <UserCtrlButtons handleClick={handleUserCtrlButtonClick} />
+                    </Row>
+                </Col>
 
-                            <Col className="nopadding" xs={12} md={9}>
-                                <LegendsCtrlButtons handleClick={toggleLegend} />
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
+                <Col xs={12} md={5}>
+                    <Row className="cell-control">
+                        <CellStatus env={agent.env} updateEnv={updateEnv} selectedState={selectedState}
+                                    setSelectedStateAs={setSelectedStateAs}
+                                    adjustSelectedStateReward={adjustSelectedStateReward}/>
+                    </Row>
+
+                    <Row>
+                        <LegendsCtrlButtons handleClick={toggleLegend} />
+                    </Row>
+                </Col>
             </div>
         );
     }

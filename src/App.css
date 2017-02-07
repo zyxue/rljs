@@ -2,7 +2,8 @@
     cursor: pointer;
 }
 
-.slider {
+/* strange: if without prefix input in the selector, it does not have an effect?! */
+input.slider {
     display: inline-block;
     vertical-align: middle;
 }
@@ -16,8 +17,8 @@ input[type=number] {
     width: 5em;
 }
 
-.dashboard-row {
-    margin-bottom: 3px;
+div.dashboard-container {
+    margin-bottom: 5px;
 }
 
 button.control {

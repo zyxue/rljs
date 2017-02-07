@@ -126,8 +126,7 @@ class View extends Control {
                 </Row>
                 
                 <Row>
-                    <Col className='grid' xs={12} md={8} style={{border: 'red 0.5px solid', height: '600px'}}>
-                        {this.state.agent.gamma}
+                    <Col className='grid' xs={12} md={8} style={{border: 'green 0.5px solid'}}>
                         <Grid
                             height={600}
                             width={700}
@@ -139,9 +138,7 @@ class View extends Control {
                         />
                     </Col>
 
-                    <Col xs={12} md={4}>
-                        <p> will put some plots here</p>
-
+                    <Col xs={12} md={4} style={{border: 'blue 0.5px solid'}}>
                         <div className="row">
                             <Line
                                 height={150}
