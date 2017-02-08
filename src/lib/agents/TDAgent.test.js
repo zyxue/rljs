@@ -1,6 +1,10 @@
 import TDAgent from './TDAgent';
 import GridWorld from '../../examples/GridWorld/Base/Env';
 
+// the way of how to mock utils.randi is learned from
+// http://stackoverflow.com/questions/40465047/how-can-i-mock-an-es6-module-import-using-jest
+import * as utils from '../utils';
+
 
 const STARTING_STATE_ID = 3;
 const TERMINAL_STATE_ID = 2;
@@ -105,5 +109,18 @@ describe('proper initialization', () => {
             });
         });
     });
-
 });
+
+
+it('take a random action', () => {
+    utils.randi = jest.fn();
+    utils.randi.mockReturnValueOnce(1).mockReturnValue(2);
+    const first_action = agent.takeRandomAction({allowedActions: ['a0', 'a1']});
+    expect(utils.randi).toBeCalledWith(0, 2);
+    // do it again
+    const second_action = agent.takeRandomAction({allowedActions: ['a0', 'a1', 'a2']});
+    expect(utils.randi).toBeCalledWith(0, 3);
+    // assert actions taken
+    expect(first_action).toBe('a1');
+    expect(second_action).toBe('a2');
+})
