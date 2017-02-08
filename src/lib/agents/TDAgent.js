@@ -3,7 +3,7 @@ import {randi} from '../utils';
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType='accumulatingTrace',
-                             learningAlgo='sarsaLambda',
+                             learningAlgo='qLambda',
                              batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
@@ -17,6 +17,7 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
     // Trace-decay parameter
     this.lambda = lambda;
 
+    this.etraceType = etraceType;
     this.learningAlgo = learningAlgo;
 
     // for learning from multiple episodes in batch
@@ -43,7 +44,7 @@ TDAgent.prototype = {
         this.numStepsCurrentEpisode = 0;
         this.s0 = this.env.initState();
         this.a0 = this.chooseAction(this.s0);
-        this.reward = null;
+        this.reward = 0;
         this.s1 = null;
         this.a1 = null;
         this.resetTrace();
