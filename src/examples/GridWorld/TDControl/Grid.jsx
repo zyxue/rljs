@@ -5,6 +5,7 @@ import Cell from './Cell.jsx';
 import Frame from '../Base/Grid/Frame.jsx';
 import Cliff from '../Base/Grid/Cliff.jsx';
 import StartingState from '../Base/Grid/StartingState.jsx';
+import TerminalState from '../Base/Grid/TerminalState.jsx';
 import ArrowHeadDef from '../Base/Grid/ArrowHeadDef.jsx';
 import {calcCoords} from '../Base/Grid/gridUtils.js';
 
@@ -46,9 +47,11 @@ class Grid extends Component {
             <div>
                 <svg height={height} width={width}>
                     {frame}
+                    <StartingState coords={agent.env.getStartingState().coords}></StartingState>
+                    <TerminalState coords={agent.env.getTerminalState().coords}></TerminalState>
                     <ArrowHeadDef markerId={arrowHeadDefId}></ArrowHeadDef>
                     {grid}
-                    <StartingState coords={agent.env.getStartingState().coords}></StartingState>
+
                 </svg>
             </div>
         );
