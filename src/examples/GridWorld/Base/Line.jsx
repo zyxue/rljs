@@ -45,7 +45,7 @@ class Line extends Component {
                    .attr("y", 0)
                    .attr("text-anchor", "middle")
                    .attr("dominant-baseline", "text-after-edge")
-                   .style("font-size", "13px")
+                   .style("font-size", ".8em")
                    .text(title);
 
         if (xlabel !== undefined)
@@ -53,7 +53,7 @@ class Line extends Component {
                    .attr("text-anchor", "middle")
                    .attr("transform", "translate("+ (width/2) +","+(height + (margin.bottom || 0))+")")
                    .attr("dominant-baseline", "text-after-edge")
-                   .style("font-size", "11px")
+                   .style("font-size", ".8em")
                    .text(xlabel);
 
         if (ylabel !== undefined)
@@ -61,7 +61,7 @@ class Line extends Component {
                    .attr("text-anchor", "middle")
                    /* /1.27 is a very brittle setting after careful adjustment to make it look better */
                    .attr("transform", "translate("+ -margin.left / 1.27 +","+(height/2)+")rotate(-90)")
-                   .style("font-size", "11px")
+                   .style("font-size", ".8em")
                    .text(ylabel);
     }
 
