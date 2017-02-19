@@ -106,53 +106,63 @@ class View extends Control {
     }
 
     render() {
+        const dashboard = (
+            <Dashboard
+                agent={this.state.agent}
+                legendsCtrl={this.state.legendsCtrl}
+                selectedState={this.state.selectedState}
+
+                updateAgent={this.updateAgent.bind(this)}
+                updateEnv={this.updateEnv.bind(this)}
+                handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
+                toggleLegend={this.toggleLegend.bind(this)}
+                setSelectedStateAs={this.setSelectedStateAs.bind(this)}
+                adjustSelectedStateReward={this.adjustSelectedStateReward.bind(this)}
+            />
+        );
+
+        const grid = (
+            <Col className='grid' xs={12} md={8} style={{border: 'green 0.5px solid'}}>
+                <Grid
+                    height={600}
+                    width={700}
+                    id="grid-TD-control"
+                    agent={this.state.agent}
+                    legendsCtrl={this.state.legendsCtrl}
+                    selectedState={this.state.selectedState}
+                    updateSelectedState={this.updateSelectedState.bind(this)}
+                />
+            </Col>
+        );
+
+        const numStepsVsNumEpisodesPlot = (
+            <Line
+                height={150}
+                width={300}
+                margin={{top:30, left: 40, bottom:30}}
+                id={'TD-num-steps-per-episode'}
+                data={this.state.agent.numStepsPerEpisode}
+                xlabel={'# episodes'}
+                ylabel={'# steps'}
+            />
+        );
+
+        const etracePlots = (
+            <EligibilityTracePlots selectedState={this.state.selectedState !== null? this.state.selectedState : this.state.env.states[0]}/>
+        )
+
         return (
             <div>
                 <Row style={{border: 'red 0.5px solid'}}>
-                    <div>
-                        <Dashboard
-                            agent={this.state.agent}
-                            legendsCtrl={this.state.legendsCtrl}
-                            selectedState={this.state.selectedState}
-
-                            updateAgent={this.updateAgent.bind(this)}
-                            updateEnv={this.updateEnv.bind(this)}
-                            handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
-                            toggleLegend={this.toggleLegend.bind(this)}
-                            setSelectedStateAs={this.setSelectedStateAs.bind(this)}
-                            adjustSelectedStateReward={this.adjustSelectedStateReward.bind(this)}
-                        />
-                    </div>
+                    <div>{dashboard}</div>
                 </Row>
                 
                 <Row>
-                    <Col className='grid' xs={12} md={8} style={{border: 'green 0.5px solid'}}>
-                        <Grid
-                            height={600}
-                            width={700}
-                            id="grid-TD-control"
-                            agent={this.state.agent}
-                            legendsCtrl={this.state.legendsCtrl}
-                            selectedState={this.state.selectedState}
-                            updateSelectedState={this.updateSelectedState.bind(this)}
-                        />
-                    </Col>
+                    {grid}
 
                     <Col xs={12} md={4} style={{border: 'blue 0.5px solid'}}>
-                        <div className="row">
-                            <Line
-                                height={150}
-                                width={300}
-                                margin={{top:30, left: 40, bottom:30}}
-                                id={'TD-num-steps-per-episode'}
-                                data={this.state.agent.numStepsPerEpisode}
-                                xlabel={'# episodes'}
-                                ylabel={'# steps'}
-                            />
-                        </div>
-
-                        <EligibilityTracePlots selectedState={this.state.selectedState !== null? this.state.selectedState : this.state.env.states[0]}/>
-
+                        <div className="row">{numStepsVsNumEpisodesPlot}</div>
+                        {etracePlots}
                     </Col>
                 </Row>
 
