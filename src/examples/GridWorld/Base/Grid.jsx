@@ -1,29 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import * as d3 from 'd3';
 
-import './Grid.css';
 import Cell from './Cell.jsx';
 import Cliff from './Cliff.jsx';
+import ArrowHeadDef from './ArrowHeadDef.jsx';
 import {calcCoords} from './gridUtils.js';
 
+import './Grid.css';
 
 class Grid extends Component {
-    addDimensionsToStates() {
-        // assign geometrical dimensions to each state according to passed
-        // height and width
-        const {height, width, agent} = this.props;
-        const {numRows, numCols} = agent.env;
-        const cellHeight = height / numRows;
-        const cellWidth = width  / numCols;
-
-        let that = this;
-        agent.env.states.forEach(function (st) {
-            st.cellHeight = cellHeight;
-            st.cellWidth = cellWidth;
-            st.coords = calcCoords(st.x, st.y, cellHeight, cellWidth);
-        });
-    }
-
     propTypes: {
         id: PropTypes.string,
         height: PropTypes.number,
@@ -31,20 +15,29 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width} = this.props;
-        const env = this.props.agent.env;
-        this.addDimensionsToStates();
-        const grid = env.states.map((state) => {
+        const {height, width, agent} = this.props;
+
+        // add coords per cell to enable draw inside the cell
+        const {numRows, numCols} = agent.env;
+        const cellHeight = height / numRows;
+        const cellWidth = width  / numCols;
+        agent.env.states.forEach(function (st) {
+            st.coords = calcCoords(st.x, st.y, cellHeight, cellWidth);
+        });
+
+        const arrowHeadDefId = "arrow-head";
+        const grid = agent.env.states.map((state) => {
             return (
                 state.isCliff ?
                 <Cliff key={state.id} state={state} /> :
-                <Cell  key={state.id} state={state} />
+                <Cell  key={state.id} state={state} arrowHeadDefId={arrowHeadDefId} />
             );
         });
 
         return (
             <div>
                 <svg height={height} width={width}>
+                    <ArrowHeadDef markerId={arrowHeadDefId}></ArrowHeadDef>;
                     {grid}
                 </svg>
             </div>
