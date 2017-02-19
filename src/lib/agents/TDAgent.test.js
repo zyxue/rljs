@@ -5,6 +5,7 @@ import GridWorld from '../../examples/GridWorld/Base/Env';
 // http://stackoverflow.com/questions/40465047/how-can-i-mock-an-es6-module-import-using-jest
 import * as utils from '../utils';
 utils.randi = jest.fn();
+Math.random = jest.fn()
 
 const STARTING_STATE_ID = 3;
 const TERMINAL_STATE_ID = 2;
@@ -95,7 +96,7 @@ describe('proper initialization', () => {
                 expect(agent.s0.id).toBe(STARTING_STATE_ID);
             });
 
-            it('agent should have an action to take, selected from a given policy', () => {
+            it('agent should have an action to choose, selected from a given policy', () => {
                 expect(agent.a0).not.toBeNull();    
             });
 
@@ -112,28 +113,28 @@ describe('proper initialization', () => {
 });
 
 
-it('take a random action (1)', () => {
+it('choose a random action (1)', () => {
     utils.randi.mockReturnValue(1);
 
     // only mock the relevant parts
     const mockState = {allowedActions: ['a0', 'a1']};
-    const action = agent.takeRandomAction(mockState);
+    const action = agent.chooseRandomAction(mockState);
     expect(utils.randi).toBeCalledWith(0, 2);
     expect(action).toBe('a1');
 });
 
 
-it('take a random action (2)', () => {
+it('choose a random action (2)', () => {
     utils.randi.mockReturnValue(2);
 
     const mockState = {allowedActions: ['a0', 'a1', 'a2']};
-    const action = agent.takeRandomAction(mockState);
+    const action = agent.chooseRandomAction(mockState);
     expect(utils.randi).toBeCalledWith(0, 3);
     expect(action).toBe('a2');
 });
 
 
-it('take a greedy action (1)', () => {
+it('choose a greedy action (1)', () => {
     const mockState = {
         allowedActions: ['a0', 'a1', 'a2'],
         Q: {
@@ -144,12 +145,12 @@ it('take a greedy action (1)', () => {
     };
     for (let i of [0, 1, 2]) {
         utils.randi.mockReturnValue(i);
-        expect(agent.takeGreedyAction(mockState)).toBe('a2');
+        expect(agent.chooseGreedyAction(mockState)).toBe('a2');
     }
 });
 
 
-it('take a greedy action (2), starting from the bigger one', () => {
+it('choose a greedy action (2), starting from the bigger one', () => {
     utils.randi.mockReturnValue(0);
     const mockState = {
         allowedActions: ['a0', 'a1'],
@@ -158,11 +159,11 @@ it('take a greedy action (2), starting from the bigger one', () => {
             a1: 1,
         }
     };
-    expect(agent.takeGreedyAction(mockState)).toBe('a0');
+    expect(agent.chooseGreedyAction(mockState)).toBe('a0');
 });
 
 
-it('take a greedy action (3), starting from the smaller one', () => {
+it('choose a greedy action (3), starting from the smaller one', () => {
     utils.randi.mockReturnValue(1);
     const mockState = {
         allowedActions: ['a0', 'a1'],
@@ -171,5 +172,9 @@ it('take a greedy action (3), starting from the smaller one', () => {
             a1: 1,
         }
     };
-    expect(agent.takeGreedyAction(mockState)).toBe('a0');
+    expect(agent.chooseGreedyAction(mockState)).toBe('a0');
 });
+
+
+it('sarsaLambdaUpdate')
+

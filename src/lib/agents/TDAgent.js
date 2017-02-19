@@ -3,7 +3,8 @@ import {randi} from '../utils';
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType='accumulatingTrace',
-                             learningAlgo='qLambda',
+                             // learningAlgo='qLambda',
+                             learningAlgo='sarsaLambda',
                              batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
@@ -42,7 +43,7 @@ TDAgent.prototype = {
     resetEpisode: function() {
         // reset epsiode level variables
         this.numStepsCurrentEpisode = 0;
-        this.s0 = this.env.initState();
+        this.s0 = this.initState();
         this.a0 = this.chooseAction(this.s0);
         this.reward = 0;
         this.s1 = null;
@@ -71,13 +72,24 @@ TDAgent.prototype = {
         });
     },
 
-    takeRandomAction: function(s0) {
+    initState: function() {
+        // the initState method of agent is an abstraction over env.initState
+        return this.env.initState();
+    },
+
+    chooseAction: function(s0) {
+        // implemented the ∈-greedy algorithms
+        console.log(Math.random());
+        return Math.random() < this.epsilon ? this.chooseRandomAction(s0) : this.chooseGreedyAction(s0);
+    },
+
+    chooseRandomAction: function(s0) {
         let randomInt = randi(0, s0.allowedActions.length);
         let a0 = s0.allowedActions[randomInt];
         return a0;
     },
 
-    takeGreedyAction: function(s0) {
+    chooseGreedyAction: function(s0) {
         let actions = s0.allowedActions;
         let a0 = actions[randi(0, actions.length)];
         let qVal = s0.Q[a0];
@@ -91,8 +103,13 @@ TDAgent.prototype = {
         return a0;
     },
 
-    chooseAction: function(s0) {
-        return Math.random() < this.epsilon ? this.takeRandomAction(s0) : this.takeGreedyAction(s0);
+    takeAction: function() {
+        let {s0, a0} = this;
+        let [reward, s1] = this.env.gotoNextState(s0, a0);
+        this.reward = reward;
+        this.s1 = s1;
+        this.a1 = this.chooseAction(this.s1);
+        this.numStepsCurrentEpisode += 1;
     },
 
     sarsaLambdaUpdate: function() {
@@ -117,7 +134,7 @@ TDAgent.prototype = {
         // implement the Watkins' Q(λ) in Figure 7.14
         let {s0, a0, reward, s1, a1} = this;
 
-        let aStar = this.takeGreedyAction(s1);
+        let aStar = this.chooseGreedyAction(s1);
         let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
         s0.Z[a0] += 1;
 
@@ -133,15 +150,6 @@ TDAgent.prototype = {
                 state.epiHistZ[action].push(state.Z[action])
             });
         });
-    },
-
-    takeAction: function() {
-        let {s0, a0} = this;
-        let [reward, s1] = this.env.gotoNextState(s0, a0);
-        this.reward = reward;
-        this.s1 = s1;
-        this.a1 = this.chooseAction(this.s1);
-        this.numStepsCurrentEpisode += 1;
     },
 
     afterUpdate: function () {
