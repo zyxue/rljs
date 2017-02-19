@@ -9,6 +9,9 @@ class Grid extends BaseGrid {
                             {fillColor: 'blue', fillOpacity: 1});
         this.highlightState(context, agent.env.terminalState,
                             {fillColor: 'green', fillOpacity: 1});
+        if (this.props.selectedState !== null)
+            this.highlightState(context, this.props.selectedState,
+                                {fillColor: 'orange', fillOpacity: 0.5});
 
         let that = this;
         agent.env.states.forEach(function (st) {
@@ -35,10 +38,6 @@ class Grid extends BaseGrid {
                    that.handleStateMouseClick(this, st);
                });
         });
-        
-        if (this.props.selectedState !== null)
-            this.highlightState(context, this.props.selectedState,
-                                {fillColor: 'orange', fillOpacity: 0.5});
     }
 
     drawOneCell(cellContext, state, legendsCtrl) {
