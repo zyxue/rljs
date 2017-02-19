@@ -288,6 +288,9 @@ class Grid extends Component {
                .attr("markerHeight", 4)
                .attr("orient", "auto")
                .append("path")
+               .style('stroke', 'black')
+               .style('fill', 'black')
+               .style('stroke-linejoin', "miter")
                .attr("d", "M 0,0 V 4 L3,2 Z");
         return context;
     }
