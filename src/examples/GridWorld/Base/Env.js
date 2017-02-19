@@ -36,7 +36,7 @@ GridWorld.prototype = {
                     id: id,
                     x: ci,
                     y: ri,
-                    reward: 0,
+                    reward: 0
                 };
                 st.isCliff = (this.cliffStateIds.indexOf(st.id) !== -1 ? true : false);
                 st.allowedActions = this.getAllowedActions(st);
@@ -76,10 +76,10 @@ GridWorld.prototype = {
             let x = this.stox(s0.id);
             let y = this.stoy(s0.id);
             let nx, ny;
-            if (a0 === 0) {nx = Math.max(x - 1, 0); ny = y;}
-            if (a0 === 1) {nx = x; ny = Math.max(y - 1, 0);}
-            if (a0 === 2) {nx = Math.min(x + 1, this.numCols - 1); ny = y;}
-            if (a0 === 3) {nx = x; ny = Math.min(y + 1, this.numRows - 1);}
+            if (a0 === 'left') {nx = Math.max(x - 1, 0); ny = y;}
+            if (a0 === 'right') {nx = x; ny = Math.max(y - 1, 0);}
+            if (a0 === 'up') {nx = Math.min(x + 1, this.numCols - 1); ny = y;}
+            if (a0 === 'down') {nx = x; ny = Math.min(y + 1, this.numRows - 1);}
             let s1Id = this.xytos(nx, ny);
             // console.debug(a0, x, y, nx, ny, s1Id);
             s1 = this.states[s1Id];
@@ -111,7 +111,7 @@ GridWorld.prototype = {
         const as = [];
         if (! state.isCliff) {
             // Allow agent to go against towards border, but should stay put
-            [0, 1, 2, 3].forEach((a) => as.push(a));
+            ['left', 'up', 'right', 'down'].forEach((a) => as.push(a));
 
             // // NOT allow agent to go towards grid border 
             // const stateId = state.Id;
