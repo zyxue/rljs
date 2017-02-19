@@ -5,7 +5,7 @@ import GridWorld from '../../examples/GridWorld/Base/Env';
 // http://stackoverflow.com/questions/40465047/how-can-i-mock-an-es6-module-import-using-jest
 import * as utils from '../utils';
 utils.randi = jest.fn();
-Math.random = jest.fn()
+
 
 const STARTING_STATE_ID = 3;
 const TERMINAL_STATE_ID = 2;

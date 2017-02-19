@@ -1,3 +1,6 @@
+// Write the methods of the TDAgent class as functional (pure) as possible to ease
+// testing, but some functions are cumbersome to purify, e.g. reset().
+
 import {randi} from '../utils';
 
 
@@ -30,7 +33,7 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
 
 
 TDAgent.prototype = {
-    reset: function(){
+    reset: function() {
         this.resetValueFunction();
 
         // for keeping learning progress
@@ -43,8 +46,8 @@ TDAgent.prototype = {
     resetEpisode: function() {
         // reset epsiode level variables
         this.numStepsCurrentEpisode = 0;
-        this.s0 = this.initState();
-        this.a0 = this.chooseAction(this.s0);
+        this.s0 = this.initState(this.env);
+        this.a0 = this.chooseAction(this.s0, this.epsilon);
         this.reward = 0;
         this.s1 = null;
         this.a1 = null;
@@ -72,15 +75,14 @@ TDAgent.prototype = {
         });
     },
 
-    initState: function() {
+    initState: function(env) {
         // the initState method of agent is an abstraction over env.initState
-        return this.env.initState();
+        return env.initState();
     },
 
-    chooseAction: function(s0) {
+    chooseAction: function(s0, epsilon) {
         // implemented the ∈-greedy algorithms
-        console.log(Math.random());
-        return Math.random() < this.epsilon ? this.chooseRandomAction(s0) : this.chooseGreedyAction(s0);
+        return Math.random() < epsilon ? this.chooseRandomAction(s0) : this.chooseGreedyAction(s0);
     },
 
     chooseRandomAction: function(s0) {
@@ -108,7 +110,7 @@ TDAgent.prototype = {
         let [reward, s1] = this.env.gotoNextState(s0, a0);
         this.reward = reward;
         this.s1 = s1;
-        this.a1 = this.chooseAction(this.s1);
+        this.a1 = this.chooseAction(this.s1, this.epsilon);
         this.numStepsCurrentEpisode += 1;
     },
 
