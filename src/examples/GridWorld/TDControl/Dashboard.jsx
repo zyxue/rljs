@@ -176,7 +176,7 @@ class LearningAlgo extends Component {
     render () {
         let {agent, updateAgent} = this.props;
         let params = {
-            label: 'learning algorithm:', attr: 'learningAlgo', options: [
+            label: 'learning algo:', attr: 'learningAlgo', options: [
                 {value: 'watkinsQLambda', text: 'Watkins’s Q(λ)'},
                 {value: 'sarsaLambda', text: 'Sarsa(λ)'}
             ]
