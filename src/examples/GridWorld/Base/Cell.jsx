@@ -1,11 +1,18 @@
 import React, { Component, PropTypes } from 'react';
-import * as d3 from 'd3';
 
+import PolicyArrows from './PolicyArrows.jsx';
 
 // In contrast to Cliff.jsx, this file defines the UI of a normal cell
 
 
 class CellFrame extends Component {
+    propTypes: {
+        x: PropTypes.number,
+        y: PropTypes.number,
+        height: PropTypes.number,
+        width: PropTypes.number
+    }
+
     // simply a rectangle around a state cell
     render() {
         const {x, y, height, width} = this.props;
@@ -22,6 +29,12 @@ class CellFrame extends Component {
 }
 
 class StateIdTxt extends Component {
+    propTypes: {
+        x: PropTypes.number,
+        y: PropTypes.number,
+        stateId: PropTypes.number
+    }
+
     render() {
         const {x, y, stateId} = this.props;
         return (
@@ -50,8 +63,13 @@ class StateCoordTxt extends Component {
     }
 }
 
-
 class RewardTxt extends Component {
+    propTypes: {
+        x: PropTypes.number,
+        y: PropTypes.number,
+        reward: PropTypes.number
+    }
+
     render() {
         const {x, y, reward} = this.props;
         return (
@@ -66,96 +84,23 @@ class RewardTxt extends Component {
 
 
 class Cell extends Component {
-    // in contrast to cliff, this is a regular Cell
-    drawCell() {
-        const state = this.props.state
-        const context = this.setContext();
-        /* this.writeStateId(context, state);*/
-        /* this.addDimensionsToStates();
-         * this.drawCells(context);
-         * this.drawAgent(context);*/
-    }
-
-    /* redrawCell() {
-     *     const context = d3.select('#' + this.props.id);
-     *     context.remove();
-     *     this.drawGrid();
-     * }*/
-
     handleStateMouseClick(rect, state) {
         /* to be overwritten */
     }
 
-
-    drawPolicyArrow(cellContext, state, action) {
-        let nx, ny;
-        let {Q, coords} = state;
-        /* maximum length of horizontal and vertical length */
-        let maxH = state.cellWidth / 2;
-        let maxV = state.cellHeight / 2;
-
-        let minQ = Q[state.allowedActions[0]];
-        state.allowedActions.forEach((a) => {
-            if (Q[a] < minQ) minQ = Q[a];
-        });
-
-        let qSum = 0;
-        let normedQval = null;
-        state.allowedActions.forEach((a) => {
-            let normed = Q[a] - minQ;
-            qSum += normed
-            if (a === action) normedQval = normed;
-        });
-
-        let ratio = (qSum > 0) ? Math.abs(normedQval) / qSum : 0;
-
-        if (action === 0) {nx = - maxH * ratio; ny = 0;}
-        if (action === 1) {nx = 0; ny = - maxV * ratio;}
-        if (action === 2) {nx = maxH * ratio; ny = 0;}
-        if (action === 3) {nx = 0; ny = maxV * ratio;}
-
-        cellContext.append('line')
-                   .attr('x1', coords.xmid)
-                   .attr('y1', coords.ymid)
-                   .attr('x2', coords.xmid + nx)
-                   .attr('y2', coords.ymid + ny)
-                   .attr('stroke', 'black')
-                   .attr('stroke-width', 1 * Math.pow(1 + ratio, 2) )
-                   .attr("marker-end", "url(#arrowhead)");
-    }
-
-
-    setContext() {
-        const {height, width, id} = this.props.state;
-        /* let context = d3.select(this.refs["cellDiv" + this.props.state.id]).append('g')
-         *                 .attr('height', height)
-         *                 .attr('width', width)
-         *                 .attr('id', id)
-         *                 .append('g');*/
-    }
-    
-    /* componentDidMount() {
-     *     this.drawCell();
-     * }*/
-    
-    /* componentDidUpdate() {
-     *     this.redrawCell();
-     * }*/
-
     render () {
         const state = this.props.state;
         const {xmin, ymin, xmax, ymax} = state.coords;
-        console.log(state.x, state.y);
         return (
             <g className="cell">
                 <StateCoordTxt x={xmin} y={ymin} coordX={state.x} coordY={state.y}></StateCoordTxt>
                 <StateIdTxt x={xmax} y={ymin} stateId={state.id}></StateIdTxt>
                 <RewardTxt x={xmax} y={ymax} reward={state.reward}></RewardTxt>
                 <CellFrame x={xmin} y={ymin} height={ymax - ymin} width={xmax - xmin}></CellFrame>
+                <PolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId}></PolicyArrows>
             </g>
         );
     }
 }
-
 
 export default Cell;
