@@ -16,22 +16,23 @@ class EligibilityTracePlots extends React.Component {
     render() {
         let ACTION_MAP = {0: '←', 1: '↑', 2: '→', 3: '↓'};
         let st = this.props.selectedState;
-        let plots = st.allowedActions.map((aid) => {
+        let plots = st.allowedActions.map((aid, idx) => {
             let xlabel = aid === st.allowedActions[st.allowedActions.length - 1]? 'Step' : '';
             let key = "epiHistZ-state" + st.id + '-action-' + aid;
+
             return (
                 <div key={key} className="row">
-                <Line
-                height={37.5}
-                width={300}
-                margin={{top:30, left: 40, bottom: 30}}
-                id={key}
-                data={st.epiHistZ[aid]}
-                title={'Z at State ' + st.id + ', action: ' + ACTION_MAP[aid]}
-                xlabel={xlabel}
-                ylabel={'Z'}
-                />
-            </div>
+                    <Line
+                        height={37.5}
+                        width={300}
+                        margin={{top:30, left: 40, bottom: 30}}
+                        id={key}
+                        data={st.epiHistZ[aid]}
+                        title={'Z at State ' + st.id + ', action: ' + ACTION_MAP[aid]}
+                        xlabel={xlabel}
+                        ylabel={'Z'}
+                    />
+                </div>
             )
 
         });
@@ -122,7 +123,6 @@ class View extends Control {
         );
 
         const grid = (
-            <Col className='grid' xs={12} md={8} style={{border: 'green 0.5px solid'}}>
                 <Grid
                     height={600}
                     width={700}
@@ -132,7 +132,6 @@ class View extends Control {
                     selectedState={this.state.selectedState}
                     updateSelectedState={this.updateSelectedState.bind(this)}
                 />
-            </Col>
         );
 
         const numStepsVsNumEpisodesPlot = (
@@ -148,7 +147,10 @@ class View extends Control {
         );
 
         const etracePlots = (
-            <EligibilityTracePlots selectedState={this.state.selectedState !== null? this.state.selectedState : this.state.env.states[0]}/>
+            <EligibilityTracePlots
+                selectedState={this.state.selectedState !== null?
+                               this.state.selectedState :
+                               this.state.env.states[0]}/>
         )
 
         return (
@@ -158,18 +160,17 @@ class View extends Control {
                 </Row>
                 
                 <Row>
-                    {grid}
-
-                    <Col xs={12} md={4} style={{border: 'blue 0.5px solid'}}>
-                        <div className="row">{numStepsVsNumEpisodesPlot}</div>
-                        {etracePlots}
+                    <Col className='grid'  xs={12} md={8} style={{border: 'green 0.5px solid'}}>
+                        {grid}
+                    </Col>
+                    <Col className='plots' xs={12} md={4} style={{border: 'blue  0.5px solid'}}>
+                         <div>{numStepsVsNumEpisodesPlot}</div>
+                         <div>{etracePlots}</div>
                     </Col>
                 </Row>
 
                 <Row>
-                    <div>
-                        <Introduction />
-                    </div>
+                    <div><Introduction /></div>
                 </Row>
             </div>
         );
