@@ -6,8 +6,8 @@ import {randi} from '../utils';
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType=null,
-                             learningAlgo='watkinsQLambda',
-                             // learningAlgo='sarsaLambda',
+                             // learningAlgo='watkinsQLambda',
+                             learningAlgo='sarsaLambda',
                              batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
