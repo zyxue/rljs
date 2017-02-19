@@ -11,6 +11,7 @@
     "bootstrap": "^3.3.7",
     "d3": "^3.5.17",
     "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "react-faux-dom": "^3.0.0",
