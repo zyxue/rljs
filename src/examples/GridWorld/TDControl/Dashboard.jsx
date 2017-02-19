@@ -277,7 +277,8 @@ class CellStatus extends Component {
         ].map((obj) => {
             let {key, text} = obj;
             {/* bind() seems to have to be used everytime the function is passed */}
-            return <Button disabled={disabled}
+            return <Button key={key}
+                           disabled={disabled}
                            bsStyle='warning' bsSize='xsmall'
                            onClick={setSelectedStateAs.bind(this, key)}>{text}</Button>
         });
