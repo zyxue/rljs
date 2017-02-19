@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import CellFrame from '../Base/Grid/CellFrame.jsx';
+import Frame from '../Base/Grid/Frame.jsx';
 import StateCoordTxt from '../Base/Grid/StateCoordTxt.jsx';
 import StateIdTxt from '../Base/Grid/StateIdTxt.jsx';
 import StateRewardTxt from '../Base/Grid/StateRewardTxt.jsx';
@@ -18,7 +18,7 @@ class Cell extends Component {
         const {xmin, ymin, xmax, ymax} = state.coords;
         return (
             <g className="cell">
-                <CellFrame x={xmin} y={ymin} height={ymax - ymin} width={xmax - xmin}></CellFrame>
+                <Frame x={xmin} y={ymin} height={ymax - ymin} width={xmax - xmin}></Frame>
                 <StateCoordTxt x={xmin} y={ymin} coordX={state.x} coordY={state.y}></StateCoordTxt>
                 <StateIdTxt x={xmax} y={ymin} stateId={state.id}></StateIdTxt>
                 <StateRewardTxt x={xmax} y={ymax} reward={state.reward}></StateRewardTxt>

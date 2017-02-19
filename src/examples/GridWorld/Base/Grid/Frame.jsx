@@ -16,7 +16,7 @@ class CellFrame extends Component {
             <rect x={x} y={y}
                   height={height} width={width}
                   stroke="black"
-                  strokeWidth={0.1}
+                  strokeWidth={0.2}
                   fillOpacity={0}
                   cursor="pointer">
             </rect>
