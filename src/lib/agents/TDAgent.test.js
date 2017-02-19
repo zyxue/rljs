@@ -46,10 +46,6 @@ describe('proper initialization', () => {
         expect(agent.lambda).toBeCloseTo(0.9);
     });
 
-    it('agent uses default type of eligibility trace', () => {
-        expect(agent.etraceType).toBe('accumulatingTrace');
-    });
-
     // it('agent uses default type of learning algorithm', () => {
     //     expect(agent.learningAlgo).toBe('qLambda');
     // });

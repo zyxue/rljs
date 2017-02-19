@@ -5,7 +5,7 @@ import {randi} from '../utils';
 
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
-                             etraceType='accumulatingTrace',
+                             etraceType=null,
                              learningAlgo='watkinsQLambda',
                              // learningAlgo='sarsaLambda',
                              batchSize=200, actingRate=100}={}) {
@@ -21,7 +21,10 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
     // Trace-decay parameter
     this.lambda = lambda;
 
-    this.etraceType = etraceType;
+    // both sarsaLambda and watkinsQLambda have already specified etraceType, so
+    // currently won't support using additional trace types. Control trace turns
+    // out to be quite different from planning trace.
+    this.etraceType = null;
     this.learningAlgo = learningAlgo;
 
     // for learning from multiple episodes in batch
