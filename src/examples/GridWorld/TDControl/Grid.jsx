@@ -6,9 +6,9 @@ class Grid extends BaseGrid {
         const {agent, legendsCtrl} = this.props;
 
         this.highlightState(context, agent.env.startingState,
-                            {fillColor: 'blue', fillOpacity: 0.3});
+                            {fillColor: 'blue', fillOpacity: 1});
         this.highlightState(context, agent.env.terminalState,
-                            {fillColor: 'green', fillOpacity: 0.3});
+                            {fillColor: 'green', fillOpacity: 1});
 
         let that = this;
         agent.env.states.forEach(function (st) {
@@ -101,7 +101,7 @@ class Grid extends BaseGrid {
         cellContext.append('polygon')
                    .attr('points', pointsStr)
                    .attr('fill', color)
-                   .attr('fill-opacity', 0)
+                   .attr('fill-opacity', 0.5)
                    .attr('stroke', 'black')
                    .attr('stroke-width', 0.5);
     }
