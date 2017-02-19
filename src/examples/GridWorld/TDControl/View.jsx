@@ -95,9 +95,9 @@ class View extends Control {
                  * reward: true,
                  * etrace: true*/
 
-                qValue: true,
+                qValue: false,
                 stateId: true,
-                stateCoord: true,
+                stateCoord: false,
                 reward: true,
                 policy: true, // show policy as arrows
                 etrace: true
