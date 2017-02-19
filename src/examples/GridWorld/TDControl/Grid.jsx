@@ -38,8 +38,8 @@ class Grid extends Component {
 
         // add this to make the border look more symmetric as border lines
         // between neighbouring cells are drawn multiple times
-        const frame = [1, 2, 3].map(() => {
-            return <Frame x={0} y={0} height={height} width={width}></Frame>
+        const frame = [1, 2, 3].map((_, idx) => {
+            return <Frame key={idx} x={0} y={0} height={height} width={width}></Frame>
         })
 
         return (
