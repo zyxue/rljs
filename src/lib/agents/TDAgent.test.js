@@ -176,5 +176,6 @@ it('choose a greedy action (3), starting from the smaller one', () => {
 });
 
 
-it('sarsaLambdaUpdate')
+// Found the other methods are still very difficult to test... and need to learn
+// more mocking for testing complex object such as this agent.
 
