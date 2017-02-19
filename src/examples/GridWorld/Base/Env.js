@@ -44,9 +44,15 @@ GridWorld.prototype = {
             }
         }
 
-        this.startingState = this.states[this.startingStateId];
-        this.terminalState = this.states[this.terminalStateId];
-        this.terminalState.reward = this.terminalReward;
+        this.states[this.terminalStateId].reward = this.terminalReward;
+    },
+
+    getStartingState: function() {
+        return this.states[this.startingStateId];
+    },
+
+    getTerminalState: function() {
+        return this.states[this.terminalStateId];
     },
 
     calcReward: function(s0, action, s1) {
@@ -91,7 +97,7 @@ GridWorld.prototype = {
     },
 
     isTerminal: function(state) {
-        return state.id === this.terminalState.id ? true : false;
+        return state.id === this.terminalStateId ? true : false;
     },
 
     getAllowedActions: function(state) {
@@ -133,7 +139,7 @@ GridWorld.prototype = {
     },
 
     initState: function() {
-        return this.startingState;
+        return this.getStartingState();
     },
 
     getNumStates: function() {
