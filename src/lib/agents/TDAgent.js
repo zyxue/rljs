@@ -6,8 +6,8 @@ import {randi} from '../utils';
 
 let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
                              etraceType='accumulatingTrace',
-                             // learningAlgo='qLambda',
-                             learningAlgo='sarsaLambda',
+                             learningAlgo='watkinsQLambda',
+                             // learningAlgo='sarsaLambda',
                              batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
@@ -105,6 +105,24 @@ TDAgent.prototype = {
         return a0;
     },
 
+    act: function() {
+        // Main method for learning
+        this.takeAction();
+
+        switch (this.learningAlgo) {
+        case 'sarsaLambda':
+            this.sarsaLambdaUpdate();
+            break;
+        case 'watkinsQLambda':
+            this.watkinsQLambdaUpdate();
+            break;
+        default:
+            console.error('unimplemented learning algorithm: ' + this.learningAlgo);
+        }
+
+        this.afterUpdate();
+    },
+
     takeAction: function() {
         let {s0, a0} = this;
         let [reward, s1] = this.env.gotoNextState(s0, a0);
@@ -112,6 +130,17 @@ TDAgent.prototype = {
         this.s1 = s1;
         this.a1 = this.chooseAction(this.s1, this.epsilon);
         this.numStepsCurrentEpisode += 1;
+    },
+
+    afterUpdate: function () {
+        if (this.env.isTerminal(this.s0)) {
+            this.numEpisodesExperienced += 1;
+            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+            this.resetEpisode();
+        } else {
+            this.s0 = this.s1;
+            this.a0 = this.a1;
+        }
     },
 
     sarsaLambdaUpdate: function() {
@@ -132,7 +161,7 @@ TDAgent.prototype = {
         });
     },
 
-    qLambdaUpdate: function() {
+    watkinsQLambdaUpdate: function() {
         // implement the Watkins' Q(λ) in Figure 7.14
         let {s0, a0, reward, s1, a1} = this;
 
@@ -154,30 +183,18 @@ TDAgent.prototype = {
         });
     },
 
-    afterUpdate: function () {
-        if (this.env.isTerminal(this.s0)) {
-            this.numEpisodesExperienced += 1;
-            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
-            this.resetEpisode();
-        } else {
-            this.s0 = this.s1;
-            this.a0 = this.a1;
-        }
-    },
+    // updateTrace: function() {
+    //     // todo:
 
-    act: function() {
-        this.takeAction();
+    //     // trying to abstract trace calculation away for flexibility in plugging
+    //     // in new trace types in the future, but seems not easy, will see later.
 
-        if (this.learningAlgo === 'sarsaLambda') {
-            this.sarsaLambdaUpdate();
-        } else if (this.learningAlgo === 'qLambda') {
-            this.qLambdaUpdate();
-        } else {
-            console.error('unimplemented learning algorithm: ' + this.learningAlgo);
-        }
+    // }
 
-        this.afterUpdate();
-    },
+    // sarsaLambdaUpdate: function(state, Q, action) {
+    //     // this is generalized from accumulating trace as in planning
+
+    // }
 
     learnFromOneEpisode: function() {
         this.resetEpisode();
