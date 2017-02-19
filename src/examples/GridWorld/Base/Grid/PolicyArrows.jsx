@@ -38,26 +38,24 @@ class PolicyArrows extends Component {
     }
 
     render() {
-        const {Q, coords, cellHeight, cellWidth, allowedActions} = this.props.state;
+        const {Q, coords} = this.props.state;
         const arrowHeadDefId = this.props.arrowHeadDefId;
+
+        const cellHeight = coords.ymax - coords.ymin;
+        const cellWidth = coords.xmax - coords.xmin;
         const maxH = cellWidth / 2;
         const maxV = cellHeight / 2;
 
         const normedQ = this.normalizeQ(Q);
         const normedQSum = this.sumQ(normedQ);
 
-        // implicit problem, needs further debugging to see how the type casting
-        // works in javascript. action is a Number or String?
-
-        // const arrows = Object.keys(normedQ).map(function(action, idx) {
-        // console.log(Object.keys(normedQ));
-        const arrows = allowedActions.map(function(action, idx) {
-            const ratio = (normedQSum > 0) ? normedQ[action] / normedQSum : 0;
+        const arrows = Object.keys(normedQ).map(function(action, idx) {
+            let ratio = (normedQSum > 0) ? (normedQ[action] / normedQSum) : 0;
             let nx, ny;
-            if (action === 0) {nx = - maxH * ratio; ny = 0;}
-            if (action === 1) {nx = 0; ny = - maxV * ratio;}
-            if (action === 2) {nx = maxH * ratio; ny = 0;}
-            if (action === 3) {nx = 0; ny = maxV * ratio;}
+            if (action === 'left') {nx = - maxH * ratio; ny = 0;}
+            if (action === 'up') {nx = 0; ny = - maxV * ratio;}
+            if (action === 'right') {nx = maxH * ratio; ny = 0;}
+            if (action === 'down') {nx = 0; ny = maxV * ratio;}
             return (
                 <PolicyArrow
                     key={idx}
