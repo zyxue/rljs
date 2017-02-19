@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-import * as d3 from 'd3';
-
 
 class Cliff extends Component {
+    propTypes: {
+        xmin: PropTypes.number,
+        ymin: PropTypes.number,
+        xmax: PropTypes.number,
+        ymax: PropTypes.number
+    }
+
     render () {
         const {xmin, ymin, xmax, ymax} = this.props.state.coords;
         return  (
