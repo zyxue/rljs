@@ -1,4 +1,4 @@
-import BaseGrid from '../Base/Grid.jsx';
+import BaseGrid from '../Base/Grid/Grid.jsx';
 
 
 class Grid extends BaseGrid {
