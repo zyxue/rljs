@@ -46,9 +46,9 @@ describe('proper initialization', () => {
         expect(agent.lambda).toBeCloseTo(0.9);
     });
 
-    // it('agent uses default type of learning algorithm', () => {
-    //     expect(agent.learningAlgo).toBe('qLambda');
-    // });
+    it('agent uses default type of learning algorithm', () => {
+        expect(agent.learningAlgo).toBe('watkinsQLambda');
+    });
 
     // // these two may not be stable, untested for now
     // expect(agent.batchSize).toBe(200);

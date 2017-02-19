@@ -151,13 +151,34 @@ class OtherParams extends Component {
     }
 }
 
-class EligibilityTrace extends Component {
+/* 
+ * class EligibilityTrace extends Component {
+ *     render () {
+ *         let {agent, updateAgent} = this.props;
+ *         let params = {
+ *             label: 'etrace:', attr: 'etraceType', options: [
+ *                 {value: 'replacingTrace', text: 'Replacing trace'},
+ *                 {value: 'accumulatingTrace', text: 'Accumulating trace'}
+ *             ]
+ *         };
+ * 
+ *         return (
+ *             <div>
+ *                 <SelectTag objectToUpdate={agent} updateMethod={updateAgent} params={params} />
+ *             </div>
+ *         );
+ *     }
+ * }*/
+
+
+
+class LearningAlgo extends Component {
     render () {
         let {agent, updateAgent} = this.props;
         let params = {
-            label: 'etrace:', attr: 'etraceType', options: [
-                {value: 'replacingTrace', text: 'Replacing trace'},
-                {value: 'accumulatingTrace', text: 'Accumulating trace'}
+            label: 'learning algorithm:', attr: 'learningAlgo', options: [
+                {value: 'watkinsQLambda', text: 'Watkins’s Q(λ)'},
+                {value: 'sarsaLambda', text: 'Sarsa(λ)'}
             ]
         };
 
@@ -176,7 +197,7 @@ class AgentParamsCtrl extends Component {
         return (
             <div>
                 <GreekLetterParams agent={agent} updateAgent={updateAgent} />
-                <EligibilityTrace agent={agent} updateAgent={updateAgent} />
+                <LearningAlgo agent={agent} updateAgent={updateAgent} />
                 <OtherParams agent={agent} updateAgent={updateAgent} />
             </div>
         );
