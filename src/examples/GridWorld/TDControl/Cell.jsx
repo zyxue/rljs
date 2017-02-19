@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 
-import CellFrame from './CellFrame.jsx';
-import StateCoordTxt from './StateCoordTxt.jsx';
-import StateIdTxt from './StateIdTxt.jsx';
-import StateRewardTxt from './StateRewardTxt.jsx';
-import PolicyArrows from './PolicyArrows.jsx';
+import CellFrame from '../Base/Grid/CellFrame.jsx';
+import StateCoordTxt from '../Base/Grid/StateCoordTxt.jsx';
+import StateIdTxt from '../Base/Grid/StateIdTxt.jsx';
+import StateRewardTxt from '../Base/Grid/StateRewardTxt.jsx';
+import PolicyArrows from '../Base/Grid/PolicyArrows.jsx';
 
 // In contrast to Cliff.jsx, this file defines the UI of a normal cell
 
