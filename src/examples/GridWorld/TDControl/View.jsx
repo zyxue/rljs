@@ -11,21 +11,26 @@ import Grid from './Grid.jsx';
 import Dashboard from './Dashboard.jsx';
 
 
-
 class EligibilityTracePlots extends React.Component {
     render() {
         let ACTION_MAP = {0: '←', 1: '↑', 2: '→', 3: '↓'};
+
+        let {height, width} = this.props;
+        let heightPerPlot = height / 4;
         let st = this.props.selectedState;
+        let numActions = st.allowedActions.length;
+
         let plots = st.allowedActions.map((aid, idx) => {
             let xlabel = aid === st.allowedActions[st.allowedActions.length - 1]? 'Step' : '';
             let key = "epiHistZ-state" + st.id + '-action-' + aid;
-
+            let margin = {top:20, left: 40, bottom:0}
+            if (idx == numActions - 1) margin['bottom'] += 20;
             return (
-                <div key={key} className="row">
+                <div key={key}>
                     <Line
-                        height={37.5}
-                        width={300}
-                        margin={{top:30, left: 40, bottom: 30}}
+                        height={heightPerPlot}
+                        width={width}
+                        margin={margin}
                         id={key}
                         data={st.epiHistZ[aid]}
                         title={'Z at State ' + st.id + ', action: ' + ACTION_MAP[aid]}
@@ -138,7 +143,7 @@ class View extends Control {
             <Line
                 height={150}
                 width={300}
-                margin={{top:30, left: 40, bottom:30}}
+                margin={{top:0, left: 40, bottom:30}}
                 id={'TD-num-steps-per-episode'}
                 data={this.state.agent.numStepsPerEpisode}
                 xlabel={'# episodes'}
@@ -148,6 +153,8 @@ class View extends Control {
 
         const etracePlots = (
             <EligibilityTracePlots
+                height={75 * 4}
+                width={300}
                 selectedState={this.state.selectedState !== null?
                                this.state.selectedState :
                                this.state.env.states[0]}/>
@@ -164,8 +171,8 @@ class View extends Control {
                         {grid}
                     </Col>
                     <Col className='plots' xs={12} md={4} style={{border: 'blue  0.5px solid'}}>
-                         <div>{numStepsVsNumEpisodesPlot}</div>
-                         <div>{etracePlots}</div>
+                        <div>{numStepsVsNumEpisodesPlot}</div>
+                        <div>{etracePlots}</div>
                     </Col>
                 </Row>
 
