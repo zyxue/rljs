@@ -24,7 +24,7 @@ class Dashboard extends Component {
              setSelectedStateAs,
              adjustSelectedStateReward} = this.props;
         return (
-            <div className="dashboard">
+            <div>
                 <Col className="agent-control" xs={12} md={4}>
                     <AgentStatus agent={agent} updateAgent={updateAgent} />
                 </Col>

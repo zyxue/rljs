@@ -24,7 +24,6 @@ export default React.createClass({
                         <li><NavLink to="/gridworld-dyna-q">Dyna-Q</NavLink></li>
                     </ul>
                 </nav>
-                <br/>
                 {this.props.children}
             </div>
         );

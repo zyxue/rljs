@@ -1,0 +1,7 @@
+.dashboard {
+    background-color: #f2f2f2;
+}
+
+.grid, .plots {
+    margin-top: 5px;
+}

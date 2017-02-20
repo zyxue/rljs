@@ -10,6 +10,8 @@ import Line from '../Base/Line.jsx';
 import Grid from './Grid/Grid.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 
+import './View.css';
+
 
 class EligibilityTracePlots extends React.Component {
     render() {
@@ -158,15 +160,15 @@ class View extends Control {
 
         return (
             <div>
-                <Row style={{border: 'red 0.5px solid'}}>
-                    <div>{dashboard}</div>
+                <Row className="dashboard">
+                   {dashboard}
                 </Row>
                 
                 <Row>
-                    <Col className='grid'  xs={12} md={8} style={{border: 'green 0.5px solid'}}>
+                    <Col className='grid'  xs={12} md={8} >
                         {grid}
                     </Col>
-                    <Col className='plots' xs={12} md={4} style={{border: 'blue  0.5px solid'}}>
+                    <Col className='plots' xs={12} md={4} >
                         <div>{numStepsVsNumEpisodesPlot}</div>
                         <div>{etracePlots}</div>
                     </Col>
