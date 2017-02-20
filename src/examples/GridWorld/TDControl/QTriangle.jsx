@@ -35,25 +35,10 @@ class QTriangle extends Component {
     }
 
     render () {
-        const {coords, action, qVal, zVal} = this.props;
+        const {coords, action, qVal, zVal, legCtrl} = this.props;
 
         const pointsStr = this.genQPointsStr(coords, action);
         const color = genRGBColorString(qVal);
-
-        const qTxt = (
-            <QTxt coords={coords}
-                   action={action}
-                   qVal={qVal}>
-            </QTxt>
-        );
-
-        const qTrace = (
-            <Trace coords={coords}
-                   action={action}
-                   zVal={zVal}>
-            </Trace>
-        );
-
 
         return  (
             <g>
@@ -63,8 +48,8 @@ class QTriangle extends Component {
                          stroke={"black"}
                          strokeWidth={0.3}>
                 </polygon>
-                {qTxt}
-                {qTrace}
+            {legCtrl.qValue ? <QTxt coords={coords} action={action} qVal={qVal}></QTxt> : null}
+            {legCtrl.etrace ? <Trace coords={coords} action={action} zVal={zVal}></Trace> : null}
             </g>
         );
     }

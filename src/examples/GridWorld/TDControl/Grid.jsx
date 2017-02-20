@@ -19,14 +19,13 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width, agent} = this.props;
+        const {height, width, agent, legendsCtrl} = this.props;
 
-        // add coords per cell to enable draw inside the cell
+        // add coords per cell to enable drawing inside the cell
         const {numRows, numCols} = agent.env;
-        const cellHeight = height / numRows;
-        const cellWidth = width  / numCols;
         agent.env.states.forEach(function (st) {
-            st.coords = calcCoords(st.x, st.y, cellHeight, cellWidth);
+            st.coords = calcCoords(
+                st.x, st.y, height / numRows, width / numCols);
         });
 
         const arrowHeadDefId = "arrow-head";
@@ -34,7 +33,10 @@ class Grid extends Component {
             return (
                 state.isCliff ?
                 <Cliff key={state.id} state={state} /> :
-                <Cell  key={state.id} state={state} arrowHeadDefId={arrowHeadDefId} />
+                <Cell  key={state.id} state={state}
+                       arrowHeadDefId={arrowHeadDefId}
+                      legCtrl={legendsCtrl}
+                />
             );
         });
 

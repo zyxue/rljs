@@ -15,7 +15,7 @@ class Cell extends Component {
     }
 
     render () {
-        const state = this.props.state;
+        const {state, legCtrl} = this.props;
         const {xmin, ymin, xmax, ymax} = state.coords;
         const qTriangles = state.allowedActions.map((action) => {
             return (
@@ -23,7 +23,9 @@ class Cell extends Component {
                            coords={state.coords}
                            action={action}
                            qVal={state.Q[action]}
-                           zVal={state.Z[action]}>
+                           zVal={state.Z[action]}
+                           legCtrl={legCtrl}
+                >
                 </QTriangle>
             );
         })
@@ -31,10 +33,10 @@ class Cell extends Component {
         return (
             <g className="cell">
                 {qTriangles}
-                <StateCoordTxt x={xmin} y={ymin} coordX={state.x} coordY={state.y}></StateCoordTxt>
-                <StateIdTxt x={xmax} y={ymin} stateId={state.id}></StateIdTxt>
-                <StateRewardTxt x={xmax} y={ymax} reward={state.reward}></StateRewardTxt>
-                <PolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId}></PolicyArrows>
+                {legCtrl.stateCoord ? <StateCoordTxt x={xmin} y={ymin} coordX={state.x} coordY={state.y}></StateCoordTxt> : null}
+                {legCtrl.stateId    ? <StateIdTxt x={xmax} y={ymin} stateId={state.id}></StateIdTxt> : null}
+                {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward}></StateRewardTxt> : null}
+                {legCtrl.policy     ? <PolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId}></PolicyArrows> : null}
                 <Frame x={xmin} y={ymin} height={ymax - ymin} width={xmax - xmin}></Frame>
             </g>
         );
