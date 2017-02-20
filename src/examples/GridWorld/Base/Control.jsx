@@ -99,9 +99,8 @@ class Control extends React.Component {
     }
 
     adjustSelectedStateReward(event) {
-        /* let env = this.state.env;
-         * let st = env.states[this.state.selectedStateId];*/
-        let st = this.state.selectedState;
+        const env = this.state.env;
+        const st = env.states[this.state.selectedStateId];
         st.reward = parseFloat(event.target.value);
         this.setState({selectedState: st});
     }
