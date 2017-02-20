@@ -7,8 +7,8 @@ import Env from '../Base/Env.js';
 import Control from '../Base/Control.jsx';
 import Line from '../Base/Line.jsx';
 
-import Grid from './Grid.jsx';
-import Dashboard from './Dashboard.jsx';
+import Grid from './Grid/Grid.jsx';
+import Dashboard from './Dashboard/Dashboard.jsx';
 
 
 class EligibilityTracePlots extends React.Component {
@@ -92,7 +92,7 @@ class View extends Control {
         this.state = {
             agent: agent,
             env: env,
-            selectedState: null,
+            selectedStateId: null,
 
             legendsCtrl: {
                 /* stateValue: false,
@@ -112,11 +112,14 @@ class View extends Control {
     }
 
     render() {
+        const selStateId = this.state.selectedStateId;
+        const selectedState = selStateId !== null? this.agent.env.states[selStateId] : this.state.env.states[0];
+
         const dashboard = (
             <Dashboard
                 agent={this.state.agent}
                 legendsCtrl={this.state.legendsCtrl}
-                selectedState={this.state.selectedState}
+                selectedState={selectedState}
 
                 updateAgent={this.updateAgent.bind(this)}
                 updateEnv={this.updateEnv.bind(this)}
@@ -134,7 +137,7 @@ class View extends Control {
                     id="grid-TD-control"
                     agent={this.state.agent}
                     legendsCtrl={this.state.legendsCtrl}
-                    selectedState={this.state.selectedState}
+                    selectedStateId={this.state.selectedStateId}
                     updateSelectedState={this.updateSelectedState.bind(this)}
                 />
         );
@@ -155,9 +158,7 @@ class View extends Control {
             <EligibilityTracePlots
                 height={75 * 4}
                 width={300}
-                selectedState={this.state.selectedState !== null?
-                               this.state.selectedState :
-                               this.state.env.states[0]}/>
+                selectedState={selectedState}/>
         )
 
         return (

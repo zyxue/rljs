@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import QTxt from './QTxt.jsx';
 import Trace from './Trace.jsx';
-import {genRGBColorString} from '../Base/Grid/gridUtils.js';
+import {genRGBColorString} from '../../Base/Grid/gridUtils.js';
 
 
 class QTriangle extends Component {

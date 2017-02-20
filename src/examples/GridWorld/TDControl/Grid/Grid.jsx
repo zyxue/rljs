@@ -2,13 +2,14 @@ import React, { Component, PropTypes } from 'react';
 
 import Cell from './Cell.jsx';
 
-import Frame from '../Base/Grid/Frame.jsx';
-import Cliff from '../Base/Grid/Cliff.jsx';
-import StartingState from '../Base/Grid/StartingState.jsx';
-import TerminalState from '../Base/Grid/TerminalState.jsx';
-import ArrowHeadDef from '../Base/Grid/ArrowHeadDef.jsx';
-import Agent from '../Base/Grid/Agent.jsx';
-import {calcCoords} from '../Base/Grid/gridUtils.js';
+import Frame from '../../Base/Grid/Frame.jsx';
+import Cliff from '../../Base/Grid/Cliff.jsx';
+import StartingState from '../../Base/Grid/StartingState.jsx';
+import TerminalState from '../../Base/Grid/TerminalState.jsx';
+import SelectedState from '../../Base/Grid/SelectedState.jsx';
+import ArrowHeadDef from '../../Base/Grid/ArrowHeadDef.jsx';
+import Agent from '../../Base/Grid/Agent.jsx';
+import {calcCoords} from '../../Base/Grid/gridUtils.js';
 
 
 class Grid extends Component {
@@ -19,7 +20,14 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width, agent, legendsCtrl} = this.props;
+        const {height, width, agent, legendsCtrl, selectedStateId} = this.props;
+
+
+        // add this to make the border look more symmetric as border lines
+        // between neighbouring cells are drawn multiple times
+        const frame = [1, 2, 3].map((_, idx) => {
+            return <Frame key={idx} x={0} y={0} height={height} width={width}></Frame>
+        })
 
         // add coords per cell to enable drawing inside the cell
         const {numRows, numCols} = agent.env;
@@ -40,11 +48,12 @@ class Grid extends Component {
             );
         });
 
-        // add this to make the border look more symmetric as border lines
-        // between neighbouring cells are drawn multiple times
-        const frame = [1, 2, 3].map((_, idx) => {
-            return <Frame key={idx} x={0} y={0} height={height} width={width}></Frame>
-        })
+        let selectedState; 
+        if (selectedStateId) {
+            let selectedState = agent.env.states[selectedStateId];
+        } else {
+            let selectedState = null;
+        }
 
         return (
             <div>
@@ -55,6 +64,7 @@ class Grid extends Component {
                     <ArrowHeadDef markerId={arrowHeadDefId}></ArrowHeadDef>
                     {grid}
                     <Agent agentState={agent.s0} agentAction={agent.a0}></Agent>
+                    {selectedState ? <SelectedState coords={selectedState.coords}></SelectedState> : null}
                 </svg>
             </div>
         );

@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 
-import Frame from '../Base/Grid/Frame.jsx';
-import StateCoordTxt from '../Base/Grid/StateCoordTxt.jsx';
-import StateIdTxt from '../Base/Grid/StateIdTxt.jsx';
-import StateRewardTxt from '../Base/Grid/StateRewardTxt.jsx';
-import PolicyArrows from '../Base/Grid/PolicyArrows.jsx';
+import Frame from '../../Base/Grid/Frame.jsx';
+import StateCoordTxt from '../../Base/Grid/StateCoordTxt.jsx';
+import StateIdTxt from '../../Base/Grid/StateIdTxt.jsx';
+import StateRewardTxt from '../../Base/Grid/StateRewardTxt.jsx';
+import PolicyArrows from '../../Base/Grid/PolicyArrows.jsx';
 import QTriangle from './QTriangle.jsx';
 
 // In contrast to Cliff.jsx, this file defines the UI of a normal cell
