@@ -7,6 +7,7 @@ import Cliff from '../Base/Grid/Cliff.jsx';
 import StartingState from '../Base/Grid/StartingState.jsx';
 import TerminalState from '../Base/Grid/TerminalState.jsx';
 import ArrowHeadDef from '../Base/Grid/ArrowHeadDef.jsx';
+import Agent from '../Base/Grid/Agent.jsx';
 import {calcCoords} from '../Base/Grid/gridUtils.js';
 
 
@@ -51,7 +52,7 @@ class Grid extends Component {
                     <TerminalState coords={agent.env.getTerminalState().coords}></TerminalState>
                     <ArrowHeadDef markerId={arrowHeadDefId}></ArrowHeadDef>
                     {grid}
-
+                    <Agent agentState={agent.s0} agentAction={agent.a0}></Agent>
                 </svg>
             </div>
         );

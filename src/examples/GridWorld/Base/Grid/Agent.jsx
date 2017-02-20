@@ -1,50 +1,30 @@
 import React, { Component, PropTypes } from 'react';
-import * as d3 from 'd3';
-
-
-class Trace extends Component {
-    
-}
 
 
 class Agent extends Component {
-    drawAgent(context) {
-        const {height, width, agent, updateAgentAction} = this.props;
-        const {numRows, numCols} = agent.env;
-        const cellHeight = height / numRows;
-        const cellWidth = width  / numCols;
-
-        let x = agent.env.stox(agent.s0.id);
-        let y = agent.env.stoy(agent.s0.id);
-        let coords = this.calcCoords(x, y, cellHeight, cellWidth);
-        this.drawAgentAction(context, agent.a0, coords, {color: 'blue'});
-        context.append('circle')
-               .attr('cx', coords.xmid)
-               .attr('cy', coords.ymid)
-               .attr('r', 15)
-               .attr('fill', '#FFD800')
-               .attr('fill-opacity', 1)
-               .attr('stroke', '#000')
-               .attr('id', 'cpos')
-               .style('cursor', 'pointer')
-               .on('click', function () {
-                   updateAgentAction();
-               })
+    render() {
+        const {agentState, agentAction} = this.props;
+        const {coords} = agentState;
+        const {xmid, ymid} = agentState.coords;
+        return (
+            <g>
+                <AgentAction action={agentAction} coords={coords}></AgentAction>
+                <circle cx={xmid}
+                        cy={ymid}
+                        r="15"
+                        fill="#FFD800"
+                        fillOpacity="1"
+                        stroke="#000"
+                        id="cpos"
+                        cursor="pointer">
+                </circle>
+            </g>
+        );
     }
-
-    drawAgentAction(cellContext, action, coords) {
-        let pointsStr = this.genPointsStrForAgentAction(action, coords);
-        // console.debug(pointsStr);
-        cellContext.append('polygon')
-                   .attr('points', pointsStr)
-                   .attr('fill', 'blue')
-                   .attr('fill-opacity', 1)
-                   .attr('stroke', 'black')
-                   .attr('stroke-width', 0.5);
-    }
-    
+}
 
 
+class AgentAction extends Component {
     genPointsStrForAgentAction(action, coords) {
         let {xmin, ymin, xmid, ymid, xmax, ymax} = coords;
 
@@ -52,26 +32,42 @@ class Agent extends Component {
         let S = 5 / 9;
         let C = 6 / 19;
         let str;
-        if (action === 0) {
+        if (action === 'left') {
             str = (xmid - xmin) * (1 - S) + xmin + ',' + ymid + ' ' +
                   xmid + ',' + (  C * (ymax - ymid) + ymid)  + ' ' +
                   xmid + ',' + (- C * (ymid - ymin) + ymid);
 
-        } else if (action === 1) {
+        } else if (action === 'up') {
             str = xmid + ',' + ((ymid - ymin) * (1 - S) + ymin) + ' ' +
-                  (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
-                  (  C * (xmax - xmid) + xmid) + ',' + ymid;
-        } else if (action === 2) {
+                    (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
+                        (  C * (xmax - xmid) + xmid) + ',' + ymid;
+        } else if (action === 'right') {
             str = (xmax - xmid) * S + xmid  + ',' + ymid + ' ' +
                   xmid + ',' + (  C * (ymax - ymid) + ymid) + ' ' +
                   xmid + ',' + (- C * (ymid - ymin) + ymid);
 
-        } else if (action === 3) {
+        } else if (action === 'down') {
             str = xmid + ',' + ((ymax - ymid) * S + ymid) + ' ' +
-                  (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
-                  (  C * (xmax - xmid) + xmid) + ',' + ymid;
+                    (- C * (xmid - xmin) + xmid) + ',' + ymid + ' ' +
+                        (  C * (xmax - xmid) + xmid) + ',' + ymid;
         }
         return str;
     }
 
+
+    render () {
+        const{action, coords} = this.props;
+        const pointsStr = this.genPointsStrForAgentAction(action, coords);
+
+        return (
+            <polygon points={pointsStr}
+                     fill="blue"
+                     fillOpacity="1"
+                     stroke="black"
+                     strokeWidth="0.5">
+            </polygon>
+        );
+    }
 }
+
+export default Agent;
