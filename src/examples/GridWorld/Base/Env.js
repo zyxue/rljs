@@ -77,8 +77,8 @@ GridWorld.prototype = {
             let y = this.stoy(s0.id);
             let nx, ny;
             if (a0 === 'left') {nx = Math.max(x - 1, 0); ny = y;}
-            if (a0 === 'right') {nx = x; ny = Math.max(y - 1, 0);}
-            if (a0 === 'up') {nx = Math.min(x + 1, this.numCols - 1); ny = y;}
+            if (a0 === 'up') {nx = x; ny = Math.max(y - 1, 0);}
+            if (a0 === 'right') {nx = Math.min(x + 1, this.numCols - 1); ny = y;}
             if (a0 === 'down') {nx = x; ny = Math.min(y + 1, this.numRows - 1);}
             let s1Id = this.xytos(nx, ny);
             // console.debug(a0, x, y, nx, ny, s1Id);
