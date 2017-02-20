@@ -29,7 +29,7 @@ TerminatingState.propTypes = {
         ymid: PropTypes.number,
         xmax: PropTypes.number,
         ymax: PropTypes.number
-    })
+    }).isRequired
 };
 
 export default TerminatingState;
