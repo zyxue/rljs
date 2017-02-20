@@ -22,7 +22,8 @@ class Cell extends Component {
                 <QTriangle key={action}
                            coords={state.coords}
                            action={action}
-                           qVal={state.Q[action]}>
+                           qVal={state.Q[action]}
+                           zVal={state.Z[action]}>
                 </QTriangle>
             );
         })

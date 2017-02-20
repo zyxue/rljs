@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import QTxt from './QTxt.jsx';
+import Trace from './Trace.jsx';
 import {genRGBColorString} from '../Base/Grid/gridUtils.js';
 
 
@@ -34,7 +35,7 @@ class QTriangle extends Component {
     }
 
     render () {
-        const {coords, action, qVal} = this.props;
+        const {coords, action, qVal, zVal} = this.props;
 
         const pointsStr = this.genQPointsStr(coords, action);
         const color = genRGBColorString(qVal);
@@ -46,6 +47,14 @@ class QTriangle extends Component {
             </QTxt>
         );
 
+        const qTrace = (
+            <Trace coords={coords}
+                   action={action}
+                   zVal={zVal}>
+            </Trace>
+        );
+
+
         return  (
             <g>
                 <polygon points={pointsStr}
@@ -55,6 +64,7 @@ class QTriangle extends Component {
                          strokeWidth={0.3}>
                 </polygon>
                 {qTxt}
+                {qTrace}
             </g>
         );
     }
