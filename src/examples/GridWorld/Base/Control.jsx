@@ -67,19 +67,19 @@ class Control extends React.Component {
         }
     }
 
-    updateSelectedState(state) {
-        if (this.state.selectedState !== null) {
-            if (state.id === this.state.selectedState.id) {
-                this.setState({selectedState: null});
+    updateSelectedStateId(stateId) {
+        if (this.state.selectedStateId !== null) {
+            if (stateId === this.state.selectedStateId) {
+                this.setState({selectedStateId: null});
                 return
             }
         }
-        this.setState({selectedState: state});
+        this.setState({selectedStateId: stateId});
     }
 
     setSelectedStateAs(key) {
         let env = this.state.env;
-        let st = this.state.selectedState;
+        let st = env.states[this.state.selectedStateId];
 
         if (key === 'startingState') {
             st.isCliff = false;

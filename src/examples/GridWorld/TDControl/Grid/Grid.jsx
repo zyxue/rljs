@@ -20,7 +20,7 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width, agent, legendsCtrl, selectedState} = this.props;
+        const {height, width, agent, legendsCtrl, selectedState, updateSelectedStateId} = this.props;
 
 
         // add this to make the border look more symmetric as border lines
@@ -38,26 +38,29 @@ class Grid extends Component {
 
         const arrowHeadDefId = "arrow-head";
         const grid = agent.env.states.map((state) => {
-            return (
-                state.isCliff ?
-                <Cliff key={state.id} state={state} /> :
-                <Cell  key={state.id} state={state}
-                       arrowHeadDefId={arrowHeadDefId}
-                      legCtrl={legendsCtrl}
-                />
-            );
+            if (state.isCliff) {
+                return <Cliff key={state.id}
+                              state={state}
+                              updateSelectedStateId={updateSelectedStateId} />
+            } else {
+                return <Cell  key={state.id}
+                              state={state}
+                              updateSelectedStateId={updateSelectedStateId}
+                              arrowHeadDefId={arrowHeadDefId}
+                              legCtrl={legendsCtrl} />
+            }
         });
 
         return (
             <div>
                 <svg height={height} width={width}>
                     {frame}
-                    <StartingState coords={agent.env.getStartingState().coords}></StartingState>
-                    <TerminalState coords={agent.env.getTerminalState().coords}></TerminalState>
-                    <ArrowHeadDef markerId={arrowHeadDefId}></ArrowHeadDef>
+                    <StartingState coords={agent.env.getStartingState().coords} />
+                    <TerminalState coords={agent.env.getTerminalState().coords} />
+                    {selectedState ? <SelectedState coords={selectedState.coords} /> : null}
+                    <ArrowHeadDef markerId={arrowHeadDefId} />
                     {grid}
-                    <Agent agentState={agent.s0} agentAction={agent.a0}></Agent>
-                    {selectedState ? <SelectedState coords={selectedState.coords}></SelectedState> : null}
+                    <Agent agentState={agent.s0} agentAction={agent.a0} />
                 </svg>
             </div>
         );

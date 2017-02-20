@@ -113,7 +113,7 @@ class View extends Control {
 
     render() {
         const selStateId = this.state.selectedStateId;
-        const selectedState = selStateId !== null? this.agent.env.states[selStateId] : null;
+        const selectedState = selStateId !== null? this.state.agent.env.states[selStateId] : null;
 
         const dashboard = (
             <Dashboard
@@ -138,7 +138,7 @@ class View extends Control {
                     agent={this.state.agent}
                     legendsCtrl={this.state.legendsCtrl}
                     selectedState={selectedState}
-                    updateSelectedState={this.updateSelectedState.bind(this)}
+                    updateSelectedStateId={this.updateSelectedStateId.bind(this)}
                 />
         );
 

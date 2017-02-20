@@ -15,7 +15,7 @@ class Cell extends Component {
     }
 
     render () {
-        const {state, legCtrl} = this.props;
+        const {state, legCtrl, updateSelectedStateId} = this.props;
         const {xmin, ymin, xmax, ymax} = state.coords;
         const qTriangles = state.allowedActions.map((action) => {
             return (
@@ -37,7 +37,12 @@ class Cell extends Component {
                 {legCtrl.stateId    ? <StateIdTxt x={xmax} y={ymin} stateId={state.id}></StateIdTxt> : null}
                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward}></StateRewardTxt> : null}
                 {legCtrl.policy     ? <PolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId}></PolicyArrows> : null}
-                <Frame x={xmin} y={ymin} height={ymax - ymin} width={xmax - xmin}></Frame>
+                <Frame x={xmin}
+                       y={ymin}
+                       height={ymax - ymin}
+                       width={xmax - xmin}
+                       onClick={updateSelectedStateId.bind(this, state.id)}
+                />
             </g>
         );
     }
