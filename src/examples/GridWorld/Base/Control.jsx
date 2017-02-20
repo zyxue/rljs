@@ -78,27 +78,29 @@ class Control extends React.Component {
     }
 
     setSelectedStateAs(key) {
-        let env = this.state.env;
-        let st = env.states[this.state.selectedStateId];
+        const env = this.state.env;
+        const st = env.states[this.state.selectedStateId];
 
         if (key === 'startingState') {
             st.isCliff = false;
-            env.startingState = st;
+            env.startingStateId = st.id;
         } else if (key === 'terminalState') {
             // set reward of old terminal to 0 so as to avoid stuck in old
             // terminalState taking advantage of plus reward
-            env.terminalState.reward = 0;
+            env.getTerminalState().reward = 0;
             st.isCliff = false // terminal state cannot be cliff
-            env.terminalState = st;
-            env.terminalState.reward = 1;
+            env.terminalStateId = st.id;
+            env.getTerminalState().reward = 1;
         } else if (key === 'cliff') {
-            if (st.id !== env.startingState.id && st.id !== env.terminalState.id)
+            if (st.id !== env.getStartingState().id && st.id !== env.getTerminalState().id)
                 st.isCliff = !st.isCliff;
         }
         this.setState({env: env});
     }
 
     adjustSelectedStateReward(event) {
+        /* let env = this.state.env;
+         * let st = env.states[this.state.selectedStateId];*/
         let st = this.state.selectedState;
         st.reward = parseFloat(event.target.value);
         this.setState({selectedState: st});
