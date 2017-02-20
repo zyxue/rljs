@@ -1,15 +1,6 @@
 import * as d3 from 'd3';
 
 
-export let genRGBColorString = function(val) {
-        let rgbColor = this.calcRGBColor(val);
-        return 'rgb(' +
-               Math.floor(rgbColor.red) + ',' +
-               Math.floor(rgbColor.green) + ',' +
-               Math.floor(rgbColor.blue) + ')';
-}
-
-
 export let calcCoords = function(x, y, height, width) {
     /* the 6 numbers that define the coordinates of 5 points in side each
        square, useful for e.g. drawing triagles corresponding to Q values at
@@ -25,6 +16,13 @@ export let calcCoords = function(x, y, height, width) {
             xmax:xmax, ymax:ymax};
 }
 
+export let genRGBColorString = function(val) {
+    let rgbColor = calcRGBColor(val);
+    return 'rgb(' +
+        Math.floor(rgbColor.red) + ',' +
+        Math.floor(rgbColor.green) + ',' +
+        Math.floor(rgbColor.blue) + ')';
+}
 
 export let calcRGBColor = function(val) {
     /* based on the value, calculate the corresponding RGB color */
@@ -49,32 +47,3 @@ export let calcRGBColor = function(val) {
     /* console.debug(r, g, b);*/
     return {red: r, green: g, blue: b};
 }
-
-
-export let highlightState = function(context, state,
-                   {fillColor=null, fillOpacity=1, strokeColor='black', strokeWidth=0}={}) {
-        let coords = state.coords;
-        let line = d3.svg.line()
-                     .x(function(d) { return d[0]; })
-                     .y(function(d) { return d[1]; });
-
-        let that = this;
-        context.append('path')
-               .attr("d", line([
-                   [coords.xmin, coords.ymin],
-                   [coords.xmax, coords.ymin],
-                   [coords.xmax, coords.ymax],
-                   [coords.xmin, coords.ymax],
-                   [coords.xmin, coords.ymin]
-               ]))
-               .style('class', 'highlightFrame')
-               .style('stroke', strokeColor)
-               .style('stroke-width', strokeWidth)
-               .style('fill', fillColor)
-               .style('fill-opacity', fillOpacity)
-               .style('cursor', 'pointer')
-               .on('click', function() {
-                   that.handleMouseClick(this, state);
-               });
-}
-
