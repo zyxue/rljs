@@ -113,7 +113,7 @@ class View extends Control {
 
     render() {
         const selStateId = this.state.selectedStateId;
-        const selectedState = selStateId !== null? this.agent.env.states[selStateId] : this.state.env.states[0];
+        const selectedState = selStateId !== null? this.agent.env.states[selStateId] : null;
 
         const dashboard = (
             <Dashboard
@@ -137,7 +137,7 @@ class View extends Control {
                     id="grid-TD-control"
                     agent={this.state.agent}
                     legendsCtrl={this.state.legendsCtrl}
-                    selectedStateId={this.state.selectedStateId}
+                    selectedState={selectedState}
                     updateSelectedState={this.updateSelectedState.bind(this)}
                 />
         );
@@ -158,7 +158,7 @@ class View extends Control {
             <EligibilityTracePlots
                 height={75 * 4}
                 width={300}
-                selectedState={selectedState}/>
+                selectedState={selectedState ? selectedState : this.state.agent.env.states[0]}/>
         )
 
         return (

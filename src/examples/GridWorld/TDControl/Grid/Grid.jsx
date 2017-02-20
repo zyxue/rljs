@@ -20,7 +20,7 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width, agent, legendsCtrl, selectedStateId} = this.props;
+        const {height, width, agent, legendsCtrl, selectedState} = this.props;
 
 
         // add this to make the border look more symmetric as border lines
@@ -47,13 +47,6 @@ class Grid extends Component {
                 />
             );
         });
-
-        let selectedState; 
-        if (selectedStateId) {
-            let selectedState = agent.env.states[selectedStateId];
-        } else {
-            let selectedState = null;
-        }
 
         return (
             <div>
