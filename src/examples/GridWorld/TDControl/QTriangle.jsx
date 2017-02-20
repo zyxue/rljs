@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+import QTxt from './QTxt.jsx';
 import {genRGBColorString} from '../Base/Grid/gridUtils.js';
 
 
@@ -38,13 +39,23 @@ class QTriangle extends Component {
         const pointsStr = this.genQPointsStr(coords, action);
         const color = genRGBColorString(qVal);
 
+        const qTxt = (
+            <QTxt coords={coords}
+                   action={action}
+                   qVal={qVal}>
+            </QTxt>
+        );
+
         return  (
-            <polygon points={pointsStr}
-                     fill={color}
-                     fillOpacity={0.5}
-                     stroke={"black"}
-                     strokeWidth={0.3}>
-            </polygon>
+            <g>
+                <polygon points={pointsStr}
+                         fill={color}
+                         fillOpacity={0.5}
+                         stroke={"black"}
+                         strokeWidth={0.3}>
+                </polygon>
+                {qTxt}
+            </g>
         );
     }
 }

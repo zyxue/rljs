@@ -7,7 +7,6 @@ import StateRewardTxt from '../Base/Grid/StateRewardTxt.jsx';
 import PolicyArrows from '../Base/Grid/PolicyArrows.jsx';
 import QTriangle from './QTriangle.jsx';
 
-
 // In contrast to Cliff.jsx, this file defines the UI of a normal cell
 
 class Cell extends Component {
@@ -23,8 +22,8 @@ class Cell extends Component {
                 <QTriangle key={action}
                            coords={state.coords}
                            action={action}
-                           qVal={state.Q[action]}
-                ></QTriangle>
+                           qVal={state.Q[action]}>
+                </QTriangle>
             );
         })
 
