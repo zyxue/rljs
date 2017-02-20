@@ -59,7 +59,7 @@ describe('proper reset after initialization', () => {
             y: 1,
             reward: 0,
             isCliff: false,
-            allowedActions: [0, 1, 2, 3]
+            allowedActions: ["left","up","right","down"]
         });
     })
 
@@ -70,7 +70,7 @@ describe('proper reset after initialization', () => {
             y: 1,
             reward: 0,
             isCliff: false,
-            allowedActions: [0, 1, 2, 3]
+            allowedActions: ["left","up","right","down"]
         });
     })
 
@@ -81,7 +81,7 @@ describe('proper reset after initialization', () => {
             y: 1,
             reward: 0,
             isCliff: false,
-            allowedActions: [0, 1, 2, 3]
+            allowedActions: ["left","up","right","down"]
         });
     })
 
@@ -103,7 +103,7 @@ describe('proper reset after initialization', () => {
             y: 0,
             reward: 0,
             isCliff: false,
-            allowedActions: [0, 1, 2, 3]
+            allowedActions: ["left","up","right","down"]
         });
     })
 
@@ -114,7 +114,7 @@ describe('proper reset after initialization', () => {
             y: 0,
             reward: 1,
             isCliff: false,
-            allowedActions: [0, 1, 2, 3]
+            allowedActions: ["left","up","right","down"]
         });
     })
 });
@@ -127,34 +127,34 @@ it('calcNextState', () => {
         // s1: next state
 
         // top left corner
-        {s0Id: 0, a0: 0, s1Id: 0},
-        {s0Id: 0, a0: 1, s1Id: 0},
-        {s0Id: 0, a0: 2, s1Id: 0},
-        {s0Id: 0, a0: 3, s1Id: 3},
+        {s0Id: 0, a0: 'left', s1Id: 0},
+        {s0Id: 0, a0: 'up', s1Id: 0},
+        {s0Id: 0, a0: 'right', s1Id: 0},
+        {s0Id: 0, a0: 'down', s1Id: 3},
 
         // terminal state
-        {s0Id: 2, a0: 0, s1Id: 0},
-        {s0Id: 2, a0: 1, s1Id: 0},
-        {s0Id: 2, a0: 2, s1Id: 0},
-        {s0Id: 2, a0: 3, s1Id: 0},
+        {s0Id: 2, a0: 'left', s1Id: 0},
+        {s0Id: 2, a0: 'up', s1Id: 0},
+        {s0Id: 2, a0: 'right', s1Id: 0},
+        {s0Id: 2, a0: 'down', s1Id: 0},
 
         // bottom left corner
-        {s0Id: 3, a0: 0, s1Id: 3},
-        {s0Id: 3, a0: 1, s1Id: 0},
-        {s0Id: 3, a0: 2, s1Id: 4},
-        {s0Id: 3, a0: 3, s1Id: 3},
+        {s0Id: 3, a0: 'left', s1Id: 3},
+        {s0Id: 3, a0: 'up', s1Id: 0},
+        {s0Id: 3, a0: 'right', s1Id: 4},
+        {s0Id: 3, a0: 'down', s1Id: 3},
 
         // bottom center
-        {s0Id: 4, a0: 0, s1Id: 3},
-        {s0Id: 4, a0: 1, s1Id: 4},
-        {s0Id: 4, a0: 2, s1Id: 5},
-        {s0Id: 4, a0: 3, s1Id: 4},
+        {s0Id: 4, a0: 'left', s1Id: 3},
+        {s0Id: 4, a0: 'up', s1Id: 4},
+        {s0Id: 4, a0: 'right', s1Id: 5},
+        {s0Id: 4, a0: 'down', s1Id: 4},
 
         // bottom right corner
-        {s0Id: 5, a0: 0, s1Id: 4},
-        {s0Id: 5, a0: 1, s1Id: 2},
-        {s0Id: 5, a0: 2, s1Id: 5},
-        {s0Id: 5, a0: 3, s1Id: 5},
+        {s0Id: 5, a0: 'left', s1Id: 4},
+        {s0Id: 5, a0: 'up', s1Id: 2},
+        {s0Id: 5, a0: 'right', s1Id: 5},
+        {s0Id: 5, a0: 'down', s1Id: 5},
     ].map((obj) => {
         let {s0Id, a0, s1Id} = obj;
         // console.log(obj);
@@ -185,34 +185,34 @@ it('calcReward', () => {
 it('gotoNextState', () => {
     [
         // top left corner
-        {s0Id: 0, a0: 0, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0: 1, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0: 2, reward: -0.01, s1Id: 0},
-        {s0Id: 0, a0: 3, reward: -0.01, s1Id: 3},
+        {s0Id: 0, a0: 'left', reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 'up', reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 'right', reward: -0.01, s1Id: 0},
+        {s0Id: 0, a0: 'down', reward: -0.01, s1Id: 3},
 
         // terminal state
-        {s0Id: 2, a0: 0, reward: 1, s1Id: 0},
-        {s0Id: 2, a0: 1, reward: 1, s1Id: 0},
-        {s0Id: 2, a0: 2, reward: 1, s1Id: 0},
-        {s0Id: 2, a0: 3, reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 'left', reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 'up', reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 'right', reward: 1, s1Id: 0},
+        {s0Id: 2, a0: 'down', reward: 1, s1Id: 0},
 
         // bottom left corner
-        {s0Id: 3, a0: 0, reward: -0.01, s1Id: 3},
-        {s0Id: 3, a0: 1, reward: -0.01, s1Id: 0},
-        {s0Id: 3, a0: 2, reward: -0.01, s1Id: 4},
-        {s0Id: 3, a0: 3, reward: -0.01, s1Id: 3},
+        {s0Id: 3, a0: 'left', reward: -0.01, s1Id: 3},
+        {s0Id: 3, a0: 'up', reward: -0.01, s1Id: 0},
+        {s0Id: 3, a0: 'right', reward: -0.01, s1Id: 4},
+        {s0Id: 3, a0: 'down', reward: -0.01, s1Id: 3},
 
         // bottom center
-        {s0Id: 4, a0: 0, reward: -0.01, s1Id: 3},
-        {s0Id: 4, a0: 1, reward: -0.01, s1Id: 4},
-        {s0Id: 4, a0: 2, reward: -0.01, s1Id: 5},
-        {s0Id: 4, a0: 3, reward: -0.01, s1Id: 4},
+        {s0Id: 4, a0: 'left', reward: -0.01, s1Id: 3},
+        {s0Id: 4, a0: 'up', reward: -0.01, s1Id: 4},
+        {s0Id: 4, a0: 'right', reward: -0.01, s1Id: 5},
+        {s0Id: 4, a0: 'down', reward: -0.01, s1Id: 4},
 
         // bottom right corner
-        {s0Id: 5, a0: 0, reward: -0.01, s1Id: 4},
-        {s0Id: 5, a0: 1, reward: -0.01, s1Id: 2},
-        {s0Id: 5, a0: 2, reward: -0.01, s1Id: 5},
-        {s0Id: 5, a0: 3, reward: -0.01, s1Id: 5},
+        {s0Id: 5, a0: 'left', reward: -0.01, s1Id: 4},
+        {s0Id: 5, a0: 'up', reward: -0.01, s1Id: 2},
+        {s0Id: 5, a0: 'right', reward: -0.01, s1Id: 5},
+        {s0Id: 5, a0: 'down', reward: -0.01, s1Id: 5},
     ].map((obj) => {
         let {s0Id, a0, reward, s1Id} = obj;
         // console.log(obj);
@@ -235,7 +235,7 @@ it('get allowed actions of a given state', () => {
         if (st.isCliff) {
             expect(actions).toEqual([]);
         } else {
-            expect(actions).toEqual([0, 1, 2, 3]);
+            expect(actions).toEqual(["left","up","right","down"]);
         }
     })
 });

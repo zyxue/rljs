@@ -2,8 +2,8 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import View from './View';
-import Dashboard from './Dashboard';
-import Grid from './Grid';
+import Dashboard from './Dashboard/Dashboard.jsx';
+import Grid from './Grid/Grid.jsx';
 
 
 it('renders 1 <Dashboard /> & 1 <Grid /> components', () => {

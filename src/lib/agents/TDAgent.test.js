@@ -47,7 +47,8 @@ describe('proper initialization', () => {
     });
 
     it('agent uses default type of learning algorithm', () => {
-        expect(agent.learningAlgo).toBe('watkinsQLambda');
+        // expect(agent.learningAlgo).toBe('watkinsQLambda');
+        expect(agent.learningAlgo).toBe('sarsaLambda');
     });
 
     // // these two may not be stable, untested for now
@@ -58,13 +59,13 @@ describe('proper initialization', () => {
         describe('proper value function reset', () => {
             it('for 1st state', () => {
                 const st = agent.env.states[0];
-                expect(st.Q).toEqual({0:0, 1:0, 2:0, 3:0});
+                expect(st.Q).toEqual({'left':0, 'up':0, 'right':0, 'down':0});
             });
 
             it('for all states', () => {
                 expect(agent.env.states.forEach(function(st) {
                     if (st.allowedActions.length > 0) {
-                        expect(st.Q).toEqual({0:0, 1:0, 2:0, 3:0});
+                        expect(st.Q).toEqual({'left':0, 'up':0, 'right':0, 'down':0});
                     } else {
                         // it's a cliff in the case of gridworld
                         expect(st.Q).toEqual({});
