@@ -19,6 +19,7 @@ class Dashboard extends Component {
              updateAgent,
              updateEnv,
              handleUserCtrlButtonClick,
+             legendsCtrl,
              toggleLegend,
              setSelectedStateAs,
              adjustSelectedStateReward} = this.props;
@@ -48,7 +49,7 @@ class Dashboard extends Component {
                                 </Row>
 
                         <Row>
-                        <LegendsCtrlButtons handleClick={toggleLegend} />
+                        <LegendsCtrlButtons legendsCtrl={legendsCtrl} handleClick={toggleLegend} />
                         </Row> 
                     </Col>
             </div>

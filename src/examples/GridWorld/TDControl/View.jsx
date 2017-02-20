@@ -95,17 +95,11 @@ class View extends Control {
             selectedStateId: null,
 
             legendsCtrl: {
-                /* stateValue: false,
-                 * stateId: true,
-                 * stateCoord: false,
-                 * reward: true,
-                 * etrace: true*/
-
                 qValue: false,
                 stateId: true,
                 stateCoord: false,
                 reward: true,
-                policy: true, // show policy as arrows
+                policy: false, // show policy as arrows
                 etrace: true
             }
         };
@@ -124,6 +118,7 @@ class View extends Control {
                 updateAgent={this.updateAgent.bind(this)}
                 updateEnv={this.updateEnv.bind(this)}
                 handleUserCtrlButtonClick={this.handleUserCtrlButtonClick.bind(this)}
+                legendsCtrl={this.state.legendsCtrl}
                 toggleLegend={this.toggleLegend.bind(this)}
                 setSelectedStateAs={this.setSelectedStateAs.bind(this)}
                 adjustSelectedStateReward={this.adjustSelectedStateReward.bind(this)}

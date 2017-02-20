@@ -4,9 +4,9 @@ import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 class LegendsCtrlButtons extends Component {
     render() {
-        let handleClick = this.props.handleClick;
+        const {handleClick, legendsCtrl} = this.props;
 
-        let buttons = [
+        const buttons = [
             {key: 'qValue', text: 'Q value'},
             {key: 'stateId', text: 'State ID'},
             {key: 'stateCoord', text: 'State Coordinates'},
@@ -16,7 +16,9 @@ class LegendsCtrlButtons extends Component {
         ].map((obj) => {
             return (
                 <Button className="control legend-control" key={obj.key}
-                        bsStyle='success' bsSize="xsmall"
+                        style={{backgroundColor: legendsCtrl[obj.key] ? '' : 'red'}}
+                        bsStyle='success'
+                        bsSize="xsmall"
                         onClick={handleClick.bind(this, obj.key)}>
                     {obj.text}
                 </Button>
