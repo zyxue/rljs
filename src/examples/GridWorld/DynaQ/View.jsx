@@ -11,47 +11,6 @@ import Grid from './Grid/Grid.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 
 
-class EligibilityTracePlots extends React.Component {
-    render() {
-        let ACTION_MAP = {0: '←', 1: '↑', 2: '→', 3: '↓'};
-
-        let {height, width} = this.props;
-        let heightPerPlot = height / 4;
-        let st = this.props.selectedState;
-        let numActions = st.allowedActions.length;
-
-        let plots = st.allowedActions.map((aid, idx) => {
-            let xlabel = aid === st.allowedActions[st.allowedActions.length - 1]? 'Step' : '';
-            let key = "epiHistZ-state" + st.id + '-action-' + aid;
-            let margin = {top:20, left: 40, bottom:0}
-            if (idx == numActions - 1) margin['bottom'] += 20;
-            return (
-                <div key={key}>
-                    <Line
-                        height={heightPerPlot}
-                        width={width}
-                        margin={margin}
-                        id={key}
-                        data={st.epiHistZ[aid]}
-                        title={'Z at State ' + st.id + ', action: ' + ACTION_MAP[aid]}
-                        xlabel={xlabel}
-                        ylabel={'Z'}
-                    />
-                </div>
-            )
-
-        });
-
-        // console.debug(plots);
-        return (
-            <div>
-                {plots}
-            </div>
-        );
-    }
-}
-
-
 class Introduction extends React.Component {
     render() {
         return (
@@ -102,7 +61,7 @@ class View extends Control {
                 stateCoord: false,
                 reward: true,
                 policy: false, // show policy as arrows
-                etrace: true
+                etrace: false
             }
         };
     }
@@ -151,12 +110,6 @@ class View extends Control {
             />
         );
 
-        const etracePlots = (
-            <EligibilityTracePlots
-                height={75 * 4}
-                width={300}
-                selectedState={selectedState ? selectedState : this.state.agent.env.states[0]}/>
-        )
 
         return (
             <div>
@@ -170,7 +123,12 @@ class View extends Control {
                     </Col>
                     <Col className='plots' xs={12} md={4} style={{border: 'blue  0.5px solid'}}>
                         <div>{numStepsVsNumEpisodesPlot}</div>
-                        <div>{etracePlots}</div>
+                        <div>
+                            Eligibility Trace is not Considered in the
+                            <a href="https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node96.html" target="_blank">
+                                Dyna-Q algorithm
+                            </a>
+                        </div>
                     </Col>
                 </Row>
 

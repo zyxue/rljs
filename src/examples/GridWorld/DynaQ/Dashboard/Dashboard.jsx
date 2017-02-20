@@ -59,25 +59,3 @@ class Dashboard extends Component {
 
 
 export default Dashboard;
-
-
-
-
-/* 
- * class EligibilityTrace extends Component {
- *     render () {
- *         let {agent, updateAgent} = this.props;
- *         let params = {
- *             label: 'etrace:', attr: 'etraceType', options: [
- *                 {value: 'replacingTrace', text: 'Replacing trace'},
- *                 {value: 'accumulatingTrace', text: 'Accumulating trace'}
- *             ]
- *         };
- * 
- *         return (
- *             <div>
- *                 <SelectTag objectToUpdate={agent} updateMethod={updateAgent} params={params} />
- *             </div>
- *         );
- *     }
- * }*/
