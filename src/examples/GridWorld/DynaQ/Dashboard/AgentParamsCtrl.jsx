@@ -10,7 +10,6 @@ class AgentParamsCtrl extends Component {
         return (
             <div>
                 <GreekLetterParams agent={agent} updateAgent={updateAgent} />
-                <LearningAlgo agent={agent} updateAgent={updateAgent} />
                 <OtherParams agent={agent} updateAgent={updateAgent} />
             </div>
         );

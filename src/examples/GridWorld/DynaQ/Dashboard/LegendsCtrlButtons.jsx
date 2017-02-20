@@ -12,7 +12,7 @@ class LegendsCtrlButtons extends Component {
             {key: 'stateCoord', text: 'State Coordinates'},
             {key: 'reward', text: 'Reward'},
             {key: 'policy', text: 'Policy'},
-            {key: 'etrace', text: 'EligibilityTrace'}
+            /* {key: 'etrace', text: 'EligibilityTrace'}*/
         ].map((obj) => {
             return (
                 <Button className="control legend-control" key={obj.key}

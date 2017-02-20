@@ -13,7 +13,6 @@ export class GreekLetterParams extends Component {
             {label: 'α = ', attr: 'alpha',   min: 0, max: 10, step: 0.01},
             {label: 'γ = ', attr: 'gamma',   min: 0, max: 1, step: 0.01},
             {label: 'ε = ', attr: 'epsilon', min: 0, max: 1, step: 0.01},
-            {label: 'λ = ', attr: 'lambda',  min: 0, max: 1, step: 0.01},
         ];
 
         let inputs = params.map((params) => {

@@ -124,9 +124,8 @@ class View extends Control {
                     <Col className='plots' xs={12} md={4} style={{border: 'blue  0.5px solid'}}>
                         <div>{numStepsVsNumEpisodesPlot}</div>
                         <div>
-                            Eligibility Trace is not Considered in the
-                            <a href="https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node96.html" target="_blank">
-                                Dyna-Q algorithm
+                            Eligibility Trace is not Considered in the <a href="https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node96.html" target="_blank">
+                                Dyna-Q algorithm yet.
                             </a>
                         </div>
                     </Col>
