@@ -1,7 +1,7 @@
 import React from 'react';
 import {Row, Col} from 'react-bootstrap';
 
-import {TDAgent} from '../../../lib/Reinforce-js';
+import {DynaQAgent} from '../../../lib/Reinforce-js';
 
 import Env from '../Base/Env.js';
 import Control from '../Base/Control.jsx';
@@ -57,6 +57,8 @@ class Introduction extends React.Component {
         return (
             <div>
                 <h4>Instruction:</h4>
+                <p>Dyna-Q also converges, but much less efficient and seems more divergent than SARSA & Q-learning....</p>
+
                 <ul>
                     <li>Act: take one action</li>
                     <li>Toggle: Take actions continously indefinitely</li>
@@ -87,7 +89,7 @@ class View extends Control {
         super();
         this.allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10];
         let env = new Env();
-        let agent = new TDAgent(env);
+        let agent = new DynaQAgent(env);
 
         this.state = {
             agent: agent,

@@ -4,10 +4,8 @@
 import {randi} from '../utils';
 
 
-let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
-                             etraceType=null,
-                             // learningAlgo='watkinsQLambda',
-                             learningAlgo='sarsaLambda',
+let DynaQAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1,
+                                numSessions=10,
                              batchSize=200, actingRate=100}={}) {
     // store pointer to environment
     this.env = env;
@@ -18,14 +16,25 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
     this.gamma = gamma;
     // for epsilon-greedy policy
     this.epsilon = epsilon;
-    // Trace-decay parameter
-    this.lambda = lambda;
 
-    // both sarsaLambda and watkinsQLambda have already specified etraceType, so
-    // currently won't support using additional trace types. Control trace turns
-    // out to be quite different from planning trace.
-    this.etraceType = null;
-    this.learningAlgo = learningAlgo;
+    // this is the number of repeats after updating the model
+    this.numSessions = numSessions;
+
+    // // modeling while learning, that's dyna-Q
+    // this.model = {
+    //     model: {},              // for storing (S, A) => (R, S') mapping
+    //     experience: {
+    //         // for storing stateid => {action: [reward, S']} mapping
+    //     }
+    // };
+
+
+    // modeling while learning, that's dyna-Q
+    this.model = {
+        states: []
+    };            // should have similar data structure as
+                                // env.states except it has predefined reward
+                                // and next state
 
     // for learning from multiple episodes in batch
     this.batchSize = batchSize;
@@ -35,7 +44,7 @@ let TDAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
 };
 
 
-TDAgent.prototype = {
+DynaQAgent.prototype = {
     reset: function() {
         this.resetValueFunction();
 
@@ -111,18 +120,7 @@ TDAgent.prototype = {
     act: function() {
         // Main method for learning
         this.takeAction();
-
-        switch (this.learningAlgo) {
-        case 'sarsaLambda':
-            this.sarsaLambdaUpdate();
-            break;
-        case 'watkinsQLambda':
-            this.watkinsQLambdaUpdate();
-            break;
-        default:
-            console.error('unimplemented learning algorithm: ' + this.learningAlgo);
-        }
-
+        this.dynaQUpdate();
         this.afterUpdate();
     },
 
@@ -146,58 +144,94 @@ TDAgent.prototype = {
         }
     },
 
-    sarsaLambdaUpdate: function() {
-        // implement the "repeat (for each step of episode)" part of Figure
-        // 7.11: Tabular Sarsa(λ)
-        let {s0, a0, reward, s1, a1} = this;
-
-        let delta = reward + this.gamma * s1.Q[a1] - s0.Q[a0];
-        s0.Z[a0] += 1;
-
-        let that = this;
-        this.env.states.forEach((state) => {
-            state.allowedActions.forEach((action) => {
-                state.Q[action] += that.alpha * delta * state.Z[action];
-                state.Z[action] *= that.gamma * that.lambda;
-                state.epiHistZ[action].push(state.Z[action])
-            });
-        });
-    },
-
-    watkinsQLambdaUpdate: function() {
-        // implement the Watkins' Q(λ) in Figure 7.14
+    dynaQUpdate: function() {
+        // implement Dyna-Q algorithm in Figure 8.4
         let {s0, a0, reward, s1, a1} = this;
 
         let aStar = this.chooseGreedyAction(s1);
         let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
-        s0.Z[a0] += 1;
+        s0.Q[a0] += this.alpha * delta;
 
-        let that = this;
-        this.env.states.forEach((state) => {
-            state.allowedActions.forEach((action) => {
-                state.Q[action] += that.alpha * delta * state.Z[action];
-                if (a1 === aStar) {
-                    state.Z[action] *= that.gamma * that.lambda;
-                } else {
-                    state.Z[action] = 0;
-                }
-                state.epiHistZ[action].push(state.Z[action])
-            });
-        });
+        // update the model
+        if (this.model.states[s0.id] === undefined) {
+            this.model.states[s0.id] = {
+                id: s0.id,
+                nextState: {}
+            };
+            this.model.states[s0.id].nextState[a0] = [reward, s1.id];
+        } else {
+            this.model.states[s0.id].nextState[a0] = [reward, s1.id];
+        }
+
+        // modeling, n times
+        let counter = 0;
+        while (counter < this.numSessions) {
+            // r: random, m: model, e: env
+
+            // cannot use this.model.states.length as many elements are just
+            // undefined in this particular javascript array, But Object.keys()
+            // only return the non-undefined keys (in string though);
+            let seenStateIds = this.model.states.filter((s) => s !== undefined).map((s) => s.id);
+            let rS0Id = seenStateIds[randi(0, seenStateIds.length)];
+            let mS0 = this.model.states[rS0Id];
+            let eS0 = this.env.states[rS0Id];
+
+            let seenActions = Object.keys(mS0.nextState);
+            let rA0 = seenActions[randi(0, seenActions.length)];
+            // console.log(mS0, seenActions, rA0);
+            let [mReward, rS1Id] = this.model.states[rS0Id].nextState[rA0];
+            let mS1 = this.model.states[rS1Id];
+            let eS1 = this.env.states[rS1Id];
+
+            let eAStar = this.chooseGreedyAction(eS1);
+            let eDelta = mReward + this.gamma * eS1.Q[eAStar] - eS0.Q[rA0];
+            eS0.Q[rA0] += this.alpha * eDelta;
+
+            counter += 1;
+        }
     },
 
-    // updateTrace: function() {
-    //     // todo:
 
-    //     // trying to abstract trace calculation away for flexibility in plugging
-    //     // in new trace types in the future, but seems not easy, will see later.
 
-    // }
+    // sarsaLambdaUpdate: function() {
+    //     // implement the "repeat (for each step of episode)" part of Figure
+    //     // 7.11: Tabular Sarsa(λ)
+    //     let {s0, a0, reward, s1, a1} = this;
 
-    // sarsaLambdaUpdate: function(state, Q, action) {
-    //     // this is generalized from accumulating trace as in planning
+    //     let delta = reward + this.gamma * s1.Q[a1] - s0.Q[a0];
+    //     s0.Z[a0] += 1;
 
-    // }
+    //     let that = this;
+    //     this.env.states.forEach((state) => {
+    //         state.allowedActions.forEach((action) => {
+    //             state.Q[action] += that.alpha * delta * state.Z[action];
+    //             state.Z[action] *= that.gamma * that.lambda;
+    //             state.epiHistZ[action].push(state.Z[action])
+    //         });
+    //     });
+    // },
+
+    // watkinsQLambdaUpdate: function() {
+    //     // implement the Watkins' Q(λ) in Figure 7.14
+    //     let {s0, a0, reward, s1, a1} = this;
+
+    //     let aStar = this.chooseGreedyAction(s1);
+    //     let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
+    //     s0.Z[a0] += 1;
+
+    //     let that = this;
+    //     this.env.states.forEach((state) => {
+    //         state.allowedActions.forEach((action) => {
+    //             state.Q[action] += that.alpha * delta * state.Z[action];
+    //             if (a1 === aStar) {
+    //                 state.Z[action] *= that.gamma * that.lambda;
+    //             } else {
+    //                 state.Z[action] = 0;
+    //             }
+    //             state.epiHistZ[action].push(state.Z[action])
+    //         });
+    //     });
+    // },
 
     learnFromOneEpisode: function() {
         this.resetEpisode();
@@ -238,4 +272,4 @@ TDAgent.prototype = {
     // }
 };
 
-export default TDAgent;
+export default DynaQAgent;
