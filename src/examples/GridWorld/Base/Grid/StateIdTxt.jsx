@@ -3,9 +3,9 @@ import React, { Component, PropTypes } from 'react';
 
 class StateIdTxt extends Component {
     propTypes: {
-        x: PropTypes.number,
-        y: PropTypes.number,
-        stateId: PropTypes.number
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        stateId: PropTypes.number.isRequired
     }
 
     render() {
