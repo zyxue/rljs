@@ -1,108 +1,147 @@
-import {getopt, sampleWeighted, zeros} from '../utils';
+import {randi} from '../utils.js';
 
 
-// DPAgent performs Value Iteration
-// - can also be used for Policy Iteration if you really wanted to
-// - requires model of the environment :(
-// - does not learn from experience :(
-// - assumes finite MDP :(
-let DPAgent = function(env, opt) {
-    this.V = null; // state value function
-    this.P = null; // policy distribution \pi(s,a)
-    this.env = env; // store pointer to environment
-    this.gamma = getopt(opt, 'gamma', 0.75); // future reward discount factor
+let TDPredAgent = function(env, {gamma=0.95, batchSize=200}={}) {
+    // store pointer to environment
+    this.env = env;
+
+    // return discount factor
+    this.gamma = gamma;
+
+    // for learning from multiple episodes in batch
+    this.batchSize = batchSize;
     this.reset();
 };
 
-DPAgent.prototype = {
-    reset: function() {
-        // reset the agent's policy and value function
-        this.numStates = this.env.getNumStates();
-        this.numActions = this.env.getMaxNumActions();
-        this.V = zeros(this.numStates);
-        this.P = zeros(this.numStates * this.numActions);
-        // initialize uniform random policy
-        for (let s = 0; s < this.numStates; s++) {
-            let poss = this.env.allowedActions(s);
-            for (let i = 0, n = poss.length; i < n; i++) {
-                // console.log(1.0 / poss.length);
-                this.P[poss[i] * this.numStates + s] = 1.0 / poss.length;
+
+TDPredAgent.prototype = {
+    reset: function(){
+        this.env.states.forEach((st) => {
+            st.V = 0;
+        });
+
+        // for keeping learning progress
+        this.numEpisodesExperienced = 0;
+        this.numStepsPerEpisode = []; // record how number decreases;
+
+        // reset episode level variables
+        this.resetEpisode();
+    },
+
+    resetEpisode: function() {
+        // reset epsiode level variables
+        this.numStepsCurrentEpisode = 0;
+        // reset etrace history
+        this.env.states.forEach((st) => {
+            st.Z = 0;
+            st.epiHistZ = [];
+        });
+        this.s0 = this.env.initState();
+        this.a0 = this.chooseAction(this.s0);
+    },
+
+    takeRandomAction: function(s0) {
+        let randomInt = randi(0, s0.allowedActions.length);
+        return s0.allowedActions[randomInt];
+    },
+
+    takeGreedyAction: function(s0) {
+        // take a random first action instead of [0] to avoid bias
+        let a0 = s0.allowedActions[randi(0, s0.allowedActions.length)];
+        // reward is not needed
+        let [_, s1] = this.env.gotoNextState(s0, a0);
+        let val = s1.V;
+        for (let i=1; i < s0.allowedActions.length; i++) {
+            let currAction = s0.allowedActions[i];
+            let [_rew, _s1] = this.env.gotoNextState(s0, currAction);
+            if (_s1.V > val) {
+                val = _s1.V;
+                a0 = currAction;
             }
+        }
+        return a0;
+    },
+
+    chooseAction: function(state) {
+        if (Math.random() < this.epsilon) {
+            return this.takeRandomAction(state);
+        } else {
+            return this.takeGreedyAction(state);
         }
     },
 
-    evaluatePolicy: function() {
-        // perform a synchronous update of the value function
-        let Vnew = zeros(this.numStates);
-        for (let s = 0; s < this.numStates; s++) {
-            // integrate over actions in a stochastic policy note that we
-            // assume that policy probability mass over allowed actions sums
-            // to one
-            let v = 0.0;
-            let poss = this.env.allowedActions(s);
-            for (let i = 0, n = poss.length; i < n; i++) {
-                let a = poss[i];
-                let prob = this.P[a * this.numStates + s]; // probability of taking action under policy
-                if (prob === 0) {
-                    continue;
-                } // no contribution, skip for speed
-                let ns = this.env.nextStateDistribution(s, a);
-                let rs = this.env.reward(s, a, ns); // reward for s->a->ns transition
-                v += prob * (rs + this.gamma * this.V[ns]);
-            }
-            Vnew[s] = v;
+    updateTrace: function(z, etraceType) {
+        let res = null;
+        switch (etraceType) {
+
+        case 'accumulatingTrace':
+            res = z + 1;
+            break;
+        case 'replacingTrace':
+            res = 1;
+            break;
+        default:
+            // do nothing
         }
-        this.V = Vnew; // swap
+        return res;
     },
 
-    updatePolicy: function() {
-        // update policy to be greedy w.r.t. learned Value function
-        for (let s = 0; s < this.numStates; s++) {
-            let poss = this.env.allowedActions(s);
-            // compute value of taking each allowed action
-            let vmax, nmax;
-            let vs = [];
-            for (let i = 0, n = poss.length; i < n; i++) {
-                let a = poss[i];
-                let ns = this.env.nextStateDistribution(s, a);
-                let rs = this.env.reward(s, a, ns);
-                let v = rs + this.gamma * this.V[ns];
-                vs.push(v);
-                if (i === 0 || v > vmax) {
-                    vmax = v;
-                    nmax = 1;
-                } else if (v === vmax) {
-                    nmax += 1;
-                }
-            }
-            // update policy smoothly across all argmaxy actions
-            for (let i = 0, n = poss.length; i < n; i++) {
-                let a = poss[i];
-                this.P[a * this.numStates + s] = (vs[i] === vmax) ? 1.0 / nmax : 0.0;
-            }
+    tdLambdaAct: function() {
+        // implement 7.7: On-line Tabular TD(λ)
+
+        let s0 = this.s0;
+        let a0 = this.a0;
+
+        let [reward, s1] = this.env.gotoNextState(s0, a0);
+        let a1 = this.chooseAction(s1);
+
+        this.numStepsCurrentEpisode += 1;
+
+        let delta = reward + this.gamma * s1.V - s0.V;
+        s0.Z = this.updateTrace(s0.Z, this.etraceType);
+
+        let that = this;
+        this.env.states.forEach((st, idx, arr) => {
+            st.V += that.alpha * delta * st.Z;
+            st.Z *= that.gamma * that.lambda
+            st.epiHistZ.push(st.Z);
+        })
+
+        if (this.env.isTerminal(s0)) {
+            this.numEpisodesExperienced += 1;
+            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+            this.resetEpisode();
+        } else {
+            this.s0 = s1;
+            this.a0 = a1;
         }
     },
 
-    learn: function() {
-        // perform a single round of value iteration
-        this.evaluatePolicy(); // writes this.V
-        this.updatePolicy(); // writes this.P
+    act: function() {
+        this.tdLambdaAct()
     },
 
-    act: function(s) {
-        // behave according to the learned policy possible actions
-        let poss = this.env.allowedActions(s);
-        let ps = [];
-        for (let i = 0, n = poss.length; i < n; i++) {
-            let a = poss[i];
-            let prob = this.P[a * this.numStates + s];
-            ps.push(prob);
+    learnFromOneEpisode: function() {
+        this.resetEpisode();
+        while (! this.env.isTerminal(this.s0)) {
+            this.act();
+
+            if (this.numStepsCurrentEpisode > 2500) {
+                console.error('taking too long to end one episode: > ' +
+                              this.numStepsCurrentEpisode + ' steps.');
+                break;
+            }
         }
-        // randomly break tie given one of the multiple actions in this
-        // state give the same value
-        let maxi = sampleWeighted(ps);
-        return poss[maxi];
-    }
+
+        // equivalent to exit at terminal state
+        this.act();
+    },
+
+    learnFromBatchEpisodes: function() {
+        for (let i = 0; i < this.batchSize; i++) {
+            this.learnFromOneEpisode();
+        }
+    },
 };
 
-export default DPAgent;
+export default TDPredAgent;
