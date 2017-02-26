@@ -1,7 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
+import StateIdTxt from './StateIdTxt.jsx';
+import StateCoordTxt from './StateCoordTxt.jsx';
+import StateRewardTxt from './StateRewardTxt.jsx';
 import StateValueTxt from './StateValueTxt.jsx';
 import PiBasedPolicyArrows from './PiBasedPolicyArrows.jsx';
+
 import {genRGBColorString} from '../../utils.js';
 
 // A basic clickable cell like below, inherited to more complicated cell types
@@ -31,7 +35,7 @@ class Cell extends Component {
     }
 
     render () {
-        const {state, legCtrl} = this.props;
+        const {state, legendsCtrl} = this.props;
         const {xmin, ymin, xmax, ymax} = state.coords;
         const height = ymax - ymin;
         const width = xmax - xmin;
@@ -45,12 +49,26 @@ class Cell extends Component {
 
         return (
             <g className="cell">
-                {legCtrl.stateCoord ? <StateCoordTxt  x={xmin} y={ymin} coordX={state.x} coordY={state.y} />      : null}
-                {legCtrl.stateId    ? <StateValueTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
-                {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
-                {<PiBasedPolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} />}
+                {legendsCtrl.stateId
+                 ? <StateIdTxt  x={xmax} y={ymin} stateId={state.id} />
+                 : null}
 
-                {<StateValueTxt     x={xmax} y={ymin} stateValue={state.V} />}
+                {legendsCtrl.stateCoord
+                 ? <StateCoordTxt  x={xmin} y={ymin} coordX={state.x} coordY={state.y} />
+                 : null}
+
+                {legendsCtrl.reward
+                 ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />
+                 : null}
+
+                {legendsCtrl.stateValue
+                 ? <StateValueTxt x={xmin} y={ymax} stateValue={state.V} />
+                 : null}
+
+                {legendsCtrl.policy
+                 ? <PiBasedPolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId} />
+                 : null}
+
                 <rect x={xmin}
                       y={ymin}
                       height={height}
@@ -75,7 +93,7 @@ Cell.propTypes = {
 };
 
 Cell.defaultProps = {
-    legCtrl: {}
+    legendsCtrl: {}
 };
 
 

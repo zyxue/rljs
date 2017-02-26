@@ -18,7 +18,6 @@ class CellStatus extends Component {
 
     render() {
         let {handleSlide, slideVal, disabled} = this.props;
-        // let sliderReward = selectedState === null? 0: selectedState.reward;
 
         let btnData = [
             ['startingState', 'Starting state'],
@@ -43,7 +42,7 @@ class CellStatus extends Component {
                     <Col className="nopadding" md={3}>Adjust reward: </Col>
                     <Col className="slider-container selected-reward" md={6}>
                         <input className='slider'
-                               type="range" min="-1" max="1" disabled={disabled} value={slideVal}
+                               type="range" min="-5" max="5" disabled={disabled} value={slideVal}
                                step="0.01" onChange={handleSlide.bind(this)}/>
                     </Col>
                 </div>

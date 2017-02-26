@@ -47,7 +47,7 @@ class Grid extends Component {
                            state={state}
                            arrowHeadDefId={arrowHeadDefId}
                            handleClick={handleCellClick.bind(this, state.id)}
-                           legCtrl={legendsCtrl} />;
+                           legendsCtrl={legendsCtrl} />;
             }
         });
 

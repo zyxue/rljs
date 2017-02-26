@@ -22,17 +22,14 @@ class View extends Component {
         this.state = {
             agent: agent,
             env: env,
-
             selectedStateId: null,
-            /* 
-             *             legendsCtrl: {
-             *                 qValue: false,
-             *                 stateId: true,
-             *                 stateCoord: false,
-             *                 reward: true,
-             *                 policy: false, // show policy as arrows
-             *                 etrace: true
-             *             }*/
+            legCtrl: { // legends control
+                stateId: true,
+                stateCoord: false,
+                reward: true,
+                stateValue: true,
+                policy: true
+            }
         };
     }
 
@@ -162,6 +159,7 @@ class View extends Component {
                            selectedStateId={this.state.selectedStateId}
                            hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
                            hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
+                           legCtrl={this.state.legCtrl}
                 />
 
                 <hr/>
@@ -172,6 +170,7 @@ class View extends Component {
                       agent={this.state.agent}
                       selectedStateId={this.state.selectedStateId}
                       handleCellClick={this.hdlCellClick.bind(this)}
+                      legendsCtrl={this.state.legCtrl}
                 />
 
             <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>

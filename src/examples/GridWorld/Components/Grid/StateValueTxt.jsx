@@ -12,10 +12,10 @@ class StateValueTxt extends Component {
         const {x, y, stateValue} = this.props;
         return (
                 <text x={x} y={y}
-                      textAnchor="end"
-                      dominantBaseline="text-before-edge"
+                      textAnchor="start"
+                      dominantBaseline="text-after-edge"
                       fontSize=".7em" fill="blue">
-                    {stateValue.toPrecision(10)}
+                    v{stateValue.toPrecision(10)}
                 </text>
         );
     }
