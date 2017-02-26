@@ -8,6 +8,9 @@ import {randi} from '../utils.js';
 // except for a max operation) and policy generation, which is relatively
 // trivial
 
+const THETA = 1e-7;             // for testing convergence
+const NUM_PREC = 7;             // for comparison of float.toPrecision
+
 const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
     // store pointer to environment
     this.env = env;
@@ -15,8 +18,6 @@ const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
     // return discount factor
     this.gamma = gamma;
 
-    // for learning from multiple episodes in batch
-    this.batchSize = batchSize;
     this.reset();
 };
 
@@ -24,8 +25,8 @@ const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
 DPAgent.prototype = {
     reset: function() {
         this.resetValueFunction();
-        this.numValueIterations = 0
         this.numPolicyIterations = 0;
+        this.numValueIterations = 0;
     },
 
     resetValueFunction: function() {
@@ -37,7 +38,6 @@ DPAgent.prototype = {
     },
 
     evaluatePolicy: function() {
-        const theta = 1e-3;     // a cutoff
         while (true) {
             let currentDelta = 0;
             this.env.states.forEach((state) => {
@@ -56,7 +56,7 @@ DPAgent.prototype = {
                 state.V = newV;
             });
             // console.debug(currentDelta);
-            if (currentDelta < theta) {break;}
+            if (currentDelta < THETA) {break;}
         }
         this.numPolicyIterations += 1;
     },
@@ -79,11 +79,11 @@ DPAgent.prototype = {
 
             // convert to string to ease float comparison
             // http://stackoverflow.com/questions/3343623/javascript-comparing-two-float-values
-            let maxValStr = maxVal.toPrecision(5);
+            let maxValStr = maxVal.toPrecision(NUM_PREC);
 
             let actionsToMaxVals = []; // actions that leads to max value
             actionVals.forEach(([action, val]) => {
-                if (val.toPrecision(5) == maxValStr) {
+                if (val.toPrecision(NUM_PREC) == maxValStr) {
                     actionsToMaxVals.push(action);
                 }
             });
@@ -115,8 +115,6 @@ DPAgent.prototype = {
     },
 
     iterateValue: function() {
-        const theta = 1e-6;     // a cutoff
-
         let currentDelta = 0;
         this.env.states.forEach((state) => {
             if (state.Pi.length === 0) return;
@@ -136,44 +134,9 @@ DPAgent.prototype = {
         });
 
         this.numValueIterations += 1;
-        const isStable = currentDelta < theta;
+        const isStable = currentDelta < THETA;
         return isStable;
     }
-
-
-    // part of value iteration
-
-    // this.env.states.forEach((state) => {
-    //     let tmpV = state.V;
-    //     // let maxV = Math.max(...Object.values(state.Q));
-    //     let vs = state.allowedActions.map((action) => {
-    //         let s1, reward = this.env.gotoNextState(state, action);
-    //         return reward + this.gamma * s1.V;
-    //     });
-    //     let maxV = Math.max(...vs);
-    // });
-
-    // learnFromOneEpisode: function() {
-    //     this.resetEpisode();
-    //     while (! this.env.isTerminal(this.s0)) {
-    //         this.act();
-
-    //         if (this.numStepsCurrentEpisode > 2500) {
-    //             console.error('taking too long to end one episode: > ' +
-    //                           this.numStepsCurrentEpisode + ' steps.');
-    //             break;
-    //         }
-    //     }
-
-    //     // equivalent to exit at terminal state
-    //     this.act();
-    // },
-
-    // learnFromBatchEpisodes: function() {
-    //     for (let i = 0; i < this.batchSize; i++) {
-    //         this.learnFromOneEpisode();
-    //     }
-    // },
 };
 
 export default DPAgent;

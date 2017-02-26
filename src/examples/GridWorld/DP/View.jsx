@@ -46,17 +46,7 @@ class View extends Component {
          * }
          * this.setState({selectedStateId: stateId});*/
     }
-
-    /* handleClick(action, event) {
-     *     if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
-     *     else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
-     *     else if (action === 'reset') {this.state.agent.reset();}
-     *     else {this.state.agent.learn();}
-
-     *     this.setState({agent: this.state.agent});
-     * }*/
     
-
     isLearning() {
         // check if learning is already going on
         return this.state.intervalId === undefined? false : true;
@@ -108,6 +98,9 @@ class View extends Component {
             case 'toggleValIter':
                 this.toggleLearning('valIter');
                 break;
+            case 'reset':
+                this.state.agent.reset();
+                break;
             default:
                 console.log('action unspecified or unrecognized: ', action);
         }
@@ -135,7 +128,9 @@ class View extends Component {
                       handleCellClick={this.updateSelectedStateId}
                 />
 
-            <p>Policy itertion is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
+            <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
+            <p><strong>Value  itertion</strong> is basically continuous update of value functions till convergene, the one step of policy update will result in the optimal policy</p>
+            <p>In general, value itertion is much slower that policy iteration. In other words, policy converges much faster than value functions. In the case of gridword, the former takes over 100 iteration while the later takes less than 10.</p>
 
             </div>
         );
