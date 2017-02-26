@@ -1,7 +1,14 @@
 import {randi} from '../utils.js';
 
+// Summary of DP methods:
 
-let TDPredAgent = function(env, {gamma=0.95, batchSize=200}={}) {
+// policy iteration includes policy evaluation and policy improvement
+
+// value iteration includes value converge (very similar to policy evaluation
+// except for a max operation) and policy generation, which is relatively
+// trivial
+
+const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
     // store pointer to environment
     this.env = env;
 
@@ -14,134 +21,113 @@ let TDPredAgent = function(env, {gamma=0.95, batchSize=200}={}) {
 };
 
 
-TDPredAgent.prototype = {
-    reset: function(){
-        this.env.states.forEach((st) => {
-            st.V = 0;
+DPAgent.prototype = {
+    reset: function() {
+        this.resetValueFunction();
+        // aka number of policy evaluations
+        this.numPolicyEvaluations = 0;
+    },
+
+    resetValueFunction: function() {
+        this.env.states.forEach(function(state) {
+            state.V = 0;
+            // could store multiple actions if they are of the same value
+            state.PI = state.allowedActions;
         });
-
-        // for keeping learning progress
-        this.numEpisodesExperienced = 0;
-        this.numStepsPerEpisode = []; // record how number decreases;
-
-        // reset episode level variables
-        this.resetEpisode();
     },
 
-    resetEpisode: function() {
-        // reset epsiode level variables
-        this.numStepsCurrentEpisode = 0;
-        // reset etrace history
-        this.env.states.forEach((st) => {
-            st.Z = 0;
-            st.epiHistZ = [];
+    evaluatePolicy: function() {
+        const theta = 1e-3;     // a cutoff
+        let currentDelta = 0;
+        while (true) {
+            this.env.states.forEach((state) => {
+                // could be a cliff or something
+                if (state.PI.length === 0) return;
+                let oldV = state.V;
+                // console.debug('action, ', state.id, state.PI);
+                // probability of taking each action
+                let newV = 0;
+                let prob = 1 / state.PI.length;
+                state.PI.forEach((action) => {
+                    let [reward, s1] = this.env.gotoNextState(state, action);
+                    newV += prob * (reward + this.gamma * s1.V);
+                });
+                console.log(newV);
+                let currentDelta = Math.max(currentDelta, Math.abs(newV - oldV));
+                state.V = newV;
+            });
+
+            if (currentDelta < theta) {break;}
+        }
+        this.numPolicyEvaluations += 1;
+    },
+
+    updatePolicy: function() {
+        const theta = 1e-3;
+        let isStable = true;
+        this.env.states.forEach((state) => {
+            let maxVal = null;
+            let actionVals = state.allowedActions.map(function(action) {
+                let s1, reward = this.env.gotoNextState(state, action);
+                let val = reward + this.gamma * s1.V;
+                if (maxVal === null || maxVal < val) maxVal = val;
+                return [action, val];
+            });
+
+            // convert to string to ease float comparison
+            // http://stackoverflow.com/questions/3343623/javascript-comparing-two-float-values
+            let maxValStr = maxVal.toFixed(7);
+
+            let nMax = 0;
+            let actionsToMaxVals = []; // actions that leads to max value
+            actionVals.forEach(([action, val]) => {
+                if (val.toFixed(7) == maxValStr) {
+                    nMax += 1;
+                    actionsToMaxVals.push(action);
+                }
+            });
+
+            state.PI = actionsToMaxVals;
         });
-        this.s0 = this.env.initState();
-        this.a0 = this.chooseAction(this.s0);
-    },
-
-    takeRandomAction: function(s0) {
-        let randomInt = randi(0, s0.allowedActions.length);
-        return s0.allowedActions[randomInt];
-    },
-
-    takeGreedyAction: function(s0) {
-        // take a random first action instead of [0] to avoid bias
-        let a0 = s0.allowedActions[randi(0, s0.allowedActions.length)];
-        // reward is not needed
-        let [_, s1] = this.env.gotoNextState(s0, a0);
-        let val = s1.V;
-        for (let i=1; i < s0.allowedActions.length; i++) {
-            let currAction = s0.allowedActions[i];
-            let [_rew, _s1] = this.env.gotoNextState(s0, currAction);
-            if (_s1.V > val) {
-                val = _s1.V;
-                a0 = currAction;
-            }
-        }
-        return a0;
-    },
-
-    chooseAction: function(state) {
-        if (Math.random() < this.epsilon) {
-            return this.takeRandomAction(state);
-        } else {
-            return this.takeGreedyAction(state);
-        }
-    },
-
-    updateTrace: function(z, etraceType) {
-        let res = null;
-        switch (etraceType) {
-
-        case 'accumulatingTrace':
-            res = z + 1;
-            break;
-        case 'replacingTrace':
-            res = 1;
-            break;
-        default:
-            // do nothing
-        }
-        return res;
-    },
-
-    tdLambdaAct: function() {
-        // implement 7.7: On-line Tabular TD(λ)
-
-        let s0 = this.s0;
-        let a0 = this.a0;
-
-        let [reward, s1] = this.env.gotoNextState(s0, a0);
-        let a1 = this.chooseAction(s1);
-
-        this.numStepsCurrentEpisode += 1;
-
-        let delta = reward + this.gamma * s1.V - s0.V;
-        s0.Z = this.updateTrace(s0.Z, this.etraceType);
-
-        let that = this;
-        this.env.states.forEach((st, idx, arr) => {
-            st.V += that.alpha * delta * st.Z;
-            st.Z *= that.gamma * that.lambda
-            st.epiHistZ.push(st.Z);
-        })
-
-        if (this.env.isTerminal(s0)) {
-            this.numEpisodesExperienced += 1;
-            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
-            this.resetEpisode();
-        } else {
-            this.s0 = s1;
-            this.a0 = a1;
-        }
     },
 
     act: function() {
-        this.tdLambdaAct()
-    },
+        this.evaluatePolicy();
+    }
 
-    learnFromOneEpisode: function() {
-        this.resetEpisode();
-        while (! this.env.isTerminal(this.s0)) {
-            this.act();
+    // part of value iteration
 
-            if (this.numStepsCurrentEpisode > 2500) {
-                console.error('taking too long to end one episode: > ' +
-                              this.numStepsCurrentEpisode + ' steps.');
-                break;
-            }
-        }
+    // this.env.states.forEach((state) => {
+    //     let tmpV = state.V;
+    //     // let maxV = Math.max(...Object.values(state.Q));
+    //     let vs = state.allowedActions.map((action) => {
+    //         let s1, reward = this.env.gotoNextState(state, action);
+    //         return reward + this.gamma * s1.V;
+    //     });
+    //     let maxV = Math.max(...vs);
+    // });
 
-        // equivalent to exit at terminal state
-        this.act();
-    },
+    // learnFromOneEpisode: function() {
+    //     this.resetEpisode();
+    //     while (! this.env.isTerminal(this.s0)) {
+    //         this.act();
 
-    learnFromBatchEpisodes: function() {
-        for (let i = 0; i < this.batchSize; i++) {
-            this.learnFromOneEpisode();
-        }
-    },
+    //         if (this.numStepsCurrentEpisode > 2500) {
+    //             console.error('taking too long to end one episode: > ' +
+    //                           this.numStepsCurrentEpisode + ' steps.');
+    //             break;
+    //         }
+    //     }
+
+    //     // equivalent to exit at terminal state
+    //     this.act();
+    // },
+
+    // learnFromBatchEpisodes: function() {
+    //     for (let i = 0; i < this.batchSize; i++) {
+    //         this.learnFromOneEpisode();
+    //     }
+    // },
 };
 
-export default TDPredAgent;
+export default DPAgent;

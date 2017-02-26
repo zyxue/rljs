@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Row, Col} from 'react-bootstrap';
+import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 
 import Grid from './Grid.jsx';
@@ -9,7 +9,7 @@ import Env from '../Env.js';
 /* import Control from '../Base/Control.jsx';*/
 /* import Line from '../Base/Line.jsx';*/
 
-/* import Dashboard from './Dashboard/Dashboard.jsx';*/
+import Dashboard from './Dashboard.jsx';
 
 
 class View extends Component {
@@ -47,15 +47,40 @@ class View extends Component {
          * this.setState({selectedStateId: stateId});*/
     }
 
+    handleClick(action, event) {
+        /* console.log(event);
+         * console.log(arguments);*/
+        /* for (let i=0; i< 100; i++) {
+         *     this.state.agent.learn();
+         * };*/
+
+        if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
+        else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
+        else if (action === 'reset') {this.state.agent.reset();}
+        else {this.state.agent.learn();}
+
+        this.setState({agent: this.state.agent});
+    }
+
     render() {
         return (
-            <Grid
-                height={600}
-                width={700}
-                id="grid-TD-control"
-                agent={this.state.agent}
-                handleCellClick={this.updateSelectedStateId}
-            />
+            <div>
+
+                <ButtonToolbar>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
+                </ButtonToolbar>
+
+                <hr/>
+                <Grid height={600}
+                      width={700}
+                      id="grid-TD-control"
+                      agent={this.state.agent}
+                      handleCellClick={this.updateSelectedStateId}
+                />
+            </div>
         );
 
         /* legendsCtrl={this.state.legendsCtrl}

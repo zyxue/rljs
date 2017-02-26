@@ -1,19 +1,19 @@
 // syntactic sugar function for getting default parameter values
-export let getopt = function(opt, field_name, default_value) {
+export const getopt = function(opt, field_name, default_value) {
     if (typeof opt === 'undefined') {
         return default_value;
     }
     return (typeof opt[field_name] !== 'undefined') ? opt[field_name] : default_value;
 };
 
-export let setConst = function(arr, c) {
+export const setConst = function(arr, c) {
     for (let i = 0, n = arr.length; i < n; i++) {
         arr[i] = c;
     }
 };
 
 // Utility fun
-export let assert = function assert(condition, message) {
+export const assert = function assert(condition, message) {
     console.log(condition);
 
     // from http://stackoverflow.com/questions/15313418/javascript-assert
@@ -27,7 +27,7 @@ export let assert = function assert(condition, message) {
     }
 };
 
-export let sampleWeighted = function(p) {
+export const sampleWeighted = function(p) {
     console.log(p);
     let r = Math.random();
     let c = 0.0; // cumulative prob
@@ -41,7 +41,7 @@ export let sampleWeighted = function(p) {
     assert(false, 'wtf');
 };
 
-export let zeros = function(n) {
+export const zeros = function(n) {
     if (typeof(n) === 'undefined' || Number.isNaN(n)) {
         return [];
     }
@@ -53,12 +53,17 @@ export let zeros = function(n) {
     return arr;
 };
 
-
-export let randi = function(min, max) {
+export const randi = function(min, max) {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
     // Math.random() function returns a floating-point, pseudo-random number in
     // the range [0, 1)]
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
-}
+};
+
+export const sum = function(array) {
+    array.reduce(function(sum, current){
+             return sum + current;
+    }, 0);
+};

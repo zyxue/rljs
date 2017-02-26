@@ -9,7 +9,7 @@ import TerminalState from '../Components/Grid/TerminalState.jsx';
 import SelectedState from '../Components/Grid/SelectedState.jsx';
 import ArrowHeadDef from '../Components/Grid/ArrowHeadDef.jsx';
 import Agent from '../Components/Grid/Agent.jsx';
-import {calcCoords} from '../utils.js';
+import {calcCoords, genRGBColorString} from '../utils.js';
 
 
 class Grid extends Component {
@@ -61,7 +61,6 @@ class Grid extends Component {
                     <TerminalState coords={agent.env.getTerminalState().coords} />
                     <ArrowHeadDef markerId={arrowHeadDefId} />
                     {grid}
-                    <Agent agentState={agent.s0} agentAction={agent.a0} />
                 </svg>
             </div>
         );

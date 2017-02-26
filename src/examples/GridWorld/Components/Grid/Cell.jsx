@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
+import StateIdTxt from './StateIdTxt.jsx';
+import {genRGBColorString} from '../../utils.js';
+
 // A basic clickable cell like below, inherited to more complicated cell types
 // or cliffs. the effect after click is defined in props.handleClick. React
 // doesn't supposrt onClick for svg element yet
@@ -31,6 +34,7 @@ class Cell extends Component {
         const {xmin, ymin, xmax, ymax} = state.coords;
         const height = ymax - ymin;
         const width = xmax - xmin;
+        const fillColor = genRGBColorString(state.V);
 
         return (
             <g className="cell">
@@ -38,6 +42,7 @@ class Cell extends Component {
                 {legCtrl.stateId    ? <StateIdTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
                 {legCtrl.policy     ? <PolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} /> : null}
+                {<StateIdTxt     x={xmax} y={ymin} stateId={state.V} />}
                 <rect x={xmin}
                       y={ymin}
                       height={height}
@@ -47,7 +52,8 @@ class Cell extends Component {
 
                       stroke="black"
                       strokeWidth={0.2}
-                      fillOpacity={0}
+                      fillOpacity={0.2}
+                      fill={fillColor}
                       cursor="pointer"
                 >
                 </rect>
