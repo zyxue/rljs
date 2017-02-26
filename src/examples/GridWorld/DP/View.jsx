@@ -133,8 +133,13 @@ class View extends Component {
             st.isCliff = !st.isCliff;
     }
 
-    hdlCellRewardAdjustment() {
-        console.debug('sliding... ');
+    hdlCellRewardAdjustment(event) {
+        event.preventDefault();
+        console.debug(event.target.value);
+        const env = this.state.env;
+        const st = env.states[this.state.selectedStateId];
+        st.reward = parseFloat(event.target.value);
+        this.setState({selectedState: st});
     }
 
     // GRID EVENTS HANDLERS
