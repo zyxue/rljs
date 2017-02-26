@@ -9,13 +9,13 @@ class StateValueTxt extends Component {
     }
 
     render() {
-        const {x, y, stateId} = this.props;
+        const {x, y, stateValue} = this.props;
         return (
                 <text x={x} y={y}
                       textAnchor="end"
                       dominantBaseline="text-before-edge"
                       fontSize=".7em" fill="blue">
-                    {stateId}
+                    {stateValue.toPrecision(10)}
                 </text>
         );
     }

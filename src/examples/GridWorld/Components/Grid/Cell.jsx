@@ -50,7 +50,7 @@ class Cell extends Component {
                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
                 {<PiBasedPolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} />}
 
-                {<StateValueTxt     x={xmax} y={ymin} stateId={state.V.toPrecision(3)} />}
+                {<StateValueTxt     x={xmax} y={ymin} stateValue={state.V} />}
                 <rect x={xmin}
                       y={ymin}
                       height={height}

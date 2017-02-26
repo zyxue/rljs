@@ -56,6 +56,44 @@ class View extends Component {
      *     this.setState({agent: this.state.agent});
      * }*/
     
+
+    isLearning() {
+        // check if learning is already going on
+        return this.state.intervalId === undefined? false : true;
+    }
+
+    startLearning(key) {
+        const actingRate = 25;
+        let intervalId = setInterval (() => {
+            let isStable = true;
+            if (key == 'polIter') {
+                isStable = this.state.agent.iteratePolicy();
+            } else if (key == 'valIter') {
+                isStable = this.state.agent.iterateValue();
+            } else {
+                console.error('unknown learning method: ' + key);
+            }
+            if (isStable) this.stopLearning();
+            this.setState({agent: this.state.agent});
+        }, actingRate);
+        this.setState({intervalId: intervalId});
+    }
+
+    stopLearning() {
+        if (this.isLearning()) {
+            clearInterval(this.state.intervalId);
+            this.setState({intervalId: undefined});
+        }
+    }
+
+    toggleLearning(key) {
+        if (this.isLearning()) {
+            this.stopLearning(key);
+        } else {
+            this.startLearning(key);
+        }
+    }
+
     handleClick(action) {
         switch(action) {
             case 'evaluatePolicy':
@@ -63,6 +101,12 @@ class View extends Component {
                 break;
             case 'updatePolicy':
                 this.state.agent.updatePolicy();
+                break;
+            case 'togglePolIter':
+                this.toggleLearning('polIter');
+                break;
+            case 'toggleValIter':
+                this.toggleLearning('valIter');
                 break;
             default:
                 console.log('action unspecified or unrecognized: ', action);
@@ -73,10 +117,13 @@ class View extends Component {
     render() {
         return (
             <div>
+                <div># policy iterations: {this.state.agent.numPolicyIterations}</div>
+                <div># value iterations: {this.state.agent.numValueIterations}</div>
                 <ButtonToolbar>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evaluatePolicy')}>Evaluate Policy</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evaluatePolicy')}>Evaluate policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'togglePolIter')}>Toggle policy iteration</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggleValIter')}>Toggle value iteration</Button>
                     <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
                 </ButtonToolbar>
 
@@ -87,6 +134,9 @@ class View extends Component {
                       agent={this.state.agent}
                       handleCellClick={this.updateSelectedStateId}
                 />
+
+            <p>Policy itertion is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
+
             </div>
         );
 

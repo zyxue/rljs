@@ -24,8 +24,8 @@ const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
 DPAgent.prototype = {
     reset: function() {
         this.resetValueFunction();
-        // aka number of policy evaluations
-        this.numPolicyEvaluations = 0;
+        this.numValueIterations = 0
+        this.numPolicyIterations = 0;
     },
 
     resetValueFunction: function() {
@@ -58,41 +58,88 @@ DPAgent.prototype = {
             // console.debug(currentDelta);
             if (currentDelta < theta) {break;}
         }
-        this.numPolicyEvaluations += 1;
+        this.numPolicyIterations += 1;
     },
 
     updatePolicy: function() {
-        const theta = 1e-3;
         let isStable = true;
         this.env.states.forEach((state) => {
+            if (state.allowedActions.length === 0) return;
+
+            let oldPi = state.Pi;
+
             let maxVal = null;
-            let actionVals = state.allowedActions.map(function(action) {
-                let s1, reward = this.env.gotoNextState(state, action);
-                let val = reward + this.gamma * s1.V;
-                if (maxVal === null || maxVal < val) maxVal = val;
-                return [action, val];
+            let actionVals = [];
+            state.allowedActions.forEach((action) => {
+                let [reward, s1] = this.env.gotoNextState(state, action);
+                let _val = reward + this.gamma * s1.V;
+                if (maxVal === null || maxVal < _val) maxVal = _val;
+                actionVals.push([action, _val]);
             });
 
             // convert to string to ease float comparison
             // http://stackoverflow.com/questions/3343623/javascript-comparing-two-float-values
-            let maxValStr = maxVal.toFixed(7);
+            let maxValStr = maxVal.toPrecision(5);
 
-            let nMax = 0;
             let actionsToMaxVals = []; // actions that leads to max value
             actionVals.forEach(([action, val]) => {
-                if (val.toFixed(7) == maxValStr) {
-                    nMax += 1;
+                if (val.toPrecision(5) == maxValStr) {
                     actionsToMaxVals.push(action);
                 }
             });
 
-            state.Pi = actionsToMaxVals;
+            let newPi = actionsToMaxVals;
+            state.Pi = newPi;
+            if (! this.areTheSamePolicies(oldPi, newPi)) isStable = false;
         });
+
+        return isStable;
     },
 
-    act: function() {
+    areTheSamePolicies: function(p1, p2) {
+        // compare two policies and see if they are the same
+        if (p1.length !== p2.length) return false;
+
+        const sp1 = p1.sort();
+        const sp2 = p2.sort();
+        for (let i=0; i < sp1,length; i++) {
+            if (sp1[i] !== sp2[i]) return false;
+        }
+        return true;
+    },
+
+    iteratePolicy: function() {
         this.evaluatePolicy();
+        let isStable = this.updatePolicy();
+        return isStable;
+    },
+
+    iterateValue: function() {
+        const theta = 1e-6;     // a cutoff
+
+        let currentDelta = 0;
+        this.env.states.forEach((state) => {
+            if (state.Pi.length === 0) return;
+
+            let oldV = state.V;
+            let maxV = null;
+            state.allowedActions.forEach((action) => {
+                let [reward, s1] = this.env.gotoNextState(state, action);
+                let newV = reward + this.gamma * s1.V;
+                if (maxV === null || maxV < newV) {
+                    maxV = newV;
+                    // state.Pi = [action];
+                }
+            });
+            currentDelta = Math.max(currentDelta, Math.abs(maxV - oldV));
+            state.V = maxV;
+        });
+
+        this.numValueIterations += 1;
+        const isStable = currentDelta < theta;
+        return isStable;
     }
+
 
     // part of value iteration
 
