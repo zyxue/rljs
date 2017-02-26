@@ -44,10 +44,10 @@ class Grid extends Component {
                               handleCellClick={handleCellClick} />;
             } else {
                 return <Cell  key={state.id}
-                              state={state}
-                              arrowHeadDefId={arrowHeadDefId}
-                              handleClick={handleCellClick.bind(this, state.id)}
-                              legCtrl={legendsCtrl} />;
+                           state={state}
+                           arrowHeadDefId={arrowHeadDefId}
+                           handleClick={handleCellClick.bind(this, state.id)}
+                           legCtrl={legendsCtrl} />;
             }
         });
 

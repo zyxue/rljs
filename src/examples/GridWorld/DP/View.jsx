@@ -47,29 +47,36 @@ class View extends Component {
          * this.setState({selectedStateId: stateId});*/
     }
 
-    handleClick(action, event) {
-        /* console.log(event);
-         * console.log(arguments);*/
-        /* for (let i=0; i< 100; i++) {
-         *     this.state.agent.learn();
-         * };*/
+    /* handleClick(action, event) {
+     *     if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
+     *     else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
+     *     else if (action === 'reset') {this.state.agent.reset();}
+     *     else {this.state.agent.learn();}
 
-        if (action === 'evalPolicy') {this.state.agent.evaluatePolicy();}
-        else if (action === 'updatePolicy') {this.state.agent.updatePolicy();}
-        else if (action === 'reset') {this.state.agent.reset();}
-        else {this.state.agent.learn();}
-
+     *     this.setState({agent: this.state.agent});
+     * }*/
+    
+    handleClick(action) {
+        switch(action) {
+            case 'evaluatePolicy':
+                this.state.agent.evaluatePolicy();
+                break;
+            case 'updatePolicy':
+                this.state.agent.updatePolicy();
+                break;
+            default:
+                console.log('action unspecified or unrecognized: ', action);
+        }
         this.setState({agent: this.state.agent});
     }
 
     render() {
         return (
             <div>
-
                 <ButtonToolbar>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evalPolicy')}>Eval Policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evaluatePolicy')}>Evaluate Policy</Button>
                     <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update Policy</Button>
+                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'learn')}>Learn</Button>
                     <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
                 </ButtonToolbar>
 

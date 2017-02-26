@@ -32,31 +32,30 @@ DPAgent.prototype = {
         this.env.states.forEach(function(state) {
             state.V = 0;
             // could store multiple actions if they are of the same value
-            state.PI = state.allowedActions;
+            state.Pi = state.allowedActions;
         });
     },
 
     evaluatePolicy: function() {
         const theta = 1e-3;     // a cutoff
-        let currentDelta = 0;
         while (true) {
+            let currentDelta = 0;
             this.env.states.forEach((state) => {
                 // could be a cliff or something
-                if (state.PI.length === 0) return;
+                if (state.Pi.length === 0) return;
                 let oldV = state.V;
-                // console.debug('action, ', state.id, state.PI);
+                // console.debug('action, ', state.id, state.Pi);
                 // probability of taking each action
                 let newV = 0;
-                let prob = 1 / state.PI.length;
-                state.PI.forEach((action) => {
+                let prob = 1 / state.Pi.length;
+                state.Pi.forEach((action) => {
                     let [reward, s1] = this.env.gotoNextState(state, action);
                     newV += prob * (reward + this.gamma * s1.V);
                 });
-                console.log(newV);
-                let currentDelta = Math.max(currentDelta, Math.abs(newV - oldV));
+                currentDelta = Math.max(currentDelta, Math.abs(newV - oldV));
                 state.V = newV;
             });
-
+            // console.debug(currentDelta);
             if (currentDelta < theta) {break;}
         }
         this.numPolicyEvaluations += 1;
@@ -87,7 +86,7 @@ DPAgent.prototype = {
                 }
             });
 
-            state.PI = actionsToMaxVals;
+            state.Pi = actionsToMaxVals;
         });
     },
 

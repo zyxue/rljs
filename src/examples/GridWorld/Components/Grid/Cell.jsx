@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
-import StateIdTxt from './StateIdTxt.jsx';
+import StateValueTxt from './StateValueTxt.jsx';
+import PiBasedPolicyArrows from './PiBasedPolicyArrows.jsx';
 import {genRGBColorString} from '../../utils.js';
 
 // A basic clickable cell like below, inherited to more complicated cell types
@@ -35,14 +36,21 @@ class Cell extends Component {
         const height = ymax - ymin;
         const width = xmax - xmin;
         const fillColor = genRGBColorString(state.V);
+        /* 
+         *                 {legCtrl.stateCoord ? <StateCoordTxt  x={xmin} y={ymin} coordX={state.x} coordY={state.y} />      : null}
+         *                 {legCtrl.stateId    ? <StateValueTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
+         *                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
+         *                 {legCtrl.policy     ? <PolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} /> : null}
+         * */
 
         return (
             <g className="cell">
                 {legCtrl.stateCoord ? <StateCoordTxt  x={xmin} y={ymin} coordX={state.x} coordY={state.y} />      : null}
-                {legCtrl.stateId    ? <StateIdTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
+                {legCtrl.stateId    ? <StateValueTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
-                {legCtrl.policy     ? <PolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} /> : null}
-                {<StateIdTxt     x={xmax} y={ymin} stateId={state.V} />}
+                {<PiBasedPolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} />}
+
+                {<StateValueTxt     x={xmax} y={ymin} stateId={state.V.toPrecision(3)} />}
                 <rect x={xmin}
                       y={ymin}
                       height={height}
