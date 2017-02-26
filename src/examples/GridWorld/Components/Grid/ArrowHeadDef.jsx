@@ -16,11 +16,7 @@ class ArrowHeadDef extends Component {
                     markerWidth="3"
                     markerHeight="4"
                     orient="auto">
-                    <path
-                        stroke="black" 
-                        fill="black"
-                        fillOpacity="1"
-                        d="M 0,0 V 4 L3,2 Z"></path>
+                    <path fill="black" d="M 0,0 V 4 L3,2 Z"/>
                 </marker>
             </defs>
         );
