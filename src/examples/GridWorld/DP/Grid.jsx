@@ -20,7 +20,7 @@ class Grid extends Component {
     }
 
     render () {
-        const {height, width, agent, legendsCtrl, selectedState, handleCellClick} = this.props;
+        const {height, width, agent, legendsCtrl, selectedStateId, handleCellClick} = this.props;
 
         // add this to make the border look more symmetric as border lines
         // between neighbouring cells are drawn multiple times
@@ -51,7 +51,10 @@ class Grid extends Component {
             }
         });
 
-        // {selectedState ? <SelectedState coords={selectedState.coords} /> : null}
+        let selectedState = null;
+        if (selectedStateId !== null) {
+            selectedState = <SelectedState coords={agent.env.states[selectedStateId].coords} />;
+        }
 
         return (
             <div>
@@ -59,6 +62,7 @@ class Grid extends Component {
                     {frame}
                     <StartingState coords={agent.env.getStartingState().coords} />
                     <TerminalState coords={agent.env.getTerminalState().coords} />
+                    {selectedState}
                     <ArrowHeadDef markerId={arrowHeadDefId} />
                     {grid}
                 </svg>
@@ -68,6 +72,7 @@ class Grid extends Component {
 }
 
 Grid.propTypes = {
+    selectedStateId: PropTypes.number
 };
 
 Grid.defaultProps = {

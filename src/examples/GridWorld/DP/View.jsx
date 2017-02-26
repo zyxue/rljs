@@ -23,30 +23,43 @@ class View extends Component {
             agent: agent,
             env: env,
 
-            /* selectedStateId: null,
-
-             * legendsCtrl: {
-             *     qValue: false,
-             *     stateId: true,
-             *     stateCoord: false,
-             *     reward: true,
-             *     policy: false, // show policy as arrows
-             *     etrace: true
-             * }*/
+            selectedStateId: null,
+            /* 
+             *             legendsCtrl: {
+             *                 qValue: false,
+             *                 stateId: true,
+             *                 stateCoord: false,
+             *                 reward: true,
+             *                 policy: false, // show policy as arrows
+             *                 etrace: true
+             *             }*/
         };
     }
 
-    updateSelectedStateId(stateId) {
-        console.log('abc: ' + stateId);
-        /* if (this.state.selectedStateId !== null) {
-         *     if (stateId === this.state.selectedStateId) {
-         *         this.setState({selectedStateId: null});
-         *         return;
-         *     }
-         * }
-         * this.setState({selectedStateId: stateId});*/
+    // DASHBOARD EVENTS HANDLERS
+    hdlAgentBtnClick(action) {
+        switch(action) {
+            case 'evaluatePolicy':
+                this.state.agent.evaluatePolicy();
+                break;
+            case 'updatePolicy':
+                this.state.agent.updatePolicy();
+                break;
+            case 'togglePolIter':
+                this.toggleLearning('polIter');
+                break;
+            case 'toggleValIter':
+                this.toggleLearning('valIter');
+                break;
+            case 'reset':
+                this.state.agent.reset();
+                break;
+            default:
+                console.log('action unspecified or unrecognized: ', action);
+        }
+        this.setState({agent: this.state.agent});
     }
-    
+
     isLearning() {
         // check if learning is already going on
         return this.state.intervalId === undefined? false : true;
@@ -56,9 +69,9 @@ class View extends Component {
         const actingRate = 25;
         let intervalId = setInterval (() => {
             let isStable = true;
-            if (key == 'polIter') {
+            if (key === 'polIter') {
                 isStable = this.state.agent.iteratePolicy();
-            } else if (key == 'valIter') {
+            } else if (key === 'valIter') {
                 isStable = this.state.agent.iterateValue();
             } else {
                 console.error('unknown learning method: ' + key);
@@ -84,48 +97,44 @@ class View extends Component {
         }
     }
 
-    handleClick(action) {
-        switch(action) {
-            case 'evaluatePolicy':
-                this.state.agent.evaluatePolicy();
-                break;
-            case 'updatePolicy':
-                this.state.agent.updatePolicy();
-                break;
-            case 'togglePolIter':
-                this.toggleLearning('polIter');
-                break;
-            case 'toggleValIter':
-                this.toggleLearning('valIter');
-                break;
-            case 'reset':
-                this.state.agent.reset();
-                break;
-            default:
-                console.log('action unspecified or unrecognized: ', action);
+    hdlCellBtnClick(key) {
+        console.debug('clicked ' + key);
+    }
+
+    hdlCellRewardAdjustment() {
+        console.debug('sliding... ');
+    }
+
+    // GRID EVENTS HANDLERS
+    hdlCellClick(stateId) {
+        this.selectedStateId = stateId;
+        if (this.state.selectedStateId !== null) {
+            if (stateId === this.state.selectedStateId) {
+                this.setState({selectedStateId: null});
+                return;
+            }
         }
-        this.setState({agent: this.state.agent});
+        this.setState({selectedStateId: stateId});
     }
 
     render() {
         return (
             <div>
-                <div># policy iterations: {this.state.agent.numPolicyIterations}</div>
-                <div># value iterations: {this.state.agent.numValueIterations}</div>
-                <ButtonToolbar>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'evaluatePolicy')}>Evaluate policy</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'updatePolicy')}>Update policy</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'togglePolIter')}>Toggle policy iteration</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'toggleValIter')}>Toggle value iteration</Button>
-                    <Button bsStyle='primary' onClick={this.handleClick.bind(this, 'reset')}>Reset</Button>
-                </ButtonToolbar>
+                <Dashboard agent={this.state.agent}
+                           hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
+                           selectedStateId={this.state.selectedStateId}
+                           hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
+                           hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
+                />
 
                 <hr/>
+
                 <Grid height={600}
                       width={700}
                       id="grid-TD-control"
                       agent={this.state.agent}
-                      handleCellClick={this.updateSelectedStateId}
+                      selectedStateId={this.state.selectedStateId}
+                      handleCellClick={this.hdlCellClick.bind(this)}
                 />
 
             <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
@@ -137,7 +146,7 @@ class View extends Component {
 
         /* legendsCtrl={this.state.legendsCtrl}
          * selectedState={this.state.selectedState}
-         * updateSelectedStateId={this.updateSelectedStateId.bind(this)}*/
+         * setSelectedStateId={this.setSelectedStateId.bind(this)}*/
 
     }
 }

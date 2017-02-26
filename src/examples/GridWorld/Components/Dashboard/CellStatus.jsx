@@ -3,22 +3,31 @@ import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 
 class CellStatus extends Component {
-    render () {
-        let {selectedState, setSelectedStateAs, adjustSelectedStateReward} = this.props;
-        let disabled = selectedState === null? true: false;
-        let sliderReward = selectedState === null? 0: selectedState.reward;
+    setBtn(key, label) {
+        let {handleClick, disabled} = this.props;
+        return (
+            <Button key={key}
+                    disabled={disabled}
+                    bsStyle='warning'
+                    bsSize='xsmall'
+                    onClick={handleClick.bind(this, key)}>
+                {label}
+            </Button>
+        );
+    }
 
-        let buttons = [
-            {key: 'startingState', text: 'Starting state'},
-            {key: 'terminalState', text: 'Terminal state'},
-            {key: 'cliff', text: 'Cliff'}
-        ].map((obj) => {
-            let {key, text} = obj;
-            {/* bind() seems to have to be used everytime the function is passed */}
-            return <Button key={key}
-                           disabled={disabled}
-                           bsStyle='warning' bsSize='xsmall'
-                           onClick={setSelectedStateAs.bind(this, key)}>{text}</Button>
+    render() {
+        let {handleSlide, slideVal, disabled} = this.props;
+        // let sliderReward = selectedState === null? 0: selectedState.reward;
+
+        let btnData = [
+            ['startingState', 'Starting state'],
+            ['terminalState', 'Terminal state'],
+            ['cliff', 'Cliff']
+        ];
+
+        let btns = btnData.map(([key, label]) => {
+            return this.setBtn(key, label);
         });
 
         return (
@@ -26,7 +35,7 @@ class CellStatus extends Component {
                 <h5>Cell: </h5>
                 <div className='dashboard-container'>
                     <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
-                        {buttons}
+                        {btns}
                     </ButtonToolbar>
                 </div>
 
@@ -34,8 +43,8 @@ class CellStatus extends Component {
                     <Col className="nopadding" md={3}>Adjust reward: </Col>
                     <Col className="slider-container selected-reward" md={6}>
                         <input className='slider'
-                               type="range" min="-1" max="1" disabled={disabled} value={sliderReward}
-                               step="0.01" onChange={adjustSelectedStateReward.bind(this)}/>
+                               type="range" min="-1" max="1" disabled={disabled} value={slideVal}
+                               step="0.01" onChange={handleSlide.bind(this)}/>
                     </Col>
                 </div>
             </div>

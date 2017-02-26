@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 
-class TerminatingState extends Component {
+class SelectedState extends Component {
     render() {
         const {xmin, ymin, xmax, ymax} = this.props.coords;
         const x = xmin;
@@ -21,7 +21,7 @@ class TerminatingState extends Component {
     }
 }
 
-TerminatingState.propTypes = {
+SelectedState.propTypes = {
     coords: React.PropTypes.shape({
         xmin: PropTypes.number,
         ymin: PropTypes.number,
@@ -32,4 +32,4 @@ TerminatingState.propTypes = {
     }).isRequired
 };
 
-export default TerminatingState;
+export default SelectedState;
