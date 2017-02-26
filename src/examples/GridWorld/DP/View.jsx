@@ -98,7 +98,39 @@ class View extends Component {
     }
 
     hdlCellBtnClick(key) {
-        console.debug('clicked ' + key);
+        const env = this.state.env;
+        const st = env.states[this.state.selectedStateId];
+        switch(key) {
+            case 'startingState':
+                this.setSelStateAsStartingState(st, env);
+                break;
+            case 'terminalState':
+                this.setSelStateAsTerminalState(st, env);
+                break;
+            case 'cliff':
+                this.setSelStateAsCliff(st, env);
+                break;
+            default:
+                console.error('unrecognized key: ', key);
+        }
+        this.setState({env: env});
+    }
+
+    setSelStateAsStartingState(st, env) {
+        st.isCliff = false;
+        env.startingStateId = st.id;
+    }
+
+    setSelStateAsTerminalState(st, env) {
+        env.getTerminalState().reward = 0;
+        st.isCliff = false;
+        env.terminalStateId = st.id;
+        env.getTerminalState().reward = 1;
+    }
+
+    setSelStateAsCliff(st, env) {
+        if (st.id !== env.getStartingState().id && st.id !== env.getTerminalState().id)
+            st.isCliff = !st.isCliff;
     }
 
     hdlCellRewardAdjustment() {

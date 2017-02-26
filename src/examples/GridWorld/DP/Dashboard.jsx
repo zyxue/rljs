@@ -33,8 +33,8 @@ class Dashboard extends Component {
                 </ButtonToolbar>
 
                 <CellStatus disabled={selectedStateId === null ? true: false}
-                            handleClick={hdlCellBtnClick}
-                            handleSlide={hdlCellRewardAdjustment}
+                            handleClick={hdlCellBtnClick.bind(this)}
+                            handleSlide={hdlCellRewardAdjustment.bind(this)}
                 />
             </div>
         );
