@@ -82,12 +82,15 @@ class View extends Component {
         const actingRate = 10;
         let intervalId = setInterval (() => {
             let delta;
-            if (key === 'polEval') {
-                delta = this.state.agent.evaluatePolicySweep();
-            } else if (key === 'valFuncOptim') {
-                delta = this.state.agent.optimizeValueFunctionSweep();
-            } else {
-                console.error('unknown learning method: ' + key);
+            switch (key) {
+                case 'polEval':
+                    delta = this.state.agent.evaluatePolicySweep();
+                    break;
+                case 'valFuncOptim':
+                    delta = this.state.agent.optimizeValueFunctionSweep();
+                    break;
+                default:
+                    console.error('unknown learning method: ' + key);
             }
             if (this.state.agent.isConverged(delta, 1e-6)) this.stopLearning();
             this.setState({agent: this.state.agent});
