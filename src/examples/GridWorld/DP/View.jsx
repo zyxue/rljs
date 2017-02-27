@@ -41,26 +41,36 @@ class View extends Component {
     }
 
     hdlAgentBtnClick(action) {
+        const A = this.state.agent;
         switch(action) {
-            case 'evaluatePolicy':
-                this.state.agent.evaluatePolicy();
+            case 'evalPolOneSweep':
+                A.evaluatePolicySweep();
                 break;
-            case 'updatePolicy':
-                this.state.agent.updatePolicy();
+            case 'evalPol':
+                A.evaluatePolicy();
                 break;
-            case 'togglePolIter':
-                this.toggleLearning('polIter');
+            case 'updatePol':
+                A.updatePolicy();
                 break;
-            case 'toggleValIter':
-                this.toggleLearning('valIter');
+            case 'polIter':
+                A.iteratePolicy();
+                break;
+            case 'valIter':
+                A.iterateValue();
+                break;
+            case 'togglePolEval':
+                this.toggleLearning('polEval');
+                break;
+            case 'toggleValFuncOptim':
+                this.toggleLearning('valFuncOptim');
                 break;
             case 'reset':
-                this.state.agent.reset();
+                A.reset();
                 break;
             default:
                 console.log('action unspecified or unrecognized: ', action);
         }
-        this.setState({agent: this.state.agent});
+        this.setState({agent: A});
     }
 
     isLearning() {
@@ -69,17 +79,17 @@ class View extends Component {
     }
 
     startLearning(key) {
-        const actingRate = 25;
+        const actingRate = 10;
         let intervalId = setInterval (() => {
-            let isStable = true;
-            if (key === 'polIter') {
-                isStable = this.state.agent.iteratePolicy();
-            } else if (key === 'valIter') {
-                isStable = this.state.agent.iterateValue();
+            let delta;
+            if (key === 'polEval') {
+                delta = this.state.agent.evaluatePolicySweep();
+            } else if (key === 'valFuncOptim') {
+                delta = this.state.agent.optimizeValueFunctionSweep();
             } else {
                 console.error('unknown learning method: ' + key);
             }
-            if (isStable) this.stopLearning();
+            if (this.state.agent.isConverged(delta, 1e-6)) this.stopLearning();
             this.setState({agent: this.state.agent});
         }, actingRate);
         this.setState({intervalId: intervalId});

@@ -5,6 +5,8 @@ import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
 import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 
+import AgentBtns from './agentBtns.jsx';
+
 import './Dashboard.css';
 
 class Dashboard extends Component {
@@ -20,15 +22,10 @@ class Dashboard extends Component {
         } = this.props;
         return (
             <div>
-                <Col md={3}>
-                    <div># policy iter: {agent.numPolicyIterations};&nbsp;# value iter: {agent.numValueIterations}</div>
-                    <ButtonToolbar className="wrapped-buttons">
-                        <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'evaluatePolicy')}>Evaluate policy</Button>
-                        <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'updatePolicy')}>Update policy</Button>
-                        <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'togglePolIter')}>Toggle policy iteration</Button>
-                        <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'toggleValIter')}>Toggle value iteration</Button>
-                        <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'reset')}>Reset</Button>
-                    </ButtonToolbar>
+                <Col md={4}>
+                    <div># policy iterations sweeps: {agent.numPolEvalSweeps}</div>
+                    <div># value iterations sweeps: {agent.numValFuncOptimizationSweeps}</div>
+                    <AgentBtns handleClick={hdlAgentBtnClick} />
                 </Col>
 
                 <Col md={3}>
@@ -45,7 +42,7 @@ class Dashboard extends Component {
                     />
                 </Col>
 
-                <Col md={3}>
+                <Col className="wrapped-buttons" md={2}>
                     <LegendsCtrlButtons legendsCtrl={legendsCtrl} handleClick={toggleLegend.bind(this)} />
                 </Col>
 

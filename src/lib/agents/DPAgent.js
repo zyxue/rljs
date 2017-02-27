@@ -122,7 +122,7 @@ DPAgent.prototype = {
         if (p1Array.length !== p2Array.length) return false;
 
         for (let i=0; i < p1Array.length; i++) {
-            if (this.areTheSamplePoliciesPerState(p1Array[i], p2Array[i])) {
+            if (! this.areTheSamePoliciesPerState(p1Array[i], p2Array[i])) {
                 return false;   
             }
         }

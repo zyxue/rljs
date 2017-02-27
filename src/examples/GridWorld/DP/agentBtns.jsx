@@ -6,12 +6,12 @@ class AgentButtons extends Component {
     render() {
         const btnData = [
             ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
-            ['evalPol', 'Policy evaluatation (till convergence)'],
+            ['evalPol', 'Policy evaluation (till convergence)'],
             ['togglePolEval', 'Policy evaluation toggle'],
             ['toggleValFuncOptim', 'Value function optimization toggle'],
             ['updatePol', 'Update policy'],
             ['polIter', 'Policy iteration'],
-            ['vallIter', 'Value iteration'],
+            ['valIter', 'Value iteration'],
             ['reset', 'Reset'],
         ];
 
