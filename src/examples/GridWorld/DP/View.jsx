@@ -150,6 +150,12 @@ class View extends Component {
         this.setState({selectedState: st});
     }
 
+    toggleLegend(key) {
+        let legCtrl = this.state.legCtrl;
+        legCtrl[key] = !legCtrl[key];
+        this.setState({legCtrl: legCtrl});
+    }
+
     // GRID EVENTS HANDLERS
     hdlCellClick(stateId) {
         this.selectedStateId = stateId;
@@ -171,7 +177,8 @@ class View extends Component {
                            selectedStateId={this.state.selectedStateId}
                            hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
                            hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
-                           legCtrl={this.state.legCtrl}
+                           legendsCtrl={this.state.legCtrl}
+                           toggleLegend={this.toggleLegend.bind(this)}
                 />
 
                 <hr/>

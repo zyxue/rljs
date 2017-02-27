@@ -13,7 +13,9 @@ class LegendsCtrlButtons extends Component {
             {key: 'reward', text: 'Reward'},
             {key: 'policy', text: 'Policy'},
             {key: 'etrace', text: 'EligibilityTrace'}
-        ].map((obj) => {
+        ].filter((obj) => {
+            return legendsCtrl[obj.key] !== undefined;
+        }).map((obj) => {
             return (
                 <Button className="control legend-control" key={obj.key}
                         style={{backgroundColor: legendsCtrl[obj.key] ? '' : 'red'}}

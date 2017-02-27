@@ -19,7 +19,9 @@ class Dashboard extends Component {
                hdlAgentBtnClick,
                selectedStateId,
                hdlCellBtnClick,
-               hdlCellRewardAdjustment
+               hdlCellRewardAdjustment,
+               legendsCtrl,
+               toggleLegend
         } = this.props;
         return (
             <div>
@@ -42,6 +44,9 @@ class Dashboard extends Component {
                             handleClick={hdlCellBtnClick.bind(this)}
                             handleSlide={hdlCellRewardAdjustment.bind(this)}
                 />
+
+                <LegendsCtrlButtons legendsCtrl={legendsCtrl} handleClick={toggleLegend.bind(this)} />
+
             </div>
         );
 
