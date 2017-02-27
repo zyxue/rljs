@@ -1,13 +1,7 @@
 import React, {Component} from 'react';
-import {Row, Col, Button, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
+import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
-/* import NumberInputTag from './NumberInputTag.jsx';
- * import SelectTag from './SelectTag.jsx';
- * import {GreekLetterParams, OtherParams} from './Params.jsx';*/
-
-import AgentStatus from '../Components/Dashboard/AgentStatus.jsx';
 import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
-import UserCtrlButtons from '../Components/Dashboard/UserCtrlButtons.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
 import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 

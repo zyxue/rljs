@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-/* import Cell from './Cell.jsx';*/
 import Cell from '../Components/Grid/Cell.jsx';
 import Frame from '../Components/Grid/Frame.jsx';
 import Cliff from '../Components/Grid/Cliff.jsx';
@@ -8,8 +7,7 @@ import StartingState from '../Components/Grid/StartingState.jsx';
 import TerminalState from '../Components/Grid/TerminalState.jsx';
 import SelectedState from '../Components/Grid/SelectedState.jsx';
 import ArrowHeadDef from '../Components/Grid/ArrowHeadDef.jsx';
-import Agent from '../Components/Grid/Agent.jsx';
-import {calcCoords, genRGBColorString} from '../utils.js';
+import {calcCoords} from '../utils.js';
 
 
 class Grid extends Component {

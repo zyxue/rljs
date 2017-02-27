@@ -1,21 +1,16 @@
-import React, {Component, PropTypes} from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import React, {Component} from 'react';
+import {Row, Col} from 'react-bootstrap';
 
-
-import Grid from './Grid.jsx';
-import {DPAgent} from '../../../lib/Reinforce-js';
 import Env from '../Env.js';
-
-/* import Control from '../Base/Control.jsx';*/
-import Line from '../Components/Plot/Line.jsx';
+import {DPAgent} from '../../../lib/Reinforce-js';
 
 import Dashboard from './Dashboard.jsx';
-
+import Grid from './Grid.jsx';
+import Line from '../Components/Plot/Line.jsx';
 
 class View extends Component {
     constructor() {
         super();
-        this.allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10];
         let env = new Env();
         let agent = new DPAgent(env);
 
@@ -218,21 +213,12 @@ class View extends Component {
                     </Col>
                 </Row>
 
-
-
-
-
             <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
             <p><strong>Value  itertion</strong> is basically continuous update of value functions till convergene, the one step of policy update will result in the optimal policy</p>
             <p>In general, value itertion is much slower that policy iteration. In other words, policy converges much faster than value functions. In the case of gridword, the former takes over 100 iteration while the later takes less than 10.</p>
 
             </div>
         );
-
-        /* legendsCtrl={this.state.legendsCtrl}
-         * selectedState={this.state.selectedState}
-         * setSelectedStateId={this.setSelectedStateId.bind(this)}*/
-
     }
 }
 
