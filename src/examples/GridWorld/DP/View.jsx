@@ -7,7 +7,7 @@ import {DPAgent} from '../../../lib/Reinforce-js';
 import Env from '../Env.js';
 
 /* import Control from '../Base/Control.jsx';*/
-/* import Line from '../Base/Line.jsx';*/
+import Line from '../Components/Plot/Line.jsx';
 
 import Dashboard from './Dashboard.jsx';
 
@@ -171,26 +171,58 @@ class View extends Component {
     render() {
         return (
             <div>
-                <Dashboard agent={this.state.agent}
-                           hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
-                           updateEnv={this.updateEnv.bind(this)}
-                           selectedStateId={this.state.selectedStateId}
-                           hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
-                           hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
-                           legendsCtrl={this.state.legCtrl}
-                           toggleLegend={this.toggleLegend.bind(this)}
-                />
+                <Row className="dashboard">
+                    <Dashboard agent={this.state.agent}
+                               hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
+                               updateEnv={this.updateEnv.bind(this)}
+                               selectedStateId={this.state.selectedStateId}
+                               hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
+                               hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
+                               legendsCtrl={this.state.legCtrl}
+                               toggleLegend={this.toggleLegend.bind(this)}
+                    />
+                </Row>
 
                 <hr/>
 
-                <Grid height={600}
-                      width={700}
-                      id="grid-TD-control"
-                      agent={this.state.agent}
-                      selectedStateId={this.state.selectedStateId}
-                      handleCellClick={this.hdlCellClick.bind(this)}
-                      legendsCtrl={this.state.legCtrl}
-                />
+                <Row>
+                    <Col className='grid'  xs={12} md={8} >
+                        <Grid height={600}
+                              width={700}
+                              id="grid-TD-control"
+                              agent={this.state.agent}
+                              selectedStateId={this.state.selectedStateId}
+                              handleCellClick={this.hdlCellClick.bind(this)}
+                              legendsCtrl={this.state.legCtrl}
+                        />
+                    </Col>
+                    <Col className='plots' xs={12} md={4} >
+                        <Line
+                            height={150}
+                            width={300}
+                            margin={{top:0, left: 40, bottom:30}}
+                            id={'policy-iteration-delta'}
+                            data={this.state.agent.deltasPolIter}
+                            xlabel={'# sweeps'}
+                            ylabel={'pol iter delta'}
+                        />
+
+
+                        <Line
+                            height={150}
+                            width={300}
+                            margin={{top:0, left: 40, bottom:30}}
+                            id={'value-iteration-delta'}
+                            data={this.state.agent.deltasValIter}
+                            xlabel={'# sweeps'}
+                            ylabel={'val iter delta'}
+                        />
+                    </Col>
+                </Row>
+
+
+
+
 
             <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
             <p><strong>Value  itertion</strong> is basically continuous update of value functions till convergene, the one step of policy update will result in the optimal policy</p>

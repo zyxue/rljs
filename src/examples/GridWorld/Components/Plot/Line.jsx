@@ -99,7 +99,7 @@ class Line extends Component {
 
     render () {
         return (
-            <div ref="lineDiv"></div>
+            <div className="plot" ref="lineDiv"></div>
         );
     }
 }

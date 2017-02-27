@@ -1,7 +1,7 @@
 /* http://bl.ocks.org/benjchristensen/2579599 */
 
 /* tell the SVG path to be a thin blue line without any area fill */
-path.plot {
+.plot path {
 		stroke: steelblue;
 		stroke-width: 1;
 		fill: none;                 /*this is key*/

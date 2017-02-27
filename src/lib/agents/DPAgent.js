@@ -25,6 +25,8 @@ const DPAgent = function(env, {gamma=0.95, batchSize=200}={}) {
 DPAgent.prototype = {
     reset: function() {
         this.resetValueFunction();
+        this.deltasPolIter = [];
+        this.deltasValIter = [];
         this.numPolicyIterations = 0;
         this.numValueIterations = 0;
     },
@@ -56,6 +58,7 @@ DPAgent.prototype = {
                 state.V = newV;
             });
             // console.debug(currentDelta);
+            this.deltasPolIter.push(currentDelta);
             if (currentDelta < THETA) {break;}
         }
         this.numPolicyIterations += 1;
@@ -133,6 +136,7 @@ DPAgent.prototype = {
             state.V = maxV;
         });
 
+        this.deltasValIter.push(currentDelta);
         this.numValueIterations += 1;
         const isStable = currentDelta < THETA;
         return isStable;
