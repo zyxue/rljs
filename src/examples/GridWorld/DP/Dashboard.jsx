@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
+import AgentExperience from '../Components/Dashboard/AgentExperience.jsx';
 import AgentBtns from '../Components/Dashboard/AgentBtns.jsx';
 import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
@@ -20,6 +21,11 @@ class Dashboard extends Component {
                toggleLegend
         } = this.props;
 
+        const agentExperiData = [
+            ['# policy iterations sweeps', agent['numPolEvalSweeps']],
+            ['# value iterations sweeps', agent['numValFuncOptimizationSweeps']],
+        ];
+
         const agentBtnsData = [
             ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
             ['evalPol', 'Policy evaluation (till convergence)'],
@@ -34,8 +40,7 @@ class Dashboard extends Component {
         return (
             <div>
                 <Col md={4}>
-                    <div># policy iterations sweeps: {agent.numPolEvalSweeps}</div>
-                    <div># value iterations sweeps: {agent.numValFuncOptimizationSweeps}</div>
+                    <AgentExperience experienceData={agentExperiData} />
                     <AgentBtns btnsData={agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                 </Col>
 
