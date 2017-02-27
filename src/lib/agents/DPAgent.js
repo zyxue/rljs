@@ -27,8 +27,12 @@ DPAgent.prototype = {
         this.resetValueFunction();
         this.deltasPolIter = [];
         this.deltasValIter = [];
-        this.numPolicyIterations = 0;
-        this.numValueIterations = 0;
+        this.numPolEvalSweeps = 0;
+        // this.numPolEvals = 0;
+        // this.numPolicyUpdates = 0;
+        // this.numPolicyIters = 0;
+        this.numValFuncOptimizationSweeps = 0;
+
     },
 
     resetValueFunction: function() {
@@ -39,37 +43,39 @@ DPAgent.prototype = {
         });
     },
 
+    evaluatePolicySweep: function() {
+        let delta = 0;
+        this.env.states.forEach((state) => {
+            // could be a cliff or something
+            if (state.Pi.length === 0) return;
+            let oldV = state.V;
+            // console.debug('action, ', state.id, state.Pi);
+            // probability of taking each action
+            let newV = 0;
+            let prob = 1 / state.Pi.length;
+            state.Pi.forEach((action) => {
+                let [reward, s1] = this.env.gotoNextState(state, action);
+                newV += prob * (reward + this.gamma * s1.V);
+            });
+            delta = Math.max(delta, Math.abs(newV - oldV));
+            state.V = newV;
+        });
+
+        this.numPolEvalSweeps += 1;
+        this.deltasPolIter.push(delta);
+        return delta;
+    },
+
     evaluatePolicy: function() {
         while (true) {
-            let currentDelta = 0;
-            this.env.states.forEach((state) => {
-                // could be a cliff or something
-                if (state.Pi.length === 0) return;
-                let oldV = state.V;
-                // console.debug('action, ', state.id, state.Pi);
-                // probability of taking each action
-                let newV = 0;
-                let prob = 1 / state.Pi.length;
-                state.Pi.forEach((action) => {
-                    let [reward, s1] = this.env.gotoNextState(state, action);
-                    newV += prob * (reward + this.gamma * s1.V);
-                });
-                currentDelta = Math.max(currentDelta, Math.abs(newV - oldV));
-                state.V = newV;
-            });
-            // console.debug(currentDelta);
-            this.deltasPolIter.push(currentDelta);
-            if (currentDelta < THETA) {break;}
+            let delta = this.evaluatePolicySweep();
+            if (this.isConverged(delta, THETA)) break;
         }
-        this.numPolicyIterations += 1;
     },
 
     updatePolicy: function() {
-        let isStable = true;
         this.env.states.forEach((state) => {
             if (state.allowedActions.length === 0) return;
-
-            let oldPi = state.Pi;
 
             let maxVal = null;
             let actionVals = [];
@@ -91,15 +97,39 @@ DPAgent.prototype = {
                 }
             });
 
-            let newPi = actionsToMaxVals;
-            state.Pi = newPi;
-            if (! this.areTheSamePolicies(oldPi, newPi)) isStable = false;
+            state.Pi = actionsToMaxVals;
         });
-
-        return isStable;
     },
 
-    areTheSamePolicies: function(p1, p2) {
+    iteratePolicy: function() {
+        while (true) {
+            this.evaluatePolicy();
+
+            // not really care about efficiency of the code for now
+            const currentPi = this.collectPolicies();
+            this.updatePolicy();
+            const newPi = this.collectPolicies();
+
+            if (this.areTheSamePolicies(currentPi, newPi)) break;
+        }
+    },
+
+    collectPolicies: function() {
+        return this.env.states.map((st) => {return st.Pi;});        
+    },
+
+    areTheSamePolicies: function(p1Array, p2Array) {
+        if (p1Array.length !== p2Array.length) return false;
+
+        for (let i=0; i < p1Array.length; i++) {
+            if (this.areTheSamplePoliciesPerState(p1Array[i], p2Array[i])) {
+                return false;   
+            }
+        }
+        return true;
+    },
+
+    areTheSamePoliciesPerState: function(p1, p2) {
         // compare two policies and see if they are the same
         if (p1.length !== p2.length) return false;
 
@@ -111,14 +141,8 @@ DPAgent.prototype = {
         return true;
     },
 
-    iteratePolicy: function() {
-        this.evaluatePolicy();
-        let isStable = this.updatePolicy();
-        return isStable;
-    },
-
-    iterateValue: function() {
-        let currentDelta = 0;
+    optimizeValueFunctionSweep: function() {
+        let delta = 0;
         this.env.states.forEach((state) => {
             if (state.Pi.length === 0) return;
 
@@ -132,14 +156,29 @@ DPAgent.prototype = {
                     // state.Pi = [action];
                 }
             });
-            currentDelta = Math.max(currentDelta, Math.abs(maxV - oldV));
+            delta = Math.max(delta, Math.abs(maxV - oldV));
             state.V = maxV;
         });
 
-        this.deltasValIter.push(currentDelta);
-        this.numValueIterations += 1;
-        const isStable = currentDelta < THETA;
-        return isStable;
+        this.deltasValIter.push(delta);
+        this.numValFuncOptimizationSweeps += 1;
+        return delta;
+    },
+
+    optimizeValueFunction: function() {
+        while (true) {
+            let delta = this.optimizeValueFunctionSweep();
+            if (this.isConverged(delta, THETA)) break;
+        }
+    },
+
+    iterateValue: function() {
+        this.optimizeValueFunction();
+        this.updatePolicy();
+    },
+
+    isConverged: function(delta, cutoff) {
+        return delta < cutoff;
     }
 };
 
