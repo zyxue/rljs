@@ -15,7 +15,7 @@ class StateValueTxt extends Component {
                       textAnchor="start"
                       dominantBaseline="text-after-edge"
                       fontSize=".7em" fill="blue">
-                    v{stateValue.toPrecision(10)}
+                    v{stateValue.toPrecision(5)}
                 </text>
         );
     }

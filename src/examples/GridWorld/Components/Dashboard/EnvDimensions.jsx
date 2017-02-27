@@ -5,18 +5,18 @@ import SelectTag from './SelectTag.jsx';
 
 class EnvDimensions extends Component {
     render () {
-        let {env, updateEnv} = this.props;
+        let {env, updateEnv, dimOptions} = this.props;
 
-        let allowedDimensions = [3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
-            return {value:i, text:i}
+        let allowedDimensions = dimOptions.map((i) => {
+            return {value:i, text:i};
         });
 
         let numRowsParams = {
-            label: '# rows:', attr: 'numRows', options: allowedDimensions,
+            label: '# rows:', attr: 'numRows', options: allowedDimensions
         };
 
         let numColsParams = {
-            label: '# cols:', attr: 'numCols', options: allowedDimensions,
+            label: '# cols:', attr: 'numCols', options: allowedDimensions
         };
 
         return (
@@ -27,5 +27,10 @@ class EnvDimensions extends Component {
         );
     }
 }
+
+
+EnvDimensions.defaultProps = {
+    dimOptions: [3, 4, 5, 6, 7, 8, 9, 10]
+};
 
 export default EnvDimensions;

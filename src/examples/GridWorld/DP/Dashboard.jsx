@@ -15,10 +15,11 @@ import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 class Dashboard extends Component {
     render() {
         const {agent,
+               updateEnv,
                hdlAgentBtnClick,
                selectedStateId,
                hdlCellBtnClick,
-               hdlCellRewardAdjustment,
+               hdlCellRewardAdjustment
         } = this.props;
         return (
             <div>
@@ -31,6 +32,11 @@ class Dashboard extends Component {
                     <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'toggleValIter')}>Toggle value iteration</Button>
                     <Button bsStyle='primary' bsSize='xsmall' onClick={hdlAgentBtnClick.bind(this, 'reset')}>Reset</Button>
                 </ButtonToolbar>
+
+                <EnvStatus disabled={selectedStateId === null ? true: false}
+                           env={agent.env}
+                           updateEnv={updateEnv.bind(this)}
+                />
 
                 <CellStatus disabled={selectedStateId === null ? true: false}
                             handleClick={hdlCellBtnClick.bind(this)}

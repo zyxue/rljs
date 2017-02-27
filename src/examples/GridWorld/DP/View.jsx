@@ -34,6 +34,17 @@ class View extends Component {
     }
 
     // DASHBOARD EVENTS HANDLERS
+    updateEnv(attr, event) {
+        let agent = this.state.agent;
+        console.debug('updated ' + attr + ' to ' + event.target.value);
+        // data type is an issue!
+        agent.env[attr] = Number(event.target.value);
+        // resetting is important, don't forget! it resets all states.
+        agent.env.reset();
+        agent.reset();
+        this.setState({agent: agent});
+    }
+
     hdlAgentBtnClick(action) {
         switch(action) {
             case 'evaluatePolicy':
@@ -156,6 +167,7 @@ class View extends Component {
             <div>
                 <Dashboard agent={this.state.agent}
                            hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
+                           updateEnv={this.updateEnv.bind(this)}
                            selectedStateId={this.state.selectedStateId}
                            hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
                            hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
