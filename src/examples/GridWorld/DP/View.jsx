@@ -183,8 +183,6 @@ class View extends Component {
                     />
                 </Row>
 
-                <hr/>
-
                 <Row>
                     <Col className='grid'  xs={12} md={8} >
                         <Grid height={600}
