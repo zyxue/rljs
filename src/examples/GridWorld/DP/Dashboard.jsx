@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
+import AgentBtns from '../Components/Dashboard/AgentBtns.jsx';
 import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
 import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
-
-import AgentBtns from './agentBtns.jsx';
 
 import './Dashboard.css';
 
@@ -20,12 +19,24 @@ class Dashboard extends Component {
                legendsCtrl,
                toggleLegend
         } = this.props;
+
+        const agentBtnsData = [
+            ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
+            ['evalPol', 'Policy evaluation (till convergence)'],
+            ['togglePolEval', 'Policy evaluation toggle'],
+            ['toggleValFuncOptim', 'Value function optimization toggle'],
+            ['updatePol', 'Update policy'],
+            ['polIter', 'Policy iteration'],
+            ['valIter', 'Value iteration'],
+            ['reset', 'Reset'],
+        ];
+
         return (
             <div>
                 <Col md={4}>
                     <div># policy iterations sweeps: {agent.numPolEvalSweeps}</div>
                     <div># value iterations sweeps: {agent.numValFuncOptimizationSweeps}</div>
-                    <AgentBtns handleClick={hdlAgentBtnClick} />
+                    <AgentBtns btnsData={agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                 </Col>
 
                 <Col md={3}>

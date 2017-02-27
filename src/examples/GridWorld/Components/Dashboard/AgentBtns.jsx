@@ -1,21 +1,10 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {Col, Button, ButtonToolbar} from 'react-bootstrap';
 
 
 class AgentButtons extends Component {
     render() {
-        const btnData = [
-            ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
-            ['evalPol', 'Policy evaluation (till convergence)'],
-            ['togglePolEval', 'Policy evaluation toggle'],
-            ['toggleValFuncOptim', 'Value function optimization toggle'],
-            ['updatePol', 'Update policy'],
-            ['polIter', 'Policy iteration'],
-            ['valIter', 'Value iteration'],
-            ['reset', 'Reset'],
-        ];
-
-        const btns = btnData.map(([key, label]) => {
+        const btns = this.props.btnsData.map(([key, label]) => {
             return (
                 <Button key={key}
                         bsStyle='primary'
@@ -33,6 +22,11 @@ class AgentButtons extends Component {
         );
     }
 }
+
+
+AgentButtons.propTypes = {
+    btnsData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired
+};
 
 
 export default AgentButtons;
