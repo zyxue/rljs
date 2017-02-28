@@ -2,7 +2,8 @@ import {randi} from '../utils.js';
 
 
 let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
-                                 etraceType='accumulatingTrace'}={}) {
+                                 etraceType='accumulatingTrace',
+                                 batchSize=50}={}) {
     // store pointer to environment
     this.env = env;
 
@@ -15,10 +16,13 @@ let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7
     // Trace-decay parameter as in TD(λ)
     this.lambda = lambda;
 
+    // currently only one algorithm available for TD prediction
     this.learningAlgo = 'tdLambda';
+
     // accumulatingTrace or replacingTrace
     this.etraceType = etraceType;
 
+    this.batchSize = batchSize;
     this.reset();
 };
 
@@ -148,6 +152,7 @@ TDPredAgent.prototype = {
     },
 
     learnFromMultipleEpisodes: function(num) {
+        if (num === undefined) num = this.batchSize;
         for (let i = 0; i < num; i++) {
             this.learnFromOneEpisode();
         }

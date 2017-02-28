@@ -67,7 +67,7 @@ class TDPredView extends View {
                 A.learnFromOneEpisode();
                 break;
             case 'learnFromMultipleEpisodes':
-                A.learnFromMultipleEpisodes(20);
+                A.learnFromMultipleEpisodes();
                 break;
             case 'toggleTDLambda':
                 this.toggleLearning('tdLambda');

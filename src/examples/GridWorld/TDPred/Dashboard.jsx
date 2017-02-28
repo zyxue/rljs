@@ -48,6 +48,10 @@ class Dashboard extends Component {
                 spec: {label: 'λ = ', attr: 'lambda',  min: 0, max: 1, step: 0.01, currentVal: agent.lambda}
             },
             {
+                specType: 'number',
+                spec: {label: 'batchSize', attr: 'batchSize',  min: 0, max: 1, step: 0.01, hideValue: true, currentVal: agent.batchSize}
+            },
+            {
                 specType: 'select',
                 spec: {
                     label: 'etrace:',
