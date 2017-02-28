@@ -53,7 +53,7 @@ class Intro extends React.Component {
                         <ul>
                             <li>Act: take one action</li>
                             <li>Toggle: Take actions continously indefinitely</li>
-                            <li>Learn: Learn from one batch ({this.state.agent.batchSize}) of episodes</li>
+                            <li>Learn: Learn from one batch of episodes</li>
                         </ul>
 
 
