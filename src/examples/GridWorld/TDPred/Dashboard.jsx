@@ -30,7 +30,7 @@ class Dashboard extends Component {
             ['takeOneStep', 'Take one step'],
             ['toggleTDLambda', 'Toggle learning'],
             ['learnFromOneEpisode', 'Learn from one episode'],
-            ['learnFromMultipleEpisode', 'Learn from multiple episodes'],
+            ['learnFromMultipleEpisodes', 'Learn from multiple episodes'],
             ['reset', 'Reset'],
         ];
 

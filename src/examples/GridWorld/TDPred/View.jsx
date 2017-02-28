@@ -36,33 +36,43 @@ class TDPredView extends View {
 
     startLearning(key) {
         const actingRate = 10;
+        const A = this.state.agent;
         let intervalId = setInterval (() => {
+            console.debug('learning');
             switch (key) {
                 case 'tdLambda':
-                    this.state.agent.act();
+                    A.act();
                     break;
                 default:
                     console.error('unrecognized key: ', key);
             }
+            this.setState({agent: A});
         }, actingRate);
         this.setState({intervalId: intervalId});
     }
 
     hdlAgentBtnClick(action) {
+        const A = this.state.agent;
         switch(action) {
             case 'takeOneStep':
-                this.state.agent.act();
+                A.act();
                 break;
-            case 'to':
-                this.state.agent.act();
+            case 'learnFromOneEpisode':
+                A.learnFromOneEpisode();
+                break;
+            case 'learnFromMultipleEpisodes':
+                A.learnFromMultipleEpisodes(20);
+                break;
+            case 'toggleTDLambda':
+                this.toggleLearning('tdLambda');
                 break;
             case 'reset':
-                this.state.agent.reset();
+                A.reset();
                 break;
             default:
                 console.log('action unspecified or unrecognized: ', action);
         }
-        this.setState({agent: this.state.agent});
+        this.setState({agent: A});
     }
 
 

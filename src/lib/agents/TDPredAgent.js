@@ -2,7 +2,7 @@ import {randi} from '../utils.js';
 
 
 let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
-                                 etraceType='accumulatingTrace', batchSize=200, }={}) {
+                                 etraceType='accumulatingTrace'}={}) {
     // store pointer to environment
     this.env = env;
 
@@ -19,8 +19,6 @@ let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7
     // accumulatingTrace or replacingTrace
     this.etraceType = etraceType;
 
-    // for learning from multiple episodes in batch
-    this.batchSize = batchSize;
     this.reset();
 };
 
@@ -148,8 +146,8 @@ TDPredAgent.prototype = {
         this.act();
     },
 
-    learnFromBatchEpisodes: function() {
-        for (let i = 0; i < this.batchSize; i++) {
+    learnFromMultipleEpisodes: function(num) {
+        for (let i = 0; i < num; i++) {
             this.learnFromOneEpisode();
         }
     }
