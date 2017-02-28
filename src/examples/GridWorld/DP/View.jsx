@@ -18,7 +18,7 @@ class View extends Component {
             agent: agent,
             env: env,
             selectedStateId: null,
-            legCtrl: { // legends control
+            legendsCtrl: { // legends control
                 stateId: true,
                 stateCoord: false,
                 reward: true,
@@ -159,9 +159,9 @@ class View extends Component {
     }
 
     toggleLegend(key) {
-        let legCtrl = this.state.legCtrl;
+        let legCtrl = this.state.legendsCtrl;
         legCtrl[key] = !legCtrl[key];
-        this.setState({legCtrl: legCtrl});
+        this.setState({legendsCtrl: legCtrl});
     }
 
     // GRID EVENTS HANDLERS
@@ -186,7 +186,7 @@ class View extends Component {
                                selectedStateId={this.state.selectedStateId}
                                hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
                                hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
-                               legendsCtrl={this.state.legCtrl}
+                               legendsCtrl={this.state.legendsCtrl}
                                toggleLegend={this.toggleLegend.bind(this)}
                     />
                 </Row>
@@ -199,7 +199,7 @@ class View extends Component {
                               agent={this.state.agent}
                               selectedStateId={this.state.selectedStateId}
                               handleCellClick={this.hdlCellClick.bind(this)}
-                              legendsCtrl={this.state.legCtrl}
+                              legendsCtrl={this.state.legendsCtrl}
                         />
                     </Col>
                     <Col className='plots' xs={12} md={4} >

@@ -24,8 +24,7 @@ class TDPredView extends View {
             agent: agent,
             env: env,
             selectedStateId: null,
-            // legends control
-            legCtrl: {
+            legendsCtrl: {
                 stateId: true,
                 stateCoord: false,
                 reward: true,
@@ -94,7 +93,7 @@ class TDPredView extends View {
                                selectedStateId={this.state.selectedStateId}
                                hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
                                hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
-                               legendsCtrl={this.state.legCtrl}
+                               legendsCtrl={this.state.legendsCtrl}
                                toggleLegend={this.toggleLegend.bind(this)}
                     />
                 </Row>
@@ -107,7 +106,7 @@ class TDPredView extends View {
                               agent={this.state.agent}
                               selectedStateId={this.state.selectedStateId}
                               handleCellClick={this.hdlCellClick.bind(this)}
-                              legendsCtrl={this.state.legCtrl}
+                              legendsCtrl={this.state.legendsCtrl}
                         />
                     </Col>
 
