@@ -4,13 +4,13 @@ import {Row, Col} from 'react-bootstrap';
 import Env from '../Env.js';
 import {TDPredAgent} from '../../../lib/Reinforce-js';
 
-import View from '../DP/View.jsx';
-
-import Dashboard from './Dashboard.jsx';
-// use the same grid from DP since they are all for prediction only
-import Grid from '../DP/Grid.jsx';
 import Agent from '../Components/Grid/Agent.jsx';
-import Line from '../Components/Plot/Line.jsx';
+
+// use the same grid from DP since they are all for prediction only
+import View from '../DP/View.jsx';
+import Grid from '../DP/Grid.jsx';
+import Dashboard from './Dashboard.jsx';
+import Plots from './Plots.jsx';
 
 
 class TDPredView extends View {
@@ -111,27 +111,7 @@ class TDPredView extends View {
                     </Col>
 
                     <Col className='plots' xs={12} md={4} >
-                        plots placeholder
-                        {/* <Line
-                            height={150}
-                            width={300}
-                            margin={{top:0, left: 40, bottom:30}}
-                            id={'policy-iteration-delta'}
-                            data={this.state.agent.deltasPolIter}
-                            xlabel={'# sweeps'}
-                            ylabel={'pol iter delta'}
-                            />
-
-
-                            <Line
-                            height={150}
-                            width={300}
-                            margin={{top:0, left: 40, bottom:30}}
-                            id={'value-iteration-delta'}
-                            data={this.state.agent.deltasValIter}
-                            xlabel={'# sweeps'}
-                            ylabel={'val iter delta'}
-                            /> */}
+                        <Plots agent={this.state.agent} selectedStateId={this.state.selectedStateId} />
                     </Col>
                 </Row>
 
