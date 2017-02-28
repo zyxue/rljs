@@ -32,6 +32,7 @@ TDPredAgent.prototype = {
         // for keeping learning progress
         this.numEpisodesExperienced = 0;
         this.numStepsPerEpisode = []; // record how number decreases;
+        this.numTotalSteps = 0; // record how number decreases;
 
         // reset episode level variables
         this.resetEpisode();
@@ -104,8 +105,6 @@ TDPredAgent.prototype = {
         let [reward, s1] = this.env.gotoNextState(s0, a0);
         let a1 = this.chooseAction(s1);
 
-        this.numStepsCurrentEpisode += 1;
-
         let delta = reward + this.gamma * s1.V - s0.V;
         s0.Z = this.updateTrace(s0.Z, this.etraceType);
 
@@ -116,18 +115,25 @@ TDPredAgent.prototype = {
             st.epiHistZ.push(st.Z);
         });
 
-        if (this.env.isTerminal(s0)) {
-            this.numEpisodesExperienced += 1;
-            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
-            this.resetEpisode();
-        } else {
-            this.s0 = s1;
-            this.a0 = a1;
-        }
+        this.s0 = s1;
+        this.a0 = a1;
+    },
+
+    exit: function() {
+        // finish one episode
+        this.numEpisodesExperienced += 1;
+        this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+        this.resetEpisode();
     },
 
     act: function() {
-        this.tdLambdaAct();
+        if (this.env.isTerminal(this.s0)) {
+            this.exit();
+        } else {
+            this.tdLambdaAct();
+            this.numStepsCurrentEpisode += 1;
+            this.numTotalSteps += 1;
+        }
     },
 
     learnFromOneEpisode: function() {
