@@ -45,9 +45,7 @@ class Dashboard extends Component {
                 </Col>
 
                 <Col md={3}>
-                    <EnvStatus disabled={selectedStateId === null ? true: false}
-                               env={agent.env}
-                               updateEnv={updateEnv.bind(this)}
+                    <EnvStatus env={agent.env} updateEnvHandler={updateEnv.bind(this)}
                     />
                 </Col>
 
