@@ -5,6 +5,7 @@ import StateCoordTxt from './StateCoordTxt.jsx';
 import StateRewardTxt from './StateRewardTxt.jsx';
 import StateValueTxt from './StateValueTxt.jsx';
 import PiBasedPolicyArrows from './PiBasedPolicyArrows.jsx';
+import ETrace from './ETrace.jsx';
 
 import {genRGBColorString} from '../../utils.js';
 
@@ -40,12 +41,6 @@ class Cell extends Component {
         const height = ymax - ymin;
         const width = xmax - xmin;
         const fillColor = genRGBColorString(state.V);
-        /* 
-         *                 {legCtrl.stateCoord ? <StateCoordTxt  x={xmin} y={ymin} coordX={state.x} coordY={state.y} />      : null}
-         *                 {legCtrl.stateId    ? <StateValueTxt     x={xmax} y={ymin} stateId={state.id} />                     : null}
-         *                 {legCtrl.reward     ? <StateRewardTxt x={xmax} y={ymax} reward={state.reward} />                  : null}
-         *                 {legCtrl.policy     ? <PolicyArrows   state={state} arrowHeadDefId={this.props.arrowHeadDefId} /> : null}
-         * */
 
         return (
             <g className="cell">
@@ -67,6 +62,10 @@ class Cell extends Component {
 
                 {legendsCtrl.policy
                  ? <PiBasedPolicyArrows state={state} arrowHeadDefId={this.props.arrowHeadDefId} />
+                 : null}
+
+                {legendsCtrl.etrace
+                 ? <ETrace coords={state.coords} zVal={state.Z} />
                  : null}
 
                 <rect x={xmin}
