@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Row, Col, Button, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
 
 import AgentExperience from '../Components/Dashboard/AgentExperience.jsx';
-import AgentParams from '../Components/Dashboard/AgentParams.jsx';
+import Params from '../Components/Dashboard/Params.jsx';
 import AgentBtns from '../Components/Dashboard/AgentBtns.jsx';
 import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
@@ -29,7 +29,7 @@ class Dashboard extends Component {
             ['# total steps from all  episodes', agent.numTotalSteps]
         ];
 
-        let agentParamsSpec =             [
+        let agentParamSpecs = [
             // attr: the attribute to change of the agent
             {
                 specType: 'number',
@@ -75,16 +75,13 @@ class Dashboard extends Component {
                     <h5>Agent:</h5>
                     <ButtonToolbar className="wrapped-buttons">
                         <AgentExperience experienceData={agentExperiData} />
-                        <AgentParams spec={agentParamsSpec} changeHandler={updateAgent} />
+                        <Params specs={agentParamSpecs} changeHandler={updateAgent.bind(this)} />
                         <AgentBtns btnsData={agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                     </ButtonToolbar>
                 </Col>
 
                 <Col md={3}>
-                    <EnvStatus disabled={selectedStateId === null ? true: false}
-                               env={agent.env}
-                               updateEnv={updateEnv.bind(this)}
-                    />
+                    <EnvStatus env={agent.env} updateEnvHandler={updateEnv.bind(this)} />
                 </Col>
 
                 <Col md={3}>
