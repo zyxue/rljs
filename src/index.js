@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import App from './App';
 import GridWorldDPView        from './examples/GridWorld/DP/View.jsx';
-import GridWorldTDView        from './examples/GridWorld/TD/View.jsx';
+import GridWorldTDView        from './examples/GridWorld/TDPred/View.jsx';
 import GridWorldTDControlView from './examples/GridWorld/TDControl/View.jsx';
 import GridWorldDynaQView     from './examples/GridWorld/DynaQ/View.jsx';
 

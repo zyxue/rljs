@@ -7,16 +7,11 @@ import StartingState from '../Components/Grid/StartingState.jsx';
 import TerminalState from '../Components/Grid/TerminalState.jsx';
 import SelectedState from '../Components/Grid/SelectedState.jsx';
 import ArrowHeadDef from '../Components/Grid/ArrowHeadDef.jsx';
+import Agent from '../Components/Grid/Agent.jsx';
 import {calcCoords} from '../utils.js';
 
 
 class Grid extends Component {
-    propTypes: {
-        id: PropTypes.string,
-        height: PropTypes.number,
-        width: PropTypes.number
-    }
-
     render () {
         const {height, width, agent, legendsCtrl, selectedStateId, handleCellClick} = this.props;
 
@@ -54,6 +49,11 @@ class Grid extends Component {
             selectedState = <SelectedState coords={agent.env.states[selectedStateId].coords} />;
         }
 
+        // draw agent if it is model-free
+        let agentComp = null;
+        if (agent.s0 !== undefined)
+            agentComp = <Agent agentState={agent.s0} agentAction={agent.a0} />;
+
         return (
             <div>
                 <svg height={height} width={width}>
@@ -63,6 +63,7 @@ class Grid extends Component {
                     {selectedState}
                     <ArrowHeadDef markerId={arrowHeadDefId} />
                     {grid}
+                    {agentComp}
                 </svg>
             </div>
         );
@@ -70,6 +71,9 @@ class Grid extends Component {
 }
 
 Grid.propTypes = {
+    id: PropTypes.string,
+    height: PropTypes.number,
+    width: PropTypes.number,
     selectedStateId: PropTypes.number
 };
 

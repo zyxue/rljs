@@ -114,9 +114,9 @@ TDPredAgent.prototype = {
         let that = this;
         this.env.states.forEach((st, idx, arr) => {
             st.V += that.alpha * delta * st.Z;
-            st.Z *= that.gamma * that.lambda
+            st.Z *= that.gamma * that.lambda;
             st.epiHistZ.push(st.Z);
-        })
+        });
 
         if (this.env.isTerminal(s0)) {
             this.numEpisodesExperienced += 1;
@@ -129,7 +129,7 @@ TDPredAgent.prototype = {
     },
 
     act: function() {
-        this.tdLambdaAct()
+        this.tdLambdaAct();
     },
 
     learnFromOneEpisode: function() {
@@ -152,7 +152,7 @@ TDPredAgent.prototype = {
         for (let i = 0; i < this.batchSize; i++) {
             this.learnFromOneEpisode();
         }
-    },
+    }
 };
 
 export default TDPredAgent;
