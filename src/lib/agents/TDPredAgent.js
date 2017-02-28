@@ -114,25 +114,21 @@ TDPredAgent.prototype = {
             st.epiHistZ.push(st.Z);
         });
 
-        this.s0 = s1;
-        this.a0 = a1;
-    },
-
-    exit: function() {
-        // finish one episode
-        this.numEpisodesExperienced += 1;
-        this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
-        this.resetEpisode();
-    },
-
-    act: function() {
         if (this.env.isTerminal(this.s0)) {
-            this.exit();
+            // finish one episode
+            this.numEpisodesExperienced += 1;
+            this.numStepsPerEpisode.push(this.numStepsCurrentEpisode);
+            this.resetEpisode();
         } else {
-            this.tdLambdaAct();
+            this.s0 = s1;
+            this.a0 = a1;
             this.numStepsCurrentEpisode += 1;
             this.numTotalSteps += 1;
         }
+    },
+
+    act: function() {
+        this.tdLambdaAct();
     },
 
     learnFromOneEpisode: function() {
