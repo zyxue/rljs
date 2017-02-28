@@ -1,7 +1,7 @@
 import {randi} from '../utils.js';
 
 
-let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7,
+let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, lambda=0.7,
                                  etraceType='accumulatingTrace',
                                  batchSize=50}={}) {
     // store pointer to environment
@@ -11,8 +11,6 @@ let TDPredAgent = function(env, {alpha=0.01, gamma=0.95, epsilon=0.1, lambda=0.7
     this.alpha = alpha;
     // return discount factor
     this.gamma = gamma;
-    // for epsilon-greedy policy
-    this.epsilon = epsilon;
     // Trace-decay parameter as in TD(λ)
     this.lambda = lambda;
 
@@ -59,29 +57,8 @@ TDPredAgent.prototype = {
         return s0.allowedActions[randomInt];
     },
 
-    takeGreedyAction: function(s0) {
-        // take a random first action instead of [0] to avoid bias
-        let a0 = s0.allowedActions[randi(0, s0.allowedActions.length)];
-        // reward is not needed
-        let [_, s1] = this.env.gotoNextState(s0, a0);
-        let val = s1.V;
-        for (let i=1; i < s0.allowedActions.length; i++) {
-            let currAction = s0.allowedActions[i];
-            let [_rew, _s1] = this.env.gotoNextState(s0, currAction);
-            if (_s1.V > val) {
-                val = _s1.V;
-                a0 = currAction;
-            }
-        }
-        return a0;
-    },
-
     chooseAction: function(state) {
-        if (Math.random() < this.epsilon) {
-            return this.takeRandomAction(state);
-        } else {
-            return this.takeGreedyAction(state);
-        }
+        return this.takeRandomAction(state);
     },
 
     updateTrace: function(z, etraceType) {

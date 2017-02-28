@@ -41,10 +41,6 @@ class Dashboard extends Component {
             },
             {
                 specType: 'number',
-                spec: {label: 'ε = ', attr: 'epsilon', min: 0, max: 1, step: 0.01, currentVal: agent.epsilon}
-            },
-            {
-                specType: 'number',
                 spec: {label: 'λ = ', attr: 'lambda',  min: 0, max: 1, step: 0.01, currentVal: agent.lambda}
             },
             {
