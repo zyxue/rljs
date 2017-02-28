@@ -34,11 +34,17 @@ class TDPredView extends View {
         };
     }
 
+    updateAgent(attr, event) {
+        let agent = this.state.agent;
+        console.debug('updated ' + attr + ' to ' + event.target.value);
+        agent[attr] = event.target.value;
+        this.setState({agent: agent});
+    }
+
     startLearning(key) {
-        const actingRate = 10;
+        const actingRate = 1;
         const A = this.state.agent;
-        let intervalId = setInterval (() => {
-            console.debug('learning');
+        const intervalId = setInterval (() => {
             switch (key) {
                 case 'tdLambda':
                     A.act();
@@ -81,6 +87,7 @@ class TDPredView extends View {
             <div>
                 <Row className="dashboard">
                     <Dashboard agent={this.state.agent}
+                               updateAgent={this.updateAgent.bind(this)}
                                hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
                                updateEnv={this.updateEnv.bind(this)}
                                selectedStateId={this.state.selectedStateId}
