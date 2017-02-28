@@ -1,5 +1,6 @@
-// This model defines the GridWorld Environment Model
+import {randi} from './utils.js';
 
+// This model defines the GridWorld Environment Model
 
 // these are reasonable default for learning purpose
 var GridWorld = function({numRows=7, numCols=7,
@@ -7,7 +8,8 @@ var GridWorld = function({numRows=7, numCols=7,
                           startingStateId=0,
                           terminalStateId=3,
                           stepReward=-0.01,
-                          terminalReward=1
+                          terminalReward=1,
+                          slipProb=0
                          }={}) {
     this.numRows = numRows;
     this.numCols = numCols;
@@ -22,6 +24,7 @@ var GridWorld = function({numRows=7, numCols=7,
     // the reward for the terminal
     this.terminalReward = terminalReward;
 
+    this.slipProb = slipProb;
     this.reset();
 };
 
@@ -67,6 +70,10 @@ GridWorld.prototype = {
     },
 
     calcNextState: function(s0, a0) {
+        if (Math.random() < this.slipProb) {
+            a0 = s0.allowedActions[randi(0, s0.allowedActions.length)];
+        }
+
         // gridworld is deterministic, so this is easy
         let s1;
 

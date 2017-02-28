@@ -43,7 +43,16 @@ EnvStatus.defaultProps = {
         {
             specType: 'number',
             spec: {label: 'step reward: ', attr: 'stepReward', min: -1, max: 1, step: 0.01, hideValue: true}
-        }
+        },
+
+        // adding slip seems to make the problem much more complicated, even
+        // just for DP, think about it later
+
+        /* {
+         *     specType: 'number',
+         *     spec: {label: 'slip Prob.: ', attr: 'slipProb', min: 0, max: 1, step: 0.01, hideValue: true}
+         * }*/
+
     ]
 };
 

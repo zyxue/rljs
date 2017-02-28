@@ -11,7 +11,7 @@ export let calcCoords = function(x, y, height, width) {
     return {xmin:xmin, ymin:ymin,
             xmid:xmid, ymid:ymid,
             xmax:xmax, ymax:ymax};
-}
+};
 
 export let calcRGBColor = function(val) {
     // based on the value, calculate the corresponding RGB color
@@ -33,7 +33,7 @@ export let calcRGBColor = function(val) {
     }
 
     return {red: r, green: g, blue: b};
-}
+};
 
 export let genRGBColorString = function(val) {
     let rgbColor = calcRGBColor(val);
@@ -41,4 +41,10 @@ export let genRGBColorString = function(val) {
         Math.floor(rgbColor.red) + ',' +
         Math.floor(rgbColor.green) + ',' +
         Math.floor(rgbColor.blue) + ')';
-}
+};
+
+export const randi = function(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+};
