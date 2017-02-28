@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import QTxt from './QTxt.jsx';
-import Trace from './Trace.jsx';
+import Trace from './QETrace.jsx';
 import {genRGBColorString} from '../../Base/Grid/gridUtils.js';
 
 
@@ -48,8 +48,12 @@ class QTriangle extends Component {
                          stroke={"black"}
                          strokeWidth={0.3}>
                 </polygon>
-            {legCtrl.qValue ? <QTxt coords={coords} action={action} qVal={qVal}></QTxt> : null}
-            {legCtrl.etrace ? <Trace coords={coords} action={action} zVal={zVal}></Trace> : null}
+                {legCtrl.qValue
+                 ? <QTxt coords={coords} action={action} qVal={qVal}></QTxt>
+                 : null}
+                {legCtrl.etrace
+                 ? <Trace coords={coords} action={action} zVal={zVal}></Trace>
+                 : null}
             </g>
         );
     }

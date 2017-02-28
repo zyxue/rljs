@@ -1,13 +1,13 @@
 import DPAgent from './agents/DPAgent';
 import TDPredAgent from './agents/TDPredAgent';
-import TDAgent from './agents/TDAgent';
+import TDCtrlAgent from './agents/TDCtrlAgent';
 import DynaQAgent from './agents/DynaQAgent.js';
 // import DQNAgent from './agents/DQNAgent';
 
 
 export {DPAgent};
 export {TDPredAgent};
-export {TDAgent};
+export {TDCtrlAgent};
 export {DynaQAgent};
 // export {DQNAgent};
 
