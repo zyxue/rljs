@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import Cell from '../Components/Grid/Cell.jsx';
+import QCell from '../Components/Grid/QCell.jsx';
 import Frame from '../Components/Grid/Frame.jsx';
 import Cliff from '../Components/Grid/Cliff.jsx';
 import StartingState from '../Components/Grid/StartingState.jsx';
@@ -12,8 +13,15 @@ import {calcCoords} from '../utils.js';
 
 
 class Grid extends Component {
+    selectCellType (cellType) {
+        if (cellType === 'qCell') return QCell;
+        return Cell;
+    }
+
     render () {
-        const {height, width, agent, legendsCtrl, selectedStateId, handleCellClick} = this.props;
+        const {height, width, agent, legendsCtrl, selectedStateId, handleCellClick, cellType} = this.props;
+        // determine which cell to use;
+        const CellComp = this.selectCellType(cellType);
 
         // add this to make the border look more symmetric as border lines
         // between neighbouring cells are drawn multiple times
@@ -36,11 +44,11 @@ class Grid extends Component {
                               handleClick={handleCellClick.bind(this, state.id)}
                               handleCellClick={handleCellClick} />;
             } else {
-                return <Cell  key={state.id}
-                           state={state}
-                           arrowHeadDefId={arrowHeadDefId}
-                           handleClick={handleCellClick.bind(this, state.id)}
-                           legendsCtrl={legendsCtrl} />;
+                return <CellComp  key={state.id}
+                                  state={state}
+                                  arrowHeadDefId={arrowHeadDefId}
+                                  handleClick={handleCellClick.bind(this, state.id)}
+                                  legendsCtrl={legendsCtrl} />;
             }
         });
 

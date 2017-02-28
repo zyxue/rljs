@@ -5,7 +5,7 @@ import Env from '../Env.js';
 import {TDCtrlAgent} from '../../../lib/Reinforce-js';
 
 import View from '../DP/View.jsx';
-import Grid from './Grid.jsx';
+import Grid from '../DP/Grid.jsx';
 // import Dashboard from './Dashboard.jsx';
 import Intro from './Intro.jsx';
 
@@ -38,6 +38,7 @@ class TDCtrlView extends View {
                 <Grid
                     height={600}
                     width={700}
+                    cellType={'qCell'}
                     id="grid-TD-control"
                     agent={this.state.agent}
                     legendsCtrl={this.state.legendsCtrl}
