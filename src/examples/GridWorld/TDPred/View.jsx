@@ -41,17 +41,11 @@ class TDPredView extends View {
         this.setState({agent: agent});
     }
 
-    startLearning(key) {
+    startLearning() {
         const actingRate = 1;
         const A = this.state.agent;
         const intervalId = setInterval (() => {
-            switch (key) {
-                case 'tdLambda':
-                    A.act();
-                    break;
-                default:
-                    console.error('unrecognized key: ', key);
-            }
+            A.act();
             this.setState({agent: A});
         }, actingRate);
         this.setState({intervalId: intervalId});
@@ -69,8 +63,8 @@ class TDPredView extends View {
             case 'learnFromMultipleEpisodes':
                 A.learnFromMultipleEpisodes();
                 break;
-            case 'toggleTDLambda':
-                this.toggleLearning('tdLambda');
+            case 'toggleLearning':
+                this.toggleLearning();
                 break;
             case 'reset':
                 A.reset();
