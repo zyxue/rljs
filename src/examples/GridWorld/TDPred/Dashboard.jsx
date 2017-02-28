@@ -50,12 +50,11 @@ class Dashboard extends Component {
             {
                 specType: 'select',
                 spec: {
-                    label: 'learning algo:',
-                    attr: 'learningAlgo',
-                    currentVal: agent.learningAlgo,
+                    label: 'etrace:',
+                    attr: 'etraceType',
                     options: [
-                        {value: 'watkinsQLambda', label: 'Watkins’s Q(λ)'},
-                        {value: 'sarsaLambda', label: 'Sarsa(λ)'}
+                        {value: 'replacingTrace', label: 'Replacing trace'},
+                        {value: 'accumulatingTrace', label: 'Accumulating trace'}
                     ]
                 }
             }

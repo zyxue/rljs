@@ -81,19 +81,14 @@ TDPredAgent.prototype = {
     },
 
     updateTrace: function(z, etraceType) {
-        let res = null;
-        switch (etraceType) {
-
-        case 'accumulatingTrace':
-            res = z + 1;
-            break;
-        case 'replacingTrace':
-            res = 1;
-            break;
-        default:
-            // do nothing
+        switch(etraceType) {
+            case 'accumulatingTrace':
+                return z + 1;
+            case 'replacingTrace':
+                return 1;
+            default:
+                return z; // do nothing
         }
-        return res;
     },
 
     tdLambdaAct: function() {
