@@ -9,14 +9,15 @@ class ArrowHeadDef extends Component {
     render () {
         return (
             <defs>
-                <marker
-                    id={this.props.markerId}
-                    refX="3"
-                    refY="2"
-                    markerWidth="3"
-                    markerHeight="4"
-                    orient="auto">
-                    <path fill="black" d="M 0,0 V 4 L3,2 Z"/>
+                <marker id={this.props.markerId}
+                        markerWidth="10"
+                        markerHeight="10"
+                        refX="0"
+                        refY="2"
+                        orient="auto"
+                        markerUnits="strokeWidth">
+                    <path d="M0,0 L0,4 L4,2 z"
+                          fill="black" />
                 </marker>
             </defs>
         );
