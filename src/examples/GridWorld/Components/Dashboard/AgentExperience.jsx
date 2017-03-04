@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Col} from 'react-bootstrap';
+
 
 class AgentExperience extends Component {
     render () {
