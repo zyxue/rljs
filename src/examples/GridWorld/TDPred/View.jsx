@@ -34,10 +34,10 @@ class TDPredView extends View {
         };
     }
 
-    updateAgent(attr, event) {
+    updateAgent(attr, value) {
         let agent = this.state.agent;
-        console.debug('updated ' + attr + ' to ' + event.target.value);
-        agent[attr] = event.target.value;
+        console.debug('updated ' + attr + ' to ' + value);
+        agent[attr] = value;
         this.setState({agent: agent});
     }
 

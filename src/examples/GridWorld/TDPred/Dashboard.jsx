@@ -11,6 +11,61 @@ import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 import './Dashboard.css';
 
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+        const agent = this.props.agent;
+
+        this.agentExperiData = [
+            ['# episodes', agent.numEpisodesExperienced],
+            ['# steps in current episode', agent.numStepsCurrentEpisode],
+            ['# total steps from all  episodes', agent.numTotalSteps]
+        ];
+
+        this.agentParamSpecs = [
+            // attr: the attribute to change of the agent
+            {
+                specType: 'number',
+                label: 'α = ', attr: 'alpha', currentVal: agent.alpha,
+                spec: {min: 0, max: 10, step: 0.01}
+            },
+            {
+                specType: 'number',
+                label: 'γ = ', attr: 'gamma', currentVal: agent.gamma,
+                spec: {min: 0, max: 1, step: 0.01}
+            },
+            {
+                specType: 'number',
+                label: 'λ = ', attr: 'lambda', currentVal: agent.lambda,
+                spec: {min: 0, max: 1, step: 0.01}
+            },
+            {
+                specType: 'number',
+                label: 'batchSize', attr: 'batchSize', currentVal: agent.batchSize,
+                spec: {min: 0, max: 1, step: 0.01, hideValue: true}
+            },
+            {
+                specType: 'select',
+                label: 'etrace:',
+                attr: 'etraceType',
+                currentVal: agent.etraceType,
+                spec: {
+                    options: [
+                        {value: 'replacingTrace', label: 'Replacing trace'},
+                        {value: 'accumulatingTrace', label: 'Accumulating trace'}
+                    ]
+                }
+            }
+        ];
+
+        this. agentBtnsData = [
+            ['takeOneStep', 'Take one step'],
+            ['toggleLearning', 'Toggle learning'],
+            ['learnFromOneEpisode', 'Learn from one episode'],
+            ['learnFromMultipleEpisodes', 'Learn from multiple episodes'],
+            ['reset', 'Reset'],
+        ];
+    }
+
     render() {
         const {agent,
                updateAgent,
@@ -23,59 +78,14 @@ class Dashboard extends Component {
                toggleLegend
         } = this.props;
 
-        const agentExperiData = [
-            ['# episodes', agent.numEpisodesExperienced],
-            ['# steps in current episode', agent.numStepsCurrentEpisode],
-            ['# total steps from all  episodes', agent.numTotalSteps]
-        ];
-
-        let agentParamSpecs = [
-            // attr: the attribute to change of the agent
-            {
-                specType: 'number',
-                spec: {label: 'α = ', attr: 'alpha', min: 0, max: 10, step: 0.01, currentVal: agent.alpha}
-            },
-            {
-                specType: 'number',
-                spec: {label: 'γ = ', attr: 'gamma',   min: 0, max: 1, step: 0.01, currentVal: agent.gamma}
-            },
-            {
-                specType: 'number',
-                spec: {label: 'λ = ', attr: 'lambda',  min: 0, max: 1, step: 0.01, currentVal: agent.lambda}
-            },
-            {
-                specType: 'number',
-                spec: {label: 'batchSize', attr: 'batchSize',  min: 0, max: 1, step: 0.01, hideValue: true, currentVal: agent.batchSize}
-            },
-            {
-                specType: 'select',
-                spec: {
-                    label: 'etrace:',
-                    attr: 'etraceType',
-                    options: [
-                        {value: 'replacingTrace', label: 'Replacing trace'},
-                        {value: 'accumulatingTrace', label: 'Accumulating trace'}
-                    ]
-                }
-            }
-        ];
-
-        const agentBtnsData = [
-            ['takeOneStep', 'Take one step'],
-            ['toggleTDLambda', 'Toggle learning'],
-            ['learnFromOneEpisode', 'Learn from one episode'],
-            ['learnFromMultipleEpisodes', 'Learn from multiple episodes'],
-            ['reset', 'Reset'],
-        ];
-
         return (
             <div>
                 <Col md={4}>
                     <h5>Agent:</h5>
                     <ButtonToolbar className="wrapped-buttons">
-                        <AgentExperience experienceData={agentExperiData} />
-                        <Params specs={agentParamSpecs} changeHandler={updateAgent.bind(this)} />
-                        <AgentBtns btnsData={agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
+                        <AgentExperience experienceData={this.agentExperiData} />
+                        <Params specs={this.agentParamSpecs} changeHandler={updateAgent.bind(this)} />
+                        <AgentBtns btnsData={this.agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                     </ButtonToolbar>
                 </Col>
 
