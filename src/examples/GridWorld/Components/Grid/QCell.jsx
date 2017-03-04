@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
-import StateCoordTxt from '../../Base/Grid/StateCoordTxt.jsx';
-import StateIdTxt from '../../Base/Grid/StateIdTxt.jsx';
-import StateRewardTxt from '../../Base/Grid/StateRewardTxt.jsx';
-import PolicyArrows from '../../Base/Grid/PolicyArrows.jsx';
+import StateCoordTxt from './StateCoordTxt.jsx';
+import StateIdTxt from './StateIdTxt.jsx';
+import StateRewardTxt from './StateRewardTxt.jsx';
+import PolicyArrows from './PolicyArrows.jsx';
 import QTriangle from './QTriangle.jsx';
 
 
