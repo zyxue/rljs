@@ -29,11 +29,12 @@ class View extends Component {
     }
 
     // DASHBOARD EVENTS HANDLERS
-    updateEnv(attr, event) {
+    updateEnv(attr, value) {
+        console.debug(attr, value);
         let agent = this.state.agent;
-        console.debug('updated ' + attr + ' to ' + event.target.value);
+        console.debug('updated ' + attr + ' to ' + value);
         // data type is an issue!
-        agent.env[attr] = Number(event.target.value);
+        agent.env[attr] = Number(value);
         // resetting is important, don't forget! it resets all states.
         agent.env.reset();
         agent.reset();
