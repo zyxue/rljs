@@ -13,13 +13,6 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
 
-        const agent = this.props.agent;
-
-        this.agentExperiData = [
-            ['# policy iterations sweeps', agent['numPolEvalSweeps']],
-            ['# value iterations sweeps', agent['numValFuncOptimizationSweeps']],
-        ];
-
         this.agentBtnsData = [
             ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
             ['evalPol', 'Policy evaluation (till convergence)'],
@@ -43,6 +36,11 @@ class Dashboard extends Component {
                legendsCtrl,
                toggleLegend
         } = this.props;
+
+        this.agentExperiData = [
+            ['# policy iterations sweeps', agent['numPolEvalSweeps']],
+            ['# value iterations sweeps', agent['numValFuncOptimizationSweeps']],
+        ];
 
         return (
             <div>
