@@ -3,7 +3,18 @@ import React, {Component, PropTypes} from 'react';
 
 class NumberInput extends Component {
     onChange(event) {
-        this.props.changeHandler(this.props.attr, event.target.value);
+        let newVal;
+        switch (typeof this.props.currentVal) {
+            case 'number':
+                newVal = Number(event.target.value);
+                break;
+            case 'string':
+                newVal = event.target.value;
+                break;
+            default:
+                newVal = event.target.value;
+        }
+        this.props.changeHandler(this.props.attr, newVal);
     }
 
     render () {
