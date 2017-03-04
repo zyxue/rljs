@@ -4,17 +4,18 @@ import {Row, Col} from 'react-bootstrap';
 import Env from '../Env.js';
 import {TDCtrlAgent} from '../../../lib/Reinforce-js';
 
-import View from '../DP/View.jsx';
+import View from '../TDPred/View.jsx';
 import Grid from '../DP/Grid.jsx';
-// import Dashboard from './Dashboard.jsx';
+
+import Dashboard from './Dashboard.jsx';
 import Intro from './Intro.jsx';
 
 import './View.css';
 
 
 class TDCtrlView extends View {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         let env = new Env();
         let agent = new TDCtrlAgent(env);
 
@@ -44,15 +45,23 @@ class TDCtrlView extends View {
                     legendsCtrl={this.state.legendsCtrl}
                     selectedStateId={this.state.selectedStateId}
                     handleCellClick={this.hdlCellClick.bind(this)}
-                    legendsCtrl={this.state.legendsCtrl}
                 />
         );
 
         return (
             <div>
-                {/* <Row className="dashboard">
-                    {dashboard}
-                    </Row> */}
+                <Row className="dashboard">
+                    <Dashboard agent={this.state.agent}
+                               updateAgent={this.updateAgent.bind(this)}
+                               hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
+                               updateEnv={this.updateEnv.bind(this)}
+                               selectedStateId={this.state.selectedStateId}
+                               hdlCellBtnClick={this.hdlCellBtnClick.bind(this)}
+                               hdlCellRewardAdjustment={this.hdlCellRewardAdjustment.bind(this)}
+                               legendsCtrl={this.state.legendsCtrl}
+                               toggleLegend={this.toggleLegend.bind(this)}
+                    />
+                </Row>
                 
                 <Row>
                     <Col className='grid'  xs={12} md={8} >
