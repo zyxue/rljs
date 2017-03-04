@@ -1,31 +1,28 @@
 import React, {Component, PropTypes} from 'react';
-import {Col} from 'react-bootstrap';
 
-class SelectTag extends Component {
+class Select extends Component {
     render () {
-        let {changeHandler, spec, labelNumCols, inputNumCols} = this.props;
+        let {changeHandler, object, spec} = this.props;
         let options = spec.options.map((opt, idx) => {
             return <option key={idx} value={opt.value}>{opt.label}</option>;
         });
 
         return (
             <div>
-                <Col className="nopadding" md={labelNumCols}>
+                <div>
                     <span>{spec.label}</span>
-                </Col>
-                <Col className="nopadding" md={inputNumCols}>
-                    <select value={spec.currentVal}
-                            onChange={changeHandler.bind(this, spec.attr)}>
+                    <select value={object[spec.attr]}
+                            onChange={changeHandler.bind(this, object, spec.attr, spec.attrType)}>
                         {options}
                     </select>
-                </Col>
+                </div>
             </div>
         );
     }
 }
 
 
-SelectTag.propTypes = {
+Select.propTypes = {
     changeHandler: PropTypes.func.isRequired,
     spec: PropTypes.shape({
         label: PropTypes.string.isRequired,
@@ -40,17 +37,11 @@ SelectTag.propTypes = {
                 PropTypes.number
             ]).isRequired
         }))
-    }).isRequired,
-
-    // This feels very bad API design
-    labelNumCols: PropTypes.number,
-    inputNumCols: PropTypes.number
+    }).isRequired
 };
 
-SelectTag.defaultProps = {
-    labelNumCols: 3,
-    inputNumCols: 9
+Select.defaultProps = {
 };
 
 
-export default SelectTag;
+export default Select;
