@@ -43,8 +43,11 @@ class PolicyArrows extends Component {
 
         const cellHeight = coords.ymax - coords.ymin;
         const cellWidth = coords.xmax - coords.xmin;
-        const maxH = cellWidth / 2;
-        const maxV = cellHeight / 2;
+        // don't hit the cell boundry, it is also affected by the definition of
+        // arrowHead
+        const scaler = 0.42;
+        const maxH = (cellWidth / 2) * scaler;
+        const maxV = (cellHeight / 2) * scaler;
 
         const normedQ = this.normalizeQ(Q);
         const normedQSum = this.sumQ(normedQ);
