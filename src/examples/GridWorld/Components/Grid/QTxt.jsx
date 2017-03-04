@@ -2,22 +2,24 @@ import React, { Component, PropTypes } from 'react';
 
 
 class QTxt extends Component {
-    render () {
+    render() {
         const {coords, action, qVal} = this.props;
-        const qValStr = qVal.toFixed(1);
+        const qValStr = qVal.toExponential(1);
         const {xmin, ymin,  xmid, ymid, xmax, ymax} = coords;
 
+        let res;
         if (action === 'left') {
-            return (
+            res = (
                 <text x={xmin} y={ymid}
-                      textAnchor="start"
-                      dominantBaseline="central"
+                      textAnchor="middle"
+                      dominantBaseline="text-after-edge"
+                      writingMode="tb"
                       fontSize=".7em">
                     {qValStr}
                 </text>
-            )
+            );
         } else if (action === 'up') {
-            return (
+            res = (
                 <text x={xmid} y={ymin}
                       textAnchor="middle"
                       dominantBaseline="text-before-edge"
@@ -26,16 +28,17 @@ class QTxt extends Component {
                 </text>
             );
         } else if (action === 'right') {
-            return (
+            res = (
                 <text x={xmax} y={ymid}
-                      textAnchor="end"
-                      dominantBaseline="central"
+                      textAnchor="middle"
+                      dominantBaseline="text-before-edge"
+                      writingMode="tb"
                       fontSize=".7em">
                     {qValStr}
                 </text>
             );
         } else if (action === 'down') {
-            return (
+            res = (
                 <text x={xmid} y={ymax}
                       textAnchor="middle"
                       dominantBaseline="text-after-edge"
@@ -44,6 +47,7 @@ class QTxt extends Component {
                 </text>
             );
         }
+        return res;
     }
 }
 
