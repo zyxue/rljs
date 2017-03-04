@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 
 import AgentExperience from '../Components/Dashboard/AgentExperience.jsx';
 import AgentBtns from '../Components/Dashboard/AgentBtns.jsx';
@@ -10,6 +10,29 @@ import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 import './Dashboard.css';
 
 class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+
+        const agent = this.props.agent;
+
+        this.agentExperiData = [
+            ['# policy iterations sweeps', agent['numPolEvalSweeps']],
+            ['# value iterations sweeps', agent['numValFuncOptimizationSweeps']],
+        ];
+
+        this.agentBtnsData = [
+            ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
+            ['evalPol', 'Policy evaluation (till convergence)'],
+            ['togglePolEval', 'Policy evaluation toggle'],
+            ['toggleValFuncOptim', 'Value function optimization toggle'],
+            ['updatePol', 'Update policy'],
+            ['polIter', 'Policy iteration'],
+            ['valIter', 'Value iteration'],
+            ['reset', 'Reset'],
+        ];
+
+    }
+
     render() {
         const {agent,
                updateEnv,
@@ -21,27 +44,11 @@ class Dashboard extends Component {
                toggleLegend
         } = this.props;
 
-        const agentExperiData = [
-            ['# policy iterations sweeps', agent['numPolEvalSweeps']],
-            ['# value iterations sweeps', agent['numValFuncOptimizationSweeps']],
-        ];
-
-        const agentBtnsData = [
-            ['evalPolOneSweep', 'Policy evaluation (one sweep)'],
-            ['evalPol', 'Policy evaluation (till convergence)'],
-            ['togglePolEval', 'Policy evaluation toggle'],
-            ['toggleValFuncOptim', 'Value function optimization toggle'],
-            ['updatePol', 'Update policy'],
-            ['polIter', 'Policy iteration'],
-            ['valIter', 'Value iteration'],
-            ['reset', 'Reset'],
-        ];
-
         return (
             <div>
                 <Col md={4}>
-                    <AgentExperience experienceData={agentExperiData} />
-                    <AgentBtns btnsData={agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
+                    <AgentExperience experienceData={this.agentExperiData} />
+                    <AgentBtns btnsData={this.agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                 </Col>
 
                 <Col md={3}>
