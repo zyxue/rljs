@@ -8,6 +8,7 @@ import View from '../TDPred/View.jsx';
 import Grid from '../DP/Grid.jsx';
 
 import Dashboard from './Dashboard.jsx';
+import {NumStepsPerEpisodePlot, EligibilityTracePlots} from './Plots.jsx';
 import Intro from './Intro.jsx';
 
 import './View.css';
@@ -32,6 +33,11 @@ class TDCtrlView extends View {
                 etrace: true
             }
         };
+    }
+
+    getSelectedState() {
+        const id = this.state.selectedStateId ? this.state.selectedStateId : 0;
+        return this.state.agent.env.states[id];
     }
 
     render() {
@@ -68,8 +74,15 @@ class TDCtrlView extends View {
                         {grid}
                     </Col>
                     <Col className='plots' xs={12} md={4} >
-                        {/* <div>{numStepsVsNumEpisodesPlot}</div>
-                            <div>{etracePlots}</div> */}
+                        <NumStepsPerEpisodePlot data={this.state.agent.numStepsPerEpisode}
+                                                height={150} width={300}
+                        />
+
+                        <EligibilityTracePlots
+                            height={75 * 4}
+                            width={300}
+                            selectedState={this.getSelectedState()}
+                        />
                     </Col>
                 </Row>
 
