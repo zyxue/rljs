@@ -25,29 +25,28 @@ class Dashboard extends Component {
             // attr: the attribute to change of the agent
             {
                 specType: 'number',
-                label: 'α = ', attr: 'alpha', currentVal: agent.alpha,
+                label: 'α = ', attr: 'alpha',
                 spec: {min: 0, max: 10, step: 0.01}
             },
             {
                 specType: 'number',
-                label: 'γ = ', attr: 'gamma', currentVal: agent.gamma,
+                label: 'γ = ', attr: 'gamma',
                 spec: {min: 0, max: 1, step: 0.01}
             },
             {
                 specType: 'number',
-                label: 'λ = ', attr: 'lambda', currentVal: agent.lambda,
+                label: 'λ = ', attr: 'lambda',
                 spec: {min: 0, max: 1, step: 0.01}
             },
             {
                 specType: 'number',
-                label: 'batchSize', attr: 'batchSize', currentVal: agent.batchSize,
+                label: 'batchSize', attr: 'batchSize',
                 spec: {min: 0, max: 1, step: 0.01, hideValue: true}
             },
             {
                 specType: 'select',
                 label: 'etrace:',
                 attr: 'etraceType',
-                currentVal: agent.etraceType,
                 spec: {
                     options: [
                         {value: 'replacingTrace', label: 'Replacing trace'},
@@ -77,6 +76,10 @@ class Dashboard extends Component {
                legendsCtrl,
                toggleLegend
         } = this.props;
+
+        this.agentParamSpecs.forEach(function(sp) {
+            sp['currentVal'] = agent[sp.attr];
+        });
 
         return (
             <div>
