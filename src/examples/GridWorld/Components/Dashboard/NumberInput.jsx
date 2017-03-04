@@ -1,33 +1,32 @@
 import React, {Component, PropTypes} from 'react';
-import {Col} from 'react-bootstrap';
 
 
-class NumberInputTag extends Component {
+class NumberInput extends Component {
     render () {
         // obj includes information necessary for rendering this component
         // accordingly
-        let {changeHandler, spec, labelNumCols, inputNumCols} = this.props;
+        let {changeHandler, object, spec} = this.props;
         return (
             <div>
-                <Col className="nopadding" md={labelNumCols}>
+                <div>
                     <span>{spec.label}</span>
                     <span className="text-primary">
-                        {spec.hideValue ? null : spec.currentVal}
+                        {spec.hideValue ? null : object[spec.attr]}
                     </span>
-                </Col>
-                <Col className="nopadding" md={inputNumCols}>
+                </div>
+                <div>
                     <div>
                         <input type="number" min={spec.min} max={spec.max} step={spec.step}
-                               value={spec.currentVal} 
-                               onChange={changeHandler.bind(this, spec.attr)}/>
+                               value={object[spec.attr]} 
+                               onChange={changeHandler.bind(this, object, spec.attr, spec.attrType)}/>
                     </div>
-                </Col>
+                </div>
             </div>
         );
     }
 }
 
-NumberInputTag.propTypes = {
+NumberInput.propTypes = {
     changeHandler: PropTypes.func.isRequired,
     spec: PropTypes.shape({
         label: PropTypes.string.isRequired,
@@ -36,17 +35,11 @@ NumberInputTag.propTypes = {
         max: PropTypes.number.isRequired,
         step: PropTypes.number.isRequired,
         hideValue: PropTypes.bool
-    }).isRequired,
-
-    // This feels very bad API design
-    labelNumCols: PropTypes.number,
-    inputNumCols: PropTypes.number
+    }).isRequired
 };
 
-NumberInputTag.defaultProps = {
-    labelNumCols: 3,
-    inputNumCols: 3
+NumberInput.defaultProps = {
 };
 
 
-export default NumberInputTag;
+export default NumberInput;
