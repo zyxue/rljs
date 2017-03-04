@@ -1,9 +1,14 @@
 import React, {Component, PropTypes} from 'react';
 
 class Select extends Component {
+    onChange(event) {
+        this.props.changeHandler(this.props.attr, event.target.value);
+    }
+
     render () {
-        let {changeHandler, object, spec} = this.props;
-        let options = spec.options.map((opt, idx) => {
+        const {currentVal, attr, changeHandler, label, spec} = this.props;
+
+        const options = spec.options.map((opt, idx) => {
             return <option key={idx} value={opt.value}>{opt.label}</option>;
         });
 
@@ -11,8 +16,8 @@ class Select extends Component {
             <div>
                 <div>
                     <span>{spec.label}</span>
-                    <select value={object[spec.attr]}
-                            onChange={changeHandler.bind(this, object, spec.attr, spec.attrType)}>
+                    <select value={currentVal}
+                            onChange={this.onChange.bind(this)}>
                         {options}
                     </select>
                 </div>
@@ -23,10 +28,12 @@ class Select extends Component {
 
 
 Select.propTypes = {
+    currentVal: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    attr: PropTypes.string.isRequired,
     changeHandler: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
+
     spec: PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        attr: PropTypes.string.isRequired,
         options: PropTypes.arrayOf(PropTypes.shape({
             value: PropTypes.oneOfType([
                 PropTypes.string,

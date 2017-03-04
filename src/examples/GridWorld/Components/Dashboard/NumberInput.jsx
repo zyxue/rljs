@@ -2,23 +2,27 @@ import React, {Component, PropTypes} from 'react';
 
 
 class NumberInput extends Component {
+    onChange(event) {
+        this.props.changeHandler(this.props.attr, event.target.value);
+    }
+
     render () {
         // obj includes information necessary for rendering this component
         // accordingly
-        let {changeHandler, object, spec} = this.props;
+        let {currentVal, attr, changeHandler, label, spec} = this.props;
         return (
             <div>
                 <div>
-                    <span>{spec.label}</span>
+                    <span>{label}</span>
                     <span className="text-primary">
-                        {spec.hideValue ? null : object[spec.attr]}
+                        {spec.hideValue ? null : currentVal}
                     </span>
                 </div>
                 <div>
                     <div>
                         <input type="number" min={spec.min} max={spec.max} step={spec.step}
-                               value={object[spec.attr]} 
-                               onChange={changeHandler.bind(this, object, spec.attr, spec.attrType)}/>
+                               value={currentVal} 
+                               onChange={this.onChange.bind(this)}/>
                     </div>
                 </div>
             </div>
@@ -27,10 +31,11 @@ class NumberInput extends Component {
 }
 
 NumberInput.propTypes = {
+    currentVal: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    attr: PropTypes.string.isRequired,
     changeHandler: PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired,
     spec: PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        attr: PropTypes.string.isRequired,
         min: PropTypes.number.isRequired,
         max: PropTypes.number.isRequired,
         step: PropTypes.number.isRequired,
