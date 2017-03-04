@@ -1,10 +1,8 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 import {Row, Col} from 'react-bootstrap';
 
 import Env from '../Env.js';
 import {TDPredAgent} from '../../../lib/Reinforce-js';
-
-import Agent from '../Components/Grid/Agent.jsx';
 
 // use the same grid from DP since they are all for prediction only
 import View from '../DP/View.jsx';
@@ -15,10 +13,10 @@ import Intro from './Intro.jsx';
 
 
 class TDPredView extends View {
-    constructor() {
-        super();
-        let env = new Env();
-        let agent = new TDPredAgent(env);
+    constructor(props) {
+        super(props);
+        const env = new Env();
+        const agent = new TDPredAgent(env);
 
         this.state = {
             agent: agent,
