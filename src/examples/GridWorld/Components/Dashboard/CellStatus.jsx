@@ -33,7 +33,7 @@ class CellStatus extends Component {
             <div>
                 <h5>Cell: </h5>
                 <div>
-                    <ButtonToolbar>
+                    <ButtonToolbar className="wrapped-buttons">
                         {btns}
                     </ButtonToolbar>
                 </div>

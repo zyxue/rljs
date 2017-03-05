@@ -23,19 +23,13 @@ class NumberInput extends Component {
         let {currentVal, label, spec} = this.props;
         return (
             <div>
-                <div>
-                    <span>{label}</span>
-                    <span className="text-primary">
-                        {spec.hideValue ? null : currentVal}
-                    </span>
-                </div>
-                <div>
-                    <div>
-                        <input type="number" min={spec.min} max={spec.max} step={spec.step}
-                               value={currentVal} 
-                               onChange={this.onChange.bind(this)}/>
-                    </div>
-                </div>
+                <span>{label}</span>
+                {/* <span className="text-primary">
+                    {spec.hideValue ? null : currentVal}
+                    </span> */}
+                <input type="number" min={spec.min} max={spec.max} step={spec.step}
+                       value={currentVal}
+                       onChange={this.onChange.bind(this)}/>
             </div>
         );
     }

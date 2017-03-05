@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Col, ButtonToolbar} from 'react-bootstrap';
+import {Col} from 'react-bootstrap';
 
 import AgentExperience from '../Components/Dashboard/AgentExperience.jsx';
 import Params from '../Components/Dashboard/Params.jsx';
@@ -16,9 +16,9 @@ class Dashboard extends Component {
         const agent = this.props.agent;
 
         this.agentExperiData = [
-            ['# episodes', agent.numEpisodesExperienced],
-            ['# steps in current episode', agent.numStepsCurrentEpisode],
-            ['# total steps from all  episodes', agent.numTotalSteps]
+            ['# epi.', agent.numEpisodesExperienced],
+            ['# steps', agent.numStepsCurrentEpisode],
+            ['# total steps', agent.numTotalSteps]
         ];
 
         this.agentParamSpecs = [
@@ -40,17 +40,17 @@ class Dashboard extends Component {
             },
             {
                 specType: 'number',
-                label: 'batchSize', attr: 'batchSize',
+                label: 'batch size: ', attr: 'batchSize',
                 spec: {min: 0, max: 1, step: 0.01, hideValue: true}
             },
             {
                 specType: 'select',
-                label: 'etrace:',
+                label: 'trace: ',
                 attr: 'etraceType',
                 spec: {
                     options: [
-                        {value: 'replacingTrace', label: 'Replacing trace'},
-                        {value: 'accumulatingTrace', label: 'Accumulating trace'}
+                        {value: 'replacingTrace', label: 'replacing'},
+                        {value: 'accumulatingTrace', label: 'accumulating'}
                     ]
                 }
             }
@@ -83,20 +83,26 @@ class Dashboard extends Component {
 
         return (
             <div>
-                <Col md={4}>
-                    <h5>Agent:</h5>
-                    <ButtonToolbar className="wrapped-buttons">
-                        <AgentExperience experienceData={this.agentExperiData} />
-                        <Params specs={this.agentParamSpecs} changeHandler={updateAgent.bind(this)} />
-                        <AgentBtns btnsData={this.agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
-                    </ButtonToolbar>
+                <Col md={2}>
+                    <h5>Agent control:</h5>
+                    <AgentBtns btnsData={this.agentBtnsData} handleClick={hdlAgentBtnClick.bind(this)} />
                 </Col>
 
-                <Col md={3}>
+                <Col md={2}>
+                    <h5>Agent experience:</h5>
+                    <AgentExperience experienceData={this.agentExperiData} />
+                </Col>
+
+                <Col md={2}>
+                    <h5>Agent parameters:</h5>
+                    <Params specs={this.agentParamSpecs} changeHandler={updateAgent.bind(this)} />
+                </Col>
+
+                <Col md={2}>
                     <EnvStatus env={agent.env} updateEnvHandler={updateEnv.bind(this)} />
                 </Col>
 
-                <Col md={3}>
+                <Col md={2}>
                     <CellStatus disabled={selectedStateId === null ? true: false}
                                 handleClick={hdlCellBtnClick.bind(this)}
                                 handleSlide={hdlCellRewardAdjustment.bind(this)}
