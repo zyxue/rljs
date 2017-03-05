@@ -83,7 +83,11 @@ class TDCtrlView extends View {
                 </Row>
 
                 <Row>
-                    <div><Intro /></div>
+                    <div>
+                        <h4>Instruction:</h4>
+                        <p>Todo</p>
+                    </div>
+                    {/* <Intro /> */}
                 </Row>
             </div>
         );

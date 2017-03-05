@@ -107,7 +107,14 @@ class TDPredView extends View {
                     </Col>
                 </Row>
 
-                <Intro />
+                <Row>
+                    <div>
+                        <h4>Instruction:</h4>
+                        <p>Todo</p>
+                    </div>
+                    {/* <Intro /> */}
+                </Row>
+
             </div>
         );
     }

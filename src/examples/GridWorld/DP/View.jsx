@@ -210,7 +210,9 @@ class View extends Component {
                     </Col>
                 </Row>
 
-                <Intro />
+                <Row>
+                    <Intro />
+                </Row>
             </div>
         );
     }
