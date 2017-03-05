@@ -30,7 +30,7 @@ class DynaQAgent extends BaseCtrlAgent {
 
     dynaQUpdate() {
         // implement Dyna-Q algorithm in Figure 8.4
-        let {s0, a0, reward, s1, a1} = this;
+        let {s0, a0, reward, s1} = this;
 
         let aStar = this.chooseGreedyAction(s1);
         let delta = reward + this.gamma * s1.Q[aStar] - s0.Q[a0];
@@ -64,7 +64,8 @@ class DynaQAgent extends BaseCtrlAgent {
             let rA0 = seenActions[randi(0, seenActions.length)];
             // console.log(mS0, seenActions, rA0);
             let [mReward, rS1Id] = this.model.states[rS0Id].nextState[rA0];
-            let mS1 = this.model.states[rS1Id];
+
+            // let mS1 = this.model.states[rS1Id];
             let eS1 = this.env.states[rS1Id];
 
             let eAStar = this.chooseGreedyAction(eS1);
