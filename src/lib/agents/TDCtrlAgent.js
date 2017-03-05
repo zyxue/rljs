@@ -2,7 +2,6 @@
 // testing, but some functions are cumbersome to purify, e.g. reset().
 
 import BaseCtrlAgent from './BaseCtrlAgent.js';
-import {randi} from '../utils';
 
 
 class TDCtrlAgent extends BaseCtrlAgent {
