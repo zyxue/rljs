@@ -41,19 +41,6 @@ class TDCtrlView extends View {
     }
 
     render() {
-        const grid = (
-                <Grid
-                    height={600}
-                    width={700}
-                    cellType={'qCell'}
-                    id="grid-TD-control"
-                    agent={this.state.agent}
-                    legendsCtrl={this.state.legendsCtrl}
-                    selectedStateId={this.state.selectedStateId}
-                    handleCellClick={this.hdlCellClick.bind(this)}
-                />
-        );
-
         return (
             <div>
                 <Row className="dashboard">
@@ -71,7 +58,16 @@ class TDCtrlView extends View {
                 
                 <Row>
                     <Col className='grid'  xs={12} md={8} >
-                        {grid}
+                        <Grid
+                            height={600}
+                            width={700}
+                            cellType={'qCell'}
+                            id="grid-TD-control"
+                            agent={this.state.agent}
+                            legendsCtrl={this.state.legendsCtrl}
+                            selectedStateId={this.state.selectedStateId}
+                            handleCellClick={this.hdlCellClick.bind(this)}
+                        />
                     </Col>
                     <Col className='plots' xs={12} md={4} >
                         <NumStepsPerEpisodePlot data={this.state.agent.numStepsPerEpisode}
