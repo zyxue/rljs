@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Button, ButtonToolbar} from 'react-bootstrap';
 
 
 class AgentButtons extends Component {
