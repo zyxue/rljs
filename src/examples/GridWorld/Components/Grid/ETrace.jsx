@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 
-class Trace extends Component {
+class ETrace extends Component {
     calcXY(coords) {
         let cx = coords.xmid;
         let cy = coords.ymid;
@@ -31,10 +31,10 @@ const pt = {};
     pt[key] = PropTypes.number.isRequired;
 });
 
-Trace.propTypes = {
+ETrace.propTypes = {
     coords: PropTypes.shape(pt),
     zVal: PropTypes.number
-}
+};
 
 
-export default Trace;
+export default ETrace;
