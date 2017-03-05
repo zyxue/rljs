@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 
 
 class LegendsCtrlButtons extends Component {
