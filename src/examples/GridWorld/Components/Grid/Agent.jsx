@@ -70,4 +70,9 @@ class AgentAction extends Component {
     }
 }
 
+
+Agent.PropTypes = {
+    agentAction: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+};
+
 export default Agent;
