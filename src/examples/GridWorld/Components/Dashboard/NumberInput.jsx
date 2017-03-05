@@ -20,7 +20,7 @@ class NumberInput extends Component {
     render () {
         // obj includes information necessary for rendering this component
         // accordingly
-        let {currentVal, attr, changeHandler, label, spec} = this.props;
+        let {currentVal, label, spec} = this.props;
         return (
             <div>
                 <div>

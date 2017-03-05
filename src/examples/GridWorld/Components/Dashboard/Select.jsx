@@ -17,7 +17,7 @@ class Select extends Component {
     }
 
     render () {
-        const {currentVal, attr, changeHandler, label, spec} = this.props;
+        const {currentVal, label, spec} = this.props;
 
         const options = spec.options.map((opt, idx) => {
             return <option key={idx} value={opt.value}>{opt.label}</option>;
@@ -26,7 +26,7 @@ class Select extends Component {
         return (
             <div>
                 <div>
-                    <span>{spec.label}</span>
+                    <span>{label}</span>
                     <select value={currentVal}
                             onChange={this.onChange.bind(this)}>
                         {options}
