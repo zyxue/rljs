@@ -11,8 +11,7 @@ class Cliff extends Component {
     }
 
     render () {
-        const {state, handleClick} = this.props;
-        const {xmin, ymin, xmax, ymax} = state.coords;
+        const {xmin, ymin, xmax, ymax} = this.props.state.coords;
         const height = ymax - ymin;
         const width = xmax - xmin;
 
