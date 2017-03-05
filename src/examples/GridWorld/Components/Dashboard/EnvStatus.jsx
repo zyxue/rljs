@@ -27,7 +27,7 @@ EnvStatus.defaultProps = {
     envParamSpecs: [
         {
             specType: 'select',
-            label: '# rows',
+            label: '# rows: ',
             attr: 'numRows',
             spec: {
                 options: [3, 4, 5, 6, 7, 8, 9, 10].map((v) => {return {value:v, label: v};})
@@ -35,7 +35,7 @@ EnvStatus.defaultProps = {
         },
         {
             specType: 'select',
-            label: '# cols',
+            label: '# columns: ',
             attr: 'numCols',
             spec: {
                 options: [3, 4, 5, 6, 7, 8, 9, 10].map((v) => {return {value:v, label: v};})
