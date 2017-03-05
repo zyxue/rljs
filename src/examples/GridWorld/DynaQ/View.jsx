@@ -69,9 +69,7 @@ class DynaQView extends View  {
                         </div>
                         <div>
                             Eligibility Trace is not Considered in the
-                            <a href="https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node96.html" target="_blank">
-                            Dyna-Q algorithm yet.
-                            </a>
+                            <a href="https://webdocs.cs.ualberta.ca/~sutton/book/ebook/node96.html" target="_blank"> Dyna-Q</a> algorithm yet.
                         </div>
 
                     </Col>
