@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Button, ButtonToolbar, ButtonGroup} from 'react-bootstrap';
+import {Col, ButtonToolbar} from 'react-bootstrap';
 
 import AgentExperience from '../Components/Dashboard/AgentExperience.jsx';
 import Params from '../Components/Dashboard/Params.jsx';
@@ -56,7 +56,7 @@ class Dashboard extends Component {
             }
         ];
 
-        this. agentBtnsData = [
+        this.agentBtnsData = [
             ['takeOneStep', 'Take one step'],
             ['toggleLearning', 'Toggle learning'],
             ['learnFromOneEpisode', 'Learn from one episode'],
