@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 
 import Line from '../Components/Plot/Line.jsx';
 
 
-class Plots extends Component {
+class Plots extends React.Component {
     render() {
         let {agent, selectedStateId} = this.props;
         if (selectedStateId === null) selectedStateId = 0;
@@ -48,6 +48,11 @@ class Plots extends Component {
         );
     }
 }
+
+
+Plots.propTypes = {
+    selectedStateId: React.PropTypes.number
+};
 
 
 export default Plots;
