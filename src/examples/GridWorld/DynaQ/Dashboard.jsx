@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
-
 import Dashboard from '../TDCtrl/Dashboard.jsx';
+
 
 class DynaQDashboard extends Dashboard {
     constructor(props) {
