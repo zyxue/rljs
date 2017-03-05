@@ -6,7 +6,7 @@ import Select from './Select.jsx';
 
 class Params extends Component {
     render() {
-        const {changeHandler, object, specs} = this.props;
+        const {changeHandler, specs} = this.props;
 
         const specElms = specs.map((sp, idx) => {
             switch (sp.specType) {
@@ -14,14 +14,14 @@ class Params extends Component {
                     return <NumberInput key={idx}
                                         currentVal={sp.currentVal}
                                         attr={sp.attr}
-                                        changeHandler={this.props.changeHandler}
+                                        changeHandler={changeHandler}
                                         label={sp.label}
                                         spec={sp.spec} />;
                 case 'select':
                     return <Select      key={idx}
                                         currentVal={sp.currentVal}
                                         attr={sp.attr}
-                                        changeHandler={this.props.changeHandler}
+                                        changeHandler={changeHandler}
                                         label={sp.label}
                                         spec={sp.spec} />;
                 default:
