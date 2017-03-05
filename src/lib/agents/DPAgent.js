@@ -1,5 +1,3 @@
-import {randi} from '../utils.js';
-
 // Summary of DP methods:
 
 // policy iteration includes policy evaluation and policy improvement
@@ -92,7 +90,7 @@ DPAgent.prototype = {
 
             let actionsToMaxVals = []; // actions that leads to max value
             actionVals.forEach(([action, val]) => {
-                if (val.toPrecision(NUM_PREC) == maxValStr) {
+                if (val.toPrecision(NUM_PREC) === maxValStr) {
                     actionsToMaxVals.push(action);
                 }
             });
@@ -135,7 +133,7 @@ DPAgent.prototype = {
 
         const sp1 = p1.sort();
         const sp2 = p2.sort();
-        for (let i=0; i < sp1,length; i++) {
+        for (let i=0; i < sp1.length; i++) {
             if (sp1[i] !== sp2[i]) return false;
         }
         return true;
