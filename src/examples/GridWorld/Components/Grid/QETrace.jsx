@@ -38,5 +38,11 @@ class Trace extends Component {
     }
 }
 
+const pt = {};
+['xmin', 'ymin', ' xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
+    pt[key] = PropTypes.number.isRequired;
+});
+
+Trace.propTypes = pt;
 
 export default Trace;
