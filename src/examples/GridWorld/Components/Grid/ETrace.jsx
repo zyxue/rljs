@@ -3,10 +3,8 @@ import React, { Component, PropTypes } from 'react';
 
 class Trace extends Component {
     calcXY(coords) {
-        const {xmin, ymin,  xmid, ymid, xmax, ymax} = coords;
-
-        let cx = xmid;
-        let cy = ymid;
+        let cx = coords.xmid;
+        let cy = coords.ymid;
 
         return [cx, cy];
     }
@@ -25,6 +23,17 @@ class Trace extends Component {
             </circle>
         );
     }
+}
+
+
+const pt = {};
+['xmin', 'ymin', ' xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
+    pt[key] = PropTypes.number.isRequired;
+});
+
+Trace.propTypes = {
+    coords: PropTypes.shape(pt),
+    zVal: PropTypes.number
 }
 
 
