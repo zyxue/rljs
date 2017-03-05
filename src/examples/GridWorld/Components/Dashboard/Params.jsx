@@ -14,10 +14,8 @@ class Params extends Component {
             switch (sp.specType) {
                 case 'number':
                     return (
-                        <div className="param">
-                            <NumberInput key={idx}
-                                         className="param"
-                                         currentVal={sp.currentVal}
+                        <div key={idx} className="param">
+                            <NumberInput currentVal={sp.currentVal}
                                          attr={sp.attr}
                                          changeHandler={changeHandler}
                                          label={sp.label}
@@ -26,14 +24,12 @@ class Params extends Component {
                     );
                 case 'select':
                     return (
-                        <div className="param">
-                            <Select      key={idx}
-                                         className="param"
-                                         currentVal={sp.currentVal}
-                                         attr={sp.attr}
-                                         changeHandler={changeHandler}
-                                         label={sp.label}
-                                         spec={sp.spec} />
+                        <div key={idx} className="param">
+                            <Select currentVal={sp.currentVal}
+                                    attr={sp.attr}
+                                    changeHandler={changeHandler}
+                                    label={sp.label}
+                                    spec={sp.spec} />
                         </div>
                     );
                 default:
