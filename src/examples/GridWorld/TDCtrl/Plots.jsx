@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 
 import Line from '../Components/Plot/Line.jsx';
 
@@ -16,7 +16,7 @@ export class EligibilityTracePlots extends React.Component {
             let xlabel = aid === st.allowedActions[st.allowedActions.length - 1]? 'Step' : '';
             let key = "epiHistZ-state" + st.id + '-action-' + aid;
             let margin = {top:20, left: 40, bottom:0};
-            if (idx == numActions - 1) margin['bottom'] += 20;
+            if (idx === numActions - 1) margin['bottom'] += 20;
             return (
                 <div key={key}>
                     <Line
