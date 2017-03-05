@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 
 
-class Trace extends Component {
+class Trace extends React.Component {
     calcXY(coords, action) {
         const {xmin, ymin,  xmid, ymid, xmax, ymax} = coords;
         const C = 1 / 3;
@@ -39,10 +39,12 @@ class Trace extends Component {
 }
 
 const pt = {};
-['xmin', 'ymin', ' xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
-    pt[key] = PropTypes.number.isRequired;
+['xmin', 'ymin', 'xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
+    pt[key] = React.PropTypes.number.isRequired;
 });
 
-Trace.propTypes = pt;
+Trace.propTypes = {
+    coords: React.PropTypes.shape(pt)
+};
 
 export default Trace;
