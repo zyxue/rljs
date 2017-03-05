@@ -6,7 +6,9 @@ import {DPAgent} from '../../../lib/Reinforce-js';
 
 import Dashboard from './Dashboard.jsx';
 import Grid from './Grid.jsx';
-import Line from '../Components/Plot/Line.jsx';
+import Plots from './Plots.jsx';
+import Intro from './Intro.jsx';
+
 
 class View extends Component {
     constructor() {
@@ -204,33 +206,11 @@ class View extends Component {
                         />
                     </Col>
                     <Col className='plots' xs={12} md={4} >
-                        <Line
-                            height={150}
-                            width={300}
-                            margin={{top:0, left: 40, bottom:30}}
-                            id={'policy-iteration-delta'}
-                            data={this.state.agent.deltasPolIter}
-                            xlabel={'# sweeps'}
-                            ylabel={'pol iter delta'}
-                        />
-
-
-                        <Line
-                            height={150}
-                            width={300}
-                            margin={{top:0, left: 40, bottom:30}}
-                            id={'value-iteration-delta'}
-                            data={this.state.agent.deltasValIter}
-                            xlabel={'# sweeps'}
-                            ylabel={'val iter delta'}
-                        />
+                        <Plots agent={this.state.agent} />
                     </Col>
                 </Row>
 
-            <p><strong>Policy itertion</strong> is basically iterative actions of evaluating policy and updating policy till the policy converges.</p>
-            <p><strong>Value  itertion</strong> is basically continuous update of value functions till convergene, the one step of policy update will result in the optimal policy</p>
-            <p>In general, value itertion is much slower that policy iteration. In other words, policy converges much faster than value functions. In the case of gridword, the former takes over 100 iteration while the later takes less than 10.</p>
-
+                <Intro />
             </div>
         );
     }
