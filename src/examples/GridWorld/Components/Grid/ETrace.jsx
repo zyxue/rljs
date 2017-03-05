@@ -27,12 +27,21 @@ class ETrace extends Component {
 
 
 const pt = {};
-['xmin', 'ymin', ' xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
+['xmin', 'ymin', 'xmid', 'ymid', 'xmax', 'ymax'].forEach((key) => {
     pt[key] = PropTypes.number.isRequired;
 });
 
 ETrace.propTypes = {
     coords: PropTypes.shape(pt),
+    // just left here for reference, the above is equivalent
+    /* coords: PropTypes.shape({
+     *     xmin: PropTypes.number.isRequired,
+     *     ymin: PropTypes.number.isRequired,
+     *     xmid: PropTypes.number.isRequired,
+     *     ymid: PropTypes.number.isRequired,
+     *     xmax: PropTypes.number.isRequired,
+     *     ymax: PropTypes.number.isRequired
+     * }),*/
     zVal: PropTypes.number
 };
 
