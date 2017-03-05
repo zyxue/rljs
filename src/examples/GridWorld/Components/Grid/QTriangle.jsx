@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import QTxt from './QTxt.jsx';
 import Trace from './QETrace.jsx';
-import {genRGBColorString} from '../../Base/Grid/gridUtils.js';
+import {genRGBColorString} from '../../utils.js';
 
 
 class QTriangle extends Component {
@@ -51,6 +51,7 @@ class QTriangle extends Component {
                 {legCtrl.qValue
                  ? <QTxt coords={coords} action={action} qVal={qVal}></QTxt>
                  : null}
+
                 {legCtrl.etrace
                  ? <Trace coords={coords} action={action} zVal={zVal}></Trace>
                  : null}
