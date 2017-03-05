@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Button, ButtonToolbar} from 'react-bootstrap';
 
 
 class CellStatus extends Component {
@@ -32,19 +32,23 @@ class CellStatus extends Component {
         return (
             <div>
                 <h5>Cell: </h5>
-                <div className='dashboard-container'>
-                    <ButtonToolbar style={{display: 'inline-block', verticalAlign: 'middle'}}>
+                <div>
+                    <ButtonToolbar>
                         {btns}
                     </ButtonToolbar>
                 </div>
 
                 <div>
-                    <Col className="nopadding" md={3}>Adjust reward: </Col>
-                    <Col className="slider-container selected-reward" md={6}>
+                    <div>Adjust reward: </div>
+                    <div className="slider-container selected-reward" >
                         <input className='slider'
-                               type="range" min="-5" max="5" disabled={disabled} value={slideVal}
+                               type="range"
+                               min="-5"
+                               max="5"
+                               disabled={disabled}
+                               value={slideVal}
                                step="0.01" onChange={handleSlide.bind(this)}/>
-                    </Col>
+                    </div>
                 </div>
             </div>
         );
