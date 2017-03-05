@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 import StateCoordTxt from './StateCoordTxt.jsx';
 import StateIdTxt from './StateIdTxt.jsx';
@@ -72,5 +72,10 @@ class Cell extends Component {
         );
     }
 }
+
+Cell.PropTypes = {
+    legendsCtrl: React.PropTypes.object
+};
+
 
 export default Cell;
