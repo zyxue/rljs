@@ -25,6 +25,20 @@ export default React.createClass({
                     </ul>
                 </nav>
                 {this.props.children}
+
+                <h2>Welcome to RLjs</h2>
+                <h4>RLjs currently serves as a playground for Reinforcement learning.</h4>
+                <p>
+                  Several most common tabular RL algorithms have been
+                  implemented in javascript, and demenstrated with gridword as
+                  an toy example. Have fun!
+                </p>
+
+                <p>
+                  If you find anything that does not make sense, feel free
+                  to <a href="https://github.com/zyxue/rljs/issues/new"
+                  target="_blank">open a new issue</a> on github.
+                </p>
             </div>
         );
     }
