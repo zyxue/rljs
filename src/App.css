@@ -29,3 +29,7 @@ button.control {
     margin-right: 2px;
     padding: 2px 4px;
 }
+
+.wrapped-buttons button {
+    margin-bottom: 2px;
+}

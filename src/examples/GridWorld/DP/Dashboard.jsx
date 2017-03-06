@@ -7,7 +7,6 @@ import EnvStatus from '../Components/Dashboard/EnvStatus.jsx';
 import CellStatus from '../Components/Dashboard/CellStatus.jsx';
 import LegendsCtrlButtons from '../Components/Dashboard/LegendsCtrlButtons.jsx';
 
-import './Dashboard.css';
 
 class Dashboard extends Component {
     constructor(props) {
