@@ -36,7 +36,7 @@ class DynaQView extends View  {
     render() {
         return (
             <div>
-                <Row>
+                <Row className="dashboard">
                     <Dashboard agent={this.state.agent}
                                updateAgent={this.updateAgent.bind(this)}
                                hdlAgentBtnClick={this.hdlAgentBtnClick.bind(this)}
