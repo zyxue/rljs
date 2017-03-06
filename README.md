@@ -33,8 +33,8 @@ The development setup is adopted from
 [create-react-app](https://github.com/facebookincubator/create-react-app).
 
 ```
-git clone git@github.com:donkirkby/pinyincushion.git
-cd pinyincushion
+git clone git@github.com:zyxue/rljs.git
+cd rljs
 npm install
 ```
 
@@ -44,15 +44,15 @@ npm install
 npm start
 ```
 
-<!-- ## Build -->
-<!-- This will generate the static web site and copy it to the `docs` folder -->
-<!-- that is deployed to the web site when you push to GitHub. -->
+## Build
+This will generate the static web site and copy it to the `docs` folder
+that is deployed to the web site when you push to GitHub.
 
-<!-- ``` -->
-<!-- npm run build -->
-<!-- ``` -->
+```
+npm run build
+```
 
-<!-- ## Test -->
-<!-- ``` -->
-<!-- npm test -->
-<!-- ``` -->
+## Test
+```
+npm test
+```
