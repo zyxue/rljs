@@ -16,7 +16,7 @@
     "react-dom": "^15.4.2",
     "react-faux-dom": "^3.0.0",
     "react-ga": "^2.1.2",
-    "react-router": "^2.8.1"
+    "react-router-dom": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
