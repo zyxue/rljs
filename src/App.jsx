@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Link, hashHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink, Link, hashHistory } from 'react-router-dom';
 import ReactGA from 'react-ga';
 
 import GridWorldDPView from './examples/GridWorld/DP/View.jsx';
@@ -34,10 +34,10 @@ const App = () => (
             <h1><Link to="/">RLjs examples</Link></h1>
             <nav>
                 <ul role="navigation" className="nav nav-pills">
-                    <li><Link to="/gridworld-dp">Dynamic Programming</Link></li>
-                    <li><Link to="/gridworld-td-pred">TD Prediction</Link></li>
-                    <li><Link to="/gridworld-td-ctrl">TD Control</Link></li>
-                    <li><Link to="/gridworld-dyna-q">Dyna-Q</Link></li>
+                    <li><NavLink activeClassName="text-success" to="/gridworld-dp">Dynamic Programming</NavLink></li>
+                    <li><NavLink activeClassName="text-success" to="/gridworld-td-pred">TD Prediction</NavLink></li>
+                    <li><NavLink activeClassName="text-success" to="/gridworld-td-ctrl">TD Control</NavLink></li>
+                    <li><NavLink activeClassName="text-success" to="/gridworld-dyna-q">Dyna-Q</NavLink></li>
                 </ul>
             </nav>
 

@@ -2,6 +2,10 @@ nav {
     margin-bottom: 5px;
 }
 
+nav a.text-success {
+    font-weight: bold;
+}
+
 .toggle-button {
     cursor: pointer;
 }
@@ -33,3 +37,4 @@ button.control {
 .wrapped-buttons button {
     margin-bottom: 2px;
 }
+
