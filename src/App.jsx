@@ -12,7 +12,10 @@ import GridWorldDynaQView from './examples/GridWorld/DynaQ/View.jsx';
 const Home = () => (
     <div>
         <h2>Welcome to RLjs</h2>
-        <h4>RLjs currently serves as a playground for Reinforcement learning.</h4>
+        <p>
+          <strong>RLjs currently serves as a playground for learning
+          reinforcement learning.</strong>
+        </p>
         <p>
             Several most common tabular RL algorithms have been
             implemented in javascript, and demenstrated with gridword as
