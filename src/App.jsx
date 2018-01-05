@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, NavLink, Link, hashHistory } from 'react-router-dom';
-import ReactGA from 'react-ga';
 
 import GridWorldDPView from './examples/GridWorld/DP/View.jsx';
 import GridWorldTDPredView from './examples/GridWorld/TDPred/View.jsx';
 import GridWorldTDCtrlView from './examples/GridWorld/TDCtrl/View.jsx';
 import GridWorldDynaQView from './examples/GridWorld/DynaQ/View.jsx';
+
+
+/* https://github.com/react-ga/react-ga */
+import ReactGA from 'react-ga';
+const GA_ID = process.env.REACT_APP_GA_ID;
+if (GA_ID !== undefined) {
+    ReactGA.initialize(process.env.REACT_APP_GA_ID);
+    ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 
 const Home = () => (
