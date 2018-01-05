@@ -35,13 +35,13 @@ The development setup is adopted from
 ```
 git clone git@github.com:zyxue/rljs.git
 cd rljs
-npm install
+yarn install
 ```
 
 ## Run server
 
 ```
-npm start
+yarn start
 ```
 
 ## Build
@@ -49,10 +49,10 @@ This will generate the static web site and copy it to the `docs` folder
 that is deployed to the web site when you push to GitHub.
 
 ```
-npm run build
+yarn build
 ```
 
 ## Test
 ```
-npm test
+yarn test
 ```
