@@ -211,7 +211,9 @@ class View extends Component {
                 </Row>
 
                 <Row>
-                    <Intro />
+                    <Col md={8}>
+                        <Intro />
+                    </Col>
                 </Row>
             </div>
         );
