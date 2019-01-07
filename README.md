@@ -27,6 +27,10 @@ There is also another repo for hosting machine-learning related notebooks I
 created when learning/implementing algorithms at
 https://github.com/zyxue/sutton-barto-rl-exercises.
 
+A screenshot
+
+<img src="screenshot.png" alt="screenshot">
+
 ## Setup
 
 The development setup is adopted from
